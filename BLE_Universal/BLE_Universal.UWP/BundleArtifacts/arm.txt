@@ -1,0 +1,4 @@
+MainPackage=C:\Users\trevo\source\repos\Acoustic_BLE_App\BLE_Universal\BLE_Universal.UWP\bin\ARM\Debug\BLE_Universal.UWP_1.0.0.0_ARM_Debug.msix
+SymbolPackage=C:\Users\trevo\source\repos\Acoustic_BLE_App\BLE_Universal\BLE_Universal.UWP\obj\ARM\Debug\Symbols\BLE_Universal.UWP_1.0.0.0_ARM_Debug.appxsym
+ResourcePack=C:\Users\trevo\source\repos\Acoustic_BLE_App\BLE_Universal\BLE_Universal.UWP\bin\ARM\Debug\BLE_Universal.UWP_1.0.0.0_scale-100.msix
+ResourcePack=C:\Users\trevo\source\repos\Acoustic_BLE_App\BLE_Universal\BLE_Universal.UWP\bin\ARM\Debug\BLE_Universal.UWP_1.0.0.0_scale-400.msix

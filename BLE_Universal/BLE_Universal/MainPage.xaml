@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="BLE_Universal.MainPage"
+>
+    <ContentPage.Content>
+
+        <StackLayout Orientation="Vertical"> <!-- Overarching StackLayout -->
+
+            <Grid BackgroundColor="#FFFFFF">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.50*"/>
+                    <ColumnDefinition Width="0.50*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.88*"/>
+                    <RowDefinition Height="0.12*"/>
+                </Grid.RowDefinitions>
+
+                <ListView
+                    x:Name="DevicesList"
+                    IsPullToRefreshEnabled="true"
+                    CachingStrategy="RecycleElement"
+                    ItemSelected="OnItemSelected"
+                    Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                >
+                    <ListView.Header>
+                        <StackLayout BackgroundColor="#CFCFCF">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.35*"/>
+                                    <ColumnDefinition Width="0.40*"/>
+                                    <ColumnDefinition Width="0.25*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Text="Name"         VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />
+                                <Label Grid.Column="1" Text="ID"           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />
+                                <Label Grid.Column="2" Text="Connectable?" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />
+                            </Grid>
+                        </StackLayout>
+                    </ListView.Header>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.35*"/>
+                                            <ColumnDefinition Width="0.40*"/>
+                                            <ColumnDefinition Width="0.25*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Text="{Binding Name}" TextColor="#000000" />
+                                        <Label Grid.Column="1" Text="{Binding Id}" HorizontalTextAlignment="Center" TextColor="#000000" />
+                                        <Label Grid.Column="2" Text="{Binding IsConnectable}" HorizontalTextAlignment="Center">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsConnectable}" Value="false">
+                                                    <Setter Property="TextColor" Value="Red" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsConnectable}" Value="true">
+                                                    <Setter Property="TextColor" Value="Green" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Grid>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            <Button 
+                Grid.Row="1" Grid.Column="0"
+                Text="Search" FontSize="Large"
+                Clicked="SearchDevices" 
+                BackgroundColor="#000000" TextColor="#FFFFFF"
+                HeightRequest="100" CornerRadius="12"
+                HorizontalOptions="FillAndExpand"
+            />
+            <Button 
+                Grid.Row="1" Grid.Column="1"
+                Text="Read" FontSize="Large"
+                Clicked="ToConnectedPage" 
+                BackgroundColor="#005FCF" TextColor="#FFFFFF"
+                HeightRequest="100" CornerRadius="12"
+                HorizontalOptions="FillAndExpand"
+            />
+        </Grid>
+
+        </StackLayout> <!-- Overarching StackLayout -->
+
+    </ContentPage.Content>
+</ContentPage>

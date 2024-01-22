@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.ble_universal">
+	<!-- <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="33" /> -->
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="31" />
+	<application android:label="BLE_Universal.Android" android:theme="@style/MainTheme"></application>
+	<!-- Bluetooth Permissions -->
+	<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+	<!-- <uses-permission android:name="android.permission.BLUETOOTH_SCAN"  android:usesPermissionFlags="neverForLocation" /> -->
+	<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+	<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+	<!-- <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" /> -->
+	<!-- <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" /> -->
+	<!-- Misc. Permissions -->
+	<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
+	<!-- <uses-permission android:name="android.permission.LOCATION_HARDWARE" /> -->
+	<!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"   android:maxSdkVersion="30" /> -->
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<!-- Deprecated, but added for Save of Files to Public Storage -->
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<!-- Supposedly new version of Storage Permission -->
+	<uses-permission android:name="android.permission.READ_STORAGE_PERMISSION" />
+	<uses-permission android:name="android.permission.WRITE_STORAGE_PERMISSION" />
+	<uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+	<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+	<uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+	<!--
+	<uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+	-->
+</manifest>

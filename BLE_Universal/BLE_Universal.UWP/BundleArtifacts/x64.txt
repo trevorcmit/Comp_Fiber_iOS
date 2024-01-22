@@ -1,0 +1,2 @@
+MainPackage=C:\Users\trevo\source\repos\Acoustic_BLE_App\BLE_Universal\BLE_Universal.UWP\bin\x64\Debug\BLE_Universal.UWP_1.0.0.0_x64_Debug.msix
+SymbolPackage=C:\Users\trevo\source\repos\Acoustic_BLE_App\BLE_Universal\BLE_Universal.UWP\obj\x64\Debug\Symbols\BLE_Universal.UWP_1.0.0.0_x64_Debug.appxsym
