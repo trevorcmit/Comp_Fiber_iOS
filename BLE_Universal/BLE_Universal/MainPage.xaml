@@ -26,16 +26,16 @@
                     Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                 >
                     <ListView.Header>
-                        <StackLayout BackgroundColor="#CFCFCF">
+                        <StackLayout BackgroundColor="#D2D2D2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.35*"/>
-                                    <ColumnDefinition Width="0.40*"/>
-                                    <ColumnDefinition Width="0.25*"/>
+                                    <ColumnDefinition Width="0.50*"/>
+                                    <!--<ColumnDefinition Width="0.30*"/>-->
+                                    <ColumnDefinition Width="0.50*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="Name"         VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />
-                                <Label Grid.Column="1" Text="ID"           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />
-                                <Label Grid.Column="2" Text="Connectable?" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />
+                                <Label Grid.Column="0" Text="Name"         VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" FontAttributes="Bold" />
+                                <!--<Label Grid.Column="1" Text="ID"           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />-->
+                                <Label Grid.Column="1" Text="Connectable?" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" FontAttributes="Bold" />
                             </Grid>
                         </StackLayout>
                     </ListView.Header>

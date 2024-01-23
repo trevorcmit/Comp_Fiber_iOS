@@ -20,18 +20,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
 	</array>
-
 	<key>MinimumOSVersion</key>
 	<string>8.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>BLE_Universal</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.computingfiber.BLE_Universal</string>
+	<string>com.computingfiber.BLEUniversal</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
@@ -40,18 +38,15 @@
 	<string>BLE_Universal</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
-
-
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Allow the app to connect to the Computing Fiber.</string>
-
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location is necessary for BLE functionality.</string>
-
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Second bluetooth enabling request.</string>
-
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.1</string>
 </dict>
 </plist>

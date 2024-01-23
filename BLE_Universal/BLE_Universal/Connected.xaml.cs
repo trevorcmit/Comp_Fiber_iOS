@@ -52,6 +52,7 @@ namespace BLE_Universal
         // Tester OC for updating Temp Data Live
         public ObservableCollection<string> ACCEL_DATA1 = new ObservableCollection<string>();
         public ObservableCollection<string> ACCEL_DATA2 = new ObservableCollection<string>();
+        public ObservableCollection<string> ACCEL_DATA3 = new ObservableCollection<string>();
 
         public FileResult pick_result;
 
@@ -70,70 +71,6 @@ namespace BLE_Universal
                 OnPropertyChanged(nameof(Series_));
             }
         }
-
-        // private ObservableCollection<ObservablePoint> _temp1;
-        // public ObservableCollection<ObservablePoint> Temp1
-        // {
-        //     get => _temp1;
-        //     set
-        //     {
-        //         _temp1 = value;
-        //         OnPropertyChanged(nameof(Temp1));
-        //     }
-        // }
-
-        // private ObservableCollection<ObservablePoint> _temp2;
-        // public ObservableCollection<ObservablePoint> Temp2
-        // {
-        //     get => _temp2;
-        //     set
-        //     {
-        //         _temp2 = value;
-        //         OnPropertyChanged(nameof(Temp2));
-        //     }
-        // }
-
-        private string _temp_1;
-        public string Temp_1
-        {
-            get => _temp_1;
-            set
-            {
-                _temp_1 = value;
-                OnPropertyChanged(nameof(Temp_1));
-            }
-        }
-
-        private string _temp_2;
-        public string Temp_2
-        {
-            get => _temp_2;
-            set
-            {
-                _temp_2 = value;
-                OnPropertyChanged(nameof(Temp_2));
-            }
-        }
-
-        public Axis[] X_axis { get; set; } = 
-        {
-            new Axis
-            {
-                Name = "Seconds Elapsed",
-                TextSize=19,
-            }
-        };
-
-        public Axis[] Y_axis { get; set; } = 
-        {
-            new Axis
-            {
-                Name = "Temperature (°C)",
-                TextSize=19,
-                MinLimit=0,
-                MaxLimit=30,
-            }
-        };
         //------------------------------------------------------
 
 
@@ -141,11 +78,6 @@ namespace BLE_Universal
         {
             InitializeComponent();
             device = d;
-
-            Service1.ItemsSource = Serv1;
-            Service2.ItemsSource = Serv2;
-            Service3.ItemsSource = Serv3;
-            Service4.ItemsSource = Serv4;
 
             //*********************************
             // Setup chart (LiveCharts CartesianChart) in constructor
@@ -155,10 +87,8 @@ namespace BLE_Universal
             //     chart.XAxes = X_axis;
             //     chart.YAxes = Y_axis;
             // });
-
             // _temp1 = new ObservableCollection<ObservablePoint>();
             // _temp2 = new ObservableCollection<ObservablePoint>();
-
             // Series_ = new ObservableCollection<ISeries>
             // {
             //     new LineSeries<ObservablePoint> { Name = "Temp_1", Values = Temp1, Fill = null, GeometrySize=3, },
@@ -168,26 +98,14 @@ namespace BLE_Universal
 
             Device.BeginInvokeOnMainThread(() =>
             {
-                // set binding content
-                // Label1.BindingContext = this;
-                // Label2.BindingContext = this;
-                // Label1.Text = Temp_1;
-                // Label2.Text = Temp_2;
-
                 Accel_Data1.ItemsSource = ACCEL_DATA1;
                 Accel_Data2.ItemsSource = ACCEL_DATA2;
+                Accel_Data3.ItemsSource = ACCEL_DATA3;
             });
 
             ACCEL_DATA1.Add("N/A");
             ACCEL_DATA2.Add("N/A");
-
-            // Temp_1 = "N/A";
-            // Temp_2 = "N/A";
-
-            // Accel_Data1.ItemsSource = ACCEL_DATA1;
-            // Accel_Data2.ItemsSource = ACCEL_DATA2;
-            // ACCEL_DATA1.Add("N/A");
-            // ACCEL_DATA2.Add("N/A");
+            ACCEL_DATA3.Add("N/A");
 
             GetPermissions();
             SetupDevice();
@@ -198,16 +116,18 @@ namespace BLE_Universal
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
-                PermissionStatus reqStatus   = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();  
+                connectedDevice.Text = device.Name; // Set device name at top of UI
+
                 PermissionStatus checkStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                PermissionStatus readStatus  = await Permissions.RequestAsync<Permissions.StorageRead>();
-                PermissionStatus WriteStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
-                connectedDevice.Text = device.Name;
+                if (checkStatus != PermissionStatus.Granted)
+                {
+                    PermissionStatus reqStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                }
+                // PermissionStatus reqStatus   = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();  
+                // PermissionStatus checkStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                // PermissionStatus readStatus  = await Permissions.RequestAsync<Permissions.StorageRead>();
+                // PermissionStatus WriteStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
             });  
-            // if (DeviceInfo.Platform == DevicePlatform.Android) // If Android, select file to save data to
-            // {
-            //     pick_result = await FilePicker.PickAsync();
-            // }
         }
 
 
@@ -250,31 +170,32 @@ namespace BLE_Universal
         // Write Command to BLE Device to trigger MCU collection of accel. data
         async void OnStartClicked(object sender, EventArgs args)
         {
-            int error = await Char4[0].WriteAsync(new byte[] { 0x0C });
-
             START = DateTime.Now; // Setup Start DateTime for X-Axis of LiveChart
 
-            Task.Delay(2000).Wait();
+            // Write Epoch time in exactly 8 bytes of space, with 0x1D command on the head
+            // example: { 0x1D, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x5E, 0x5D, 0x5C }
+            UInt64 epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
+            byte[] epoch_array = new byte[9];
+            epoch_bytes.CopyTo(epoch_array, 1);
+            epoch_array[0] = 0x1D;
 
-            // Loop to collect temp characteristic updates from BLE device
+            int error = await Char2[0].WriteAsync( epoch_array );
+            Task.Delay(1500).Wait();
+
+            error = await Char2[0].WriteAsync(new byte[] { 0x0C });
+            Task.Delay(1500).Wait();
+        }
+
+
+        async void OnCollectClicked(object sender, EventArgs args)
+        {
             while (true)
             {
                 int error_ = await CollectionCommand();
                 if (error_ != 0)
                     continue;
             }
-        }
-
-
-        async void OnCollectClicked(object sender, EventArgs args)
-        {
-            // int error = await Char4[0].WriteAsync(new byte[] { 0xCC });
-            // Task.Delay(600).Wait();
-            // for (int J = 0; J < 11000; J++)
-            // {
-            //     int error_ = await CollectionCommand();
-            //     Counter.Text= J.ToString();
-            // }
         }
 
 
@@ -286,54 +207,48 @@ namespace BLE_Universal
             // Convert bytes to binary string
             string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
             string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
+            string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
+            string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
+            string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
+            string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
 
-            // Convert binary string to float
-            double temp1_float = Math.Round( ParseFloat16(temp1), 1);
-            double temp2_float = Math.Round( ParseFloat16(temp2), 1);
-
-            string temp1_string = temp1_float.ToString() + "°";
-            string temp2_string = temp2_float.ToString() + "°";
-
-            double TimeDiff = (DateTime.Now - START).TotalSeconds;
+            // double TimeDiff = (DateTime.Now - START).TotalSeconds;
 
             if (!(ACCEL_DATA1.ElementAt(0)==temp1_string))
             {
-                // Device.BeginInvokeOnMainThread(() =>
-                // {
-                    ACCEL_DATA1.RemoveAt(0);
-                    ACCEL_DATA1.Add(temp1_string);
-
-                // });
+                ACCEL_DATA1.RemoveAt(0);
+                ACCEL_DATA1.Add(temp1_string);
             }
 
             if (!(ACCEL_DATA2.ElementAt(0)==temp2_string))
             {
-                // Device.BeginInvokeOnMainThread(() =>
-                // {
-                    ACCEL_DATA2.RemoveAt(0);
-                    ACCEL_DATA2.Add(temp2_string);
-                // });
+                ACCEL_DATA2.RemoveAt(0);
+                ACCEL_DATA2.Add(temp2_string);
             }
 
-            // ACCEL_DATA1.Add(temp1_string);
-            // ACCEL_DATA2.Add(temp2_string);
+            if (!(ACCEL_DATA3.ElementAt(0)==temp3_string))
+            {
+                ACCEL_DATA3.RemoveAt(0);
+                ACCEL_DATA3.Add(temp3_string);
+            }
 
-            // Device.BeginInvokeOnMainThread(() =>
-            // {
-                // Temp1.Add(new ObservablePoint(TimeDiff, temp1_float));
-                // Temp2.Add(new ObservablePoint(TimeDiff, temp2_float));
-
-                // Temp_1 = temp1_string;
-                // Temp_2 = temp2_string;
-            // });
-
-            return bytes.Item2;
+            return 0;
         }
 
 
         async void OnChipErase(object sender, EventArgs args)
         {
-            int error = await Char4[0].WriteAsync(new byte[] { 0xCE });
+            bool answer = await DisplayAlert(
+                "Be careful!", 
+                "Are you sure you want to erase the SPI flash?\n\nThe chip erase takes ~30 seconds.\nWait for the buttons to change color.", 
+                "Yes", "No"
+            );
+
+            if (answer)
+            {
+                await Char4[0].WriteAsync(new byte[] { 0xCE });
+                await Task.Delay(30000); // wait 30 seconds
+            }
         }
 
 
@@ -342,13 +257,7 @@ namespace BLE_Universal
         **************************************************/
         static string CombineBytesToBinaryString(byte byte1, byte byte2)
         {
-            string binaryByte1 = Convert.ToString(byte1, 2).PadLeft(8, '0');
-            string binaryByte2 = Convert.ToString(byte2, 2).PadLeft(8, '0');
-
-            // Combine the two binary strings
-            string combinedBinaryString = binaryByte1 + binaryByte2;
-
-            return combinedBinaryString;
+            return Convert.ToString(byte1, 2).PadLeft(8, '0') + Convert.ToString(byte2, 2).PadLeft(8, '0');
         }
 
 
@@ -359,8 +268,14 @@ namespace BLE_Universal
         static float ParseFloat16(string binfloat)
         {
             // Map sign bit string to multiplicand
-            float[] S = { 1.0f, -1.0f };
+            Dictionary<char, float> S = new Dictionary<char, float>()
+            {
+                { '0', 1.0f },
+                { '1', -1.0f },
+            };
 
+            // char sign = binfloat[0];
+            // string sign = binfloat.Substring(0, 1);
             char sign = binfloat[0];
             string exp = binfloat.Substring(1, 5);
             string mantissa = binfloat.Substring(6);
@@ -373,7 +288,7 @@ namespace BLE_Universal
                 }
                 else
                 {
-                    return S[sign - '0'] * (float)Math.Pow(2, -14) * (Convert.ToInt32(mantissa, 2) * (float)Math.Pow(2, -10));
+                    return S[sign] * (float)Math.Pow(2, -14) * (Convert.ToInt32(mantissa, 2) * (float)Math.Pow(2, -10));
                 }
             }
             else if (exp == "11111") // Overflow case
@@ -390,7 +305,7 @@ namespace BLE_Universal
             else
             {
                 float fraction = 1.0f + (Convert.ToInt32(mantissa, 2) * (float)Math.Pow(2, -10));
-                return S[sign - '0'] * fraction * (float)Math.Pow(2, Convert.ToInt32(exp, 2) - 15); // 15 is half-precision bias
+                return S[sign] * fraction * (float)Math.Pow(2, Convert.ToInt32(exp, 2) - 15); // 15 is half-precision bias
             }
 
             // This line is unreachable, but C# requires a return statement in all code paths
