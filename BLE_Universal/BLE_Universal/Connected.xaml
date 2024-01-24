@@ -23,6 +23,7 @@
                     <RowDefinition Height="0.20*" />
                 </Grid.RowDefinitions>
 
+
                 <!-- - - - Name of Connected BLE Device, Box + Label - - - -->
                 <BoxView 
                     Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Color="#CECECE"
@@ -105,22 +106,19 @@
                     <Button
                         Grid.Row="0" Grid.Column="0" Grid.RowSpan="1"
                         Text="Start Data Collection (0x0C)" TextColor="White" FontSize="32"
-                        Clicked="OnStartClicked" 
-                        BackgroundColor="#008F1F"
+                        Clicked="OnStartClicked" BackgroundColor="#008F1F"
                     />
 
                     <Button
                         Grid.Row="2" Grid.Column="0" Grid.RowSpan="1"
                         Text="Resume Temperature Reading" TextColor="White" FontSize="32"
-                        Clicked="OnCollectClicked" 
-                        BackgroundColor="#0F00BF"
+                        Clicked="OnCollectClicked" BackgroundColor="#0F00BF"
                     />
 
                     <Button
                         Grid.Row="4" Grid.Column="0" Grid.RowSpan="1"
                         Text="Chip Erase (0xCE)" TextColor="White" FontSize="32"
-                        Clicked="OnChipErase"
-                        BackgroundColor="#990F0F"
+                        Clicked="OnChipErase" BackgroundColor="#990F0F"
                     />
 
                 </Grid>

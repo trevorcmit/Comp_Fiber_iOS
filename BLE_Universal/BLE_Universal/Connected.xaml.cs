@@ -20,11 +20,11 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 // Imports for Plotting
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+// using LiveChartsCore;
+// using LiveChartsCore.Defaults;
+// using LiveChartsCore.SkiaSharpView;
+// using LiveChartsCore.SkiaSharpView.Painting;
+// using SkiaSharp;
 
 
 namespace BLE_Universal
@@ -54,47 +54,13 @@ namespace BLE_Universal
         public ObservableCollection<string> ACCEL_DATA2 = new ObservableCollection<string>();
         public ObservableCollection<string> ACCEL_DATA3 = new ObservableCollection<string>();
 
-        public FileResult pick_result;
-
-
-        // LiveCharts Section ----------------------------------
         public DateTime START; // To calculate seconds elapsed in AddOrUpdateTagData()
-
-        private ObservableCollection<ISeries> _Series_;
-        public ObservableCollection<ISeries> Series_
-        {
-            get { return this._Series_; }
-            set
-            {
-                this._Series_ = value;
-                // OnPropertyChanged("Series_");
-                OnPropertyChanged(nameof(Series_));
-            }
-        }
-        //------------------------------------------------------
 
 
         public ConnectedPage(IDevice d)
         {
             InitializeComponent();
             device = d;
-
-            //*********************************
-            // Setup chart (LiveCharts CartesianChart) in constructor
-            // Device.BeginInvokeOnMainThread(() =>
-            // {
-            //     chart.Series = Series_;
-            //     chart.XAxes = X_axis;
-            //     chart.YAxes = Y_axis;
-            // });
-            // _temp1 = new ObservableCollection<ObservablePoint>();
-            // _temp2 = new ObservableCollection<ObservablePoint>();
-            // Series_ = new ObservableCollection<ISeries>
-            // {
-            //     new LineSeries<ObservablePoint> { Name = "Temp_1", Values = Temp1, Fill = null, GeometrySize=3, },
-            //     new LineSeries<ObservablePoint> { Name = "Temp_2", Values = Temp2, Fill = null, GeometrySize=3, },
-            // };
-            //**********************************
 
             Device.BeginInvokeOnMainThread(() =>
             {
@@ -114,19 +80,10 @@ namespace BLE_Universal
 
         public async void GetPermissions()
         {
+            // Formerly held devices permissions. Not necessary on iOS.
             Device.BeginInvokeOnMainThread(async () =>
             {
-                connectedDevice.Text = device.Name; // Set device name at top of UI
-
-                PermissionStatus checkStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                if (checkStatus != PermissionStatus.Granted)
-                {
-                    PermissionStatus reqStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-                }
-                // PermissionStatus reqStatus   = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();  
-                // PermissionStatus checkStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                // PermissionStatus readStatus  = await Permissions.RequestAsync<Permissions.StorageRead>();
-                // PermissionStatus WriteStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
+                connectedDevice.Text = device.Name;  // Set device name at top of UI
             });  
         }
 
@@ -137,33 +94,21 @@ namespace BLE_Universal
             IReadOnlyList<IService> s_ = await device.GetServicesAsync();
 
             for (int i = 0; i < s_.Count; i++)
-            {
                 switch (i)
                 {
                     case 0:
                         Serv1.Add(s_[i]);
                         IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
-                        foreach (var c_ in c1) { Device.BeginInvokeOnMainThread(() => { Char1.Add(c_); }); }
+                        foreach (var c_ in c1) { Char1.Add(c_); }
                         break;
                     case 1:
                         Serv2.Add(s_[i]);
                         IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
-                        foreach (var c_ in c2) { Device.BeginInvokeOnMainThread(() => { Char2.Add(c_); }); }
-                        break;
-                    case 2:
-                        Serv3.Add(s_[i]);
-                        IReadOnlyList<ICharacteristic> c3 = await s_[i].GetCharacteristicsAsync();
-                        foreach (var c_ in c3) { Device.BeginInvokeOnMainThread(() => { Char3.Add(c_); }); }
-                        break;
-                    case 3:
-                        Serv4.Add(s_[i]);
-                        IReadOnlyList<ICharacteristic> c4 = await s_[i].GetCharacteristicsAsync();
-                        foreach (var c_ in c4) { Device.BeginInvokeOnMainThread(() => { Char4.Add(c_); }); }
+                        foreach (var c_ in c2) { Char2.Add(c_); }
                         break;
                     default:
                         break;
                 }
-            }
         }
 
 
@@ -185,6 +130,13 @@ namespace BLE_Universal
 
             error = await Char2[0].WriteAsync(new byte[] { 0x0C });
             Task.Delay(1500).Wait();
+
+            while (true)
+            {
+                int error_ = await CollectionCommand();
+                if (error_ != 0)
+                    continue;
+            }
         }
 
 
@@ -199,40 +151,41 @@ namespace BLE_Universal
         }
 
 
-        private async Task<int> CollectionCommand()
+        public async Task<int> CollectionCommand()
         {
-            Task.Delay(1000).Wait();
-            (byte[], int) bytes = await Char4[2].ReadAsync();
+            Task.Delay(900).Wait();
 
-            // Convert bytes to binary string
-            string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
-            string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
-            string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
-            string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
-            string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
-            string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
+            (byte[], int) bytes = await Char2[2].ReadAsync();
 
-            // double TimeDiff = (DateTime.Now - START).TotalSeconds;
-
-            if (!(ACCEL_DATA1.ElementAt(0)==temp1_string))
+            if (bytes.Item1.Count()==6)
             {
-                ACCEL_DATA1.RemoveAt(0);
-                ACCEL_DATA1.Add(temp1_string);
-            }
+                string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
+                string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
+                string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
+                string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
+                string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
+                string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
 
-            if (!(ACCEL_DATA2.ElementAt(0)==temp2_string))
-            {
-                ACCEL_DATA2.RemoveAt(0);
-                ACCEL_DATA2.Add(temp2_string);
-            }
+                if (!(ACCEL_DATA1.ElementAt(0)==temp1_string))
+                {
+                    ACCEL_DATA1.RemoveAt(0);
+                    ACCEL_DATA1.Add(temp1_string);
+                }
 
-            if (!(ACCEL_DATA3.ElementAt(0)==temp3_string))
-            {
-                ACCEL_DATA3.RemoveAt(0);
-                ACCEL_DATA3.Add(temp3_string);
-            }
+                if (!(ACCEL_DATA2.ElementAt(0)==temp2_string))
+                {
+                    ACCEL_DATA2.RemoveAt(0);
+                    ACCEL_DATA2.Add(temp2_string);
+                }
 
-            return 0;
+                if (!(ACCEL_DATA3.ElementAt(0)==temp3_string))
+                {
+                    ACCEL_DATA3.RemoveAt(0);
+                    ACCEL_DATA3.Add(temp3_string);
+                }
+            }
+            
+            return bytes.Item2;
         }
 
 
@@ -246,7 +199,7 @@ namespace BLE_Universal
 
             if (answer)
             {
-                await Char4[0].WriteAsync(new byte[] { 0xCE });
+                await Char2[0].WriteAsync(new byte[] { 0xCE });
                 await Task.Delay(30000); // wait 30 seconds
             }
         }
@@ -274,33 +227,23 @@ namespace BLE_Universal
                 { '1', -1.0f },
             };
 
-            // char sign = binfloat[0];
-            // string sign = binfloat.Substring(0, 1);
             char sign = binfloat[0];
             string exp = binfloat.Substring(1, 5);
             string mantissa = binfloat.Substring(6);
 
             if (exp == "00000")
             {
-                if (mantissa == "0000000000") // Underflow
-                {
+                if (mantissa == "0000000000")  // Underflow
                     return 0.0f;
-                }
                 else
-                {
                     return S[sign] * (float)Math.Pow(2, -14) * (Convert.ToInt32(mantissa, 2) * (float)Math.Pow(2, -10));
-                }
             }
-            else if (exp == "11111") // Overflow case
+            else if (exp == "11111")    // Overflow case
             {
                 if (sign == '0')
-                {
-                    return float.NaN; // Currently set to NaN, this could be float.PositiveInfinity
-                }
+                    return float.NaN;   // Currently set to NaN, this could be float.PositiveInfinity
                 else if (sign == '1')
-                {
-                    return float.NaN; // Currently set to NaN, this could be float.NegativeInfinity
-                }
+                    return float.NaN;   // Currently set to NaN, this could be float.NegativeInfinity
             }
             else
             {
