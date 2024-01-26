@@ -10,36 +10,111 @@
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
 
-            <Grid>
+            <Grid HeightRequest="2000" > <!-- Overarching grid to hold fibers -->
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.07*" />
-                    <RowDefinition Height="0.33*" />
-                    <RowDefinition Height="0.20*" />
-                    <RowDefinition Height="0.20*" />
-                    <RowDefinition Height="0.20*" />
+                    <RowDefinition Height="0.180*" /> <!-- Row 0 -->
+                    <RowDefinition Height="0.025*" />
+                    <RowDefinition Height="0.180*" /> <!-- Row 2 -->
+                    <RowDefinition Height="0.025*" />
+                    <RowDefinition Height="0.180*" /> <!-- Row 4 -->
+                    <RowDefinition Height="0.025*" />
+                    <RowDefinition Height="0.180*" /> <!-- Row 6 -->
+                    <RowDefinition Height="0.025*" />
+                    <RowDefinition Height="0.180*" /> <!-- Row 8 -->
                 </Grid.RowDefinitions>
 
+                <!-- Fiber 1 -->
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*" />
+                        <RowDefinition Height="0.6*" />
+                        <RowDefinition Height="0.3*" />
+                    </Grid.RowDefinitions>
+                    <BoxView x:Name="Box1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
 
-                <!-- - - - Name of Connected BLE Device, Box + Label - - - -->
-                <BoxView 
-                    Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Color="#CECECE"
-                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                />
-                <Label
-                    x:Name="connectedDevice" FontSize="32" FontAttributes="Bold"
-                    Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                />
-                <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+                    <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                </Grid>
 
+                <!-- Fiber 2 -->
+                <Grid Grid.Row="2" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*" />
+                        <RowDefinition Height="0.6*" />
+                        <RowDefinition Height="0.3*" />
+                    </Grid.RowDefinitions>
+                    <BoxView x:Name="Box2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
 
-                <!-- - - - Plotting Code - - - -->
-                <ListView
-                    x:Name="Accel_Data1" CachingStrategy="RecycleElement"
+                    <Label x:Name="Fiber2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                </Grid>
+
+                <!-- Fiber 3 -->
+                <Grid Grid.Row="4" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*" />
+                        <RowDefinition Height="0.6*" />
+                        <RowDefinition Height="0.3*" />
+                    </Grid.RowDefinitions>
+                    <BoxView x:Name="Box3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
+
+                    <Label x:Name="Fiber3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                </Grid>
+
+                <!-- Fiber 4 -->
+                <Grid Grid.Row="6" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*" />
+                        <RowDefinition Height="0.6*" />
+                        <RowDefinition Height="0.3*" />
+                    </Grid.RowDefinitions>
+                    <BoxView x:Name="Box4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
+
+                    <Label x:Name="Fiber4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                </Grid>
+
+                <!-- Fiber 5 -->
+                <Grid Grid.Row="8" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*" />
+                        <RowDefinition Height="0.6*" />
+                        <RowDefinition Height="0.3*" />
+                    </Grid.RowDefinitions>
+                    <BoxView x:Name="Box5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
+
+                    <Label x:Name="Fiber5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                </Grid>
+
+            </Grid> <!-- Overarching grid to hold fibers -->
+
+                <!--
+                ListViewx:Name="Accel_Data1" CachingStrategy="RecycleElement"
                     Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" RowHeight="200"
                     VerticalOptions="Center"
                 >
@@ -89,10 +164,8 @@
                         </StackLayout></ViewCell></DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 
-                <!-- - - - Characteristics, Maximum 6 (from BLE_ADC demo) - - - -->
                 <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalOptions="Fill" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -120,11 +193,8 @@
                         Text="Chip Erase (0xCE)" TextColor="White" FontSize="32"
                         Clicked="OnChipErase" BackgroundColor="#990F0F"
                     />
-
                 </Grid>
-                <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-
-            </Grid>
+            </Grid> -->
 
         </StackLayout>
     </ContentPage.Content>

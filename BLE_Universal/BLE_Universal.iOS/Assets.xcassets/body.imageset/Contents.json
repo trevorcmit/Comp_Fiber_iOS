@@ -8,9 +8,15 @@
         },
         {
             "scale": "2x",
-            "size": "200x203",
+            "size": "100x102",
             "idiom": "iphone",
             "filename": "Man20.png"
+        },
+        {
+            "scale": "3x",
+            "size": "100x102",
+            "idiom": "iphone",
+            "filename": "Man30.png"
         }
     ],
     "properties": {},

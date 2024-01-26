@@ -18,13 +18,8 @@ using Xamarin;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
-// Imports for Plotting
-// using LiveChartsCore;
 // using LiveChartsCore.Defaults;
-// using LiveChartsCore.SkiaSharpView;
-// using LiveChartsCore.SkiaSharpView.Painting;
-// using SkiaSharp;
+
 
 
 namespace BLE_Universal
@@ -32,7 +27,8 @@ namespace BLE_Universal
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ConnectedPage : ContentPage
     {
-        public IDevice device;
+        public IDevice device1, device2, device3, device4, device5;
+        public DateTime START;  // To calculate seconds elapsed in AddOrUpdateTagData()
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName = null)
@@ -42,73 +38,168 @@ namespace BLE_Universal
 
         public ObservableCollection<IService> Serv1 = new ObservableCollection<IService>();
         public ObservableCollection<IService> Serv2 = new ObservableCollection<IService>();
-        public ObservableCollection<IService> Serv3 = new ObservableCollection<IService>();
-        public ObservableCollection<IService> Serv4 = new ObservableCollection<IService>();
         public ObservableCollection<ICharacteristic> Char1 = new ObservableCollection<ICharacteristic>();
         public ObservableCollection<ICharacteristic> Char2 = new ObservableCollection<ICharacteristic>();
-        public ObservableCollection<ICharacteristic> Char3 = new ObservableCollection<ICharacteristic>();
-        public ObservableCollection<ICharacteristic> Char4 = new ObservableCollection<ICharacteristic>();
+
+        public ObservableCollection<IService> d1s1, d1s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d2s1, d2s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d3s1, d3s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d4s1, d4s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d5s1, d5s2 = new ObservableCollection<IService>();
+        public ObservableCollection<ICharacteristic> d1c1, d1c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d2c1, d2c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d3c1, d3c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d4c1, d4c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d5c1, d5c2 = new ObservableCollection<ICharacteristic>();
+
+        // public ObservableCollection<string> d1_temp1, d1_temp2, d1_temp3 = new ObservableCollection<string>();
+        // public ObservableCollection<string> d2_temp1, d2_temp2, d2_temp3 = new ObservableCollection<string>();
+        // public ObservableCollection<string> d3_temp1, d3_temp2, d3_temp3 = new ObservableCollection<string>();
+        // public ObservableCollection<string> d4_temp1, d4_temp2, d4_temp3 = new ObservableCollection<string>();
+        // public ObservableCollection<string> d5_temp1, d5_temp2, d5_temp3 = new ObservableCollection<string>();
 
         // Tester OC for updating Temp Data Live
         public ObservableCollection<string> ACCEL_DATA1 = new ObservableCollection<string>();
         public ObservableCollection<string> ACCEL_DATA2 = new ObservableCollection<string>();
         public ObservableCollection<string> ACCEL_DATA3 = new ObservableCollection<string>();
 
-        public DateTime START; // To calculate seconds elapsed in AddOrUpdateTagData()
 
 
-        public ConnectedPage(IDevice d)
+        public ConnectedPage(IDevice d1=null, IDevice d2=null, IDevice d3=null, IDevice d4=null, IDevice d5=null)
         {
             InitializeComponent();
-            device = d;
 
-            Device.BeginInvokeOnMainThread(() =>
+            if (d1 != null)
             {
-                Accel_Data1.ItemsSource = ACCEL_DATA1;
-                Accel_Data2.ItemsSource = ACCEL_DATA2;
-                Accel_Data3.ItemsSource = ACCEL_DATA3;
-            });
+                device1 = d1;
+                Fiber1.Text = device1.Name;
+                Box1.Color = Color.FromHex("#EFEFEF");
+                SetupDevices(0);
+            }
+            else
+            {
+                Fiber1.Text = "Not connected";
+                Box1.Color = Color.FromHex("#858585");
+            }
 
-            ACCEL_DATA1.Add("N/A");
-            ACCEL_DATA2.Add("N/A");
-            ACCEL_DATA3.Add("N/A");
+            if (d2 != null)
+            {
+                device2 = d2;
+                Fiber2.Text = device2.Name;
+                Box2.Color = Color.FromHex("#EFEFEF");
+                SetupDevices(1);
+            }
+            else
+            {
+                Fiber2.Text = "Not connected";
+                Box2.Color = Color.FromHex("#858585");
+            }
 
-            GetPermissions();
-            SetupDevice();
+            if (d3 != null)
+            {
+                device3 = d3;
+                Fiber3.Text = device3.Name;
+                Box3.Color = Color.FromHex("#EFEFEF");
+                SetupDevices(2);
+            }
+            else
+            {
+                Fiber3.Text = "Not connected";
+                Box3.Color = Color.FromHex("#858585");
+            }
+
+            if (d4 != null)
+            {
+                device4 = d4;
+                Fiber4.Text = device4.Name;
+                Box4.Color = Color.FromHex("#EFEFEF");
+                SetupDevices(3);
+            }
+            else
+            {
+                Fiber4.Text = "Not connected";
+                Box4.Color = Color.FromHex("#858585");
+            }
+
+            if (d5 != null)
+            {
+                device5 = d5;
+                Fiber5.Text = device5.Name;
+                Box5.Color = Color.FromHex("#EFEFEF");
+                SetupDevices(4);
+            }
+            else
+            {
+                Fiber5.Text = "Not connected";
+                Box5.Color = Color.FromHex("#858585");
+            }
         }
 
 
         public async void GetPermissions()
         {
             // Formerly held devices permissions. Not necessary on iOS.
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                connectedDevice.Text = device.Name;  // Set device name at top of UI
-            });  
+            // Currently only used to setup device naming scheme.
+            // Device.BeginInvokeOnMainThread(async () =>
+            // {
+            //     connectedDevice.Text = device1.Name;  // Set device name at top of UI
+            // });  
         }
 
 
-        public async void SetupDevice()
+        public async void SetupDevices(int index)
         {
-            // Discover Services of Connected Device
-            IReadOnlyList<IService> s_ = await device.GetServicesAsync();
+            IReadOnlyList<IService> s_;
 
-            for (int i = 0; i < s_.Count; i++)
-                switch (i)
-                {
-                    case 0:
-                        Serv1.Add(s_[i]);
-                        IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
-                        foreach (var c_ in c1) { Char1.Add(c_); }
+            switch (index)
+            {
+                case 0:
+                    if (device1 == null)
                         break;
-                    case 1:
-                        Serv2.Add(s_[i]);
-                        IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
-                        foreach (var c_ in c2) { Char2.Add(c_); }
+                    s_ = await device1.GetServicesAsync();
+                    for (int i = 0; i < s_.Count; i++)
+                        switch (i)
+                        {
+                            case 0:
+                                d1s1.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c1) { d1c1.Add(c_); }
+                                break;
+                            case 1:
+                                d1s2.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c2) { d1c2.Add(c_); }
+                                break;
+                            default:
+                                break;
+                        }
+                    break;
+
+                case 1:
+                    if (device2 == null)
                         break;
-                    default:
-                        break;
-                }
+                    s_ = await device1.GetServicesAsync();
+                    for (int i = 0; i < s_.Count; i++)
+                        switch (i)
+                        {
+                            case 0:
+                                d1s1.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c1) { d1c1.Add(c_); }
+                                break;
+                            case 1:
+                                d1s2.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c2) { d1c2.Add(c_); }
+                                break;
+                            default:
+                                break;
+                        }
+                    break;
+                
+                default:
+                    break;
+            }
         }
 
 
@@ -200,7 +291,7 @@ namespace BLE_Universal
             if (answer)
             {
                 await Char2[0].WriteAsync(new byte[] { 0xCE });
-                await Task.Delay(30000); // wait 30 seconds
+                await Task.Delay(30000);  // wait 30 seconds
             }
         }
 

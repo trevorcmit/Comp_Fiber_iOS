@@ -14,84 +14,72 @@
                     <ColumnDefinition Width="0.50*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.50*"/>
-                    <RowDefinition Height="0.40*"/>
+                    <RowDefinition Height="0.90*"/>
                     <RowDefinition Height="0.10*"/>
                 </Grid.RowDefinitions>
 
                 <Grid BackgroundColor="#FFFFFF" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.20*"/>
-                        <ColumnDefinition Width="0.20*"/>
-                        <ColumnDefinition Width="0.20*"/>
-                        <ColumnDefinition Width="0.20*"/>
-                        <ColumnDefinition Width="0.20*"/>
+                        <ColumnDefinition Width="0.30*" />
+                        <ColumnDefinition Width="0.30*" />
+                        <ColumnDefinition Width="0.40*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <!-- <RowDefinition Height="0.15*"/> -->
-                        <!-- <RowDefinition Height="0.35*"/> -->
-                        <!-- <RowDefinition Height="0.35*"/> -->
-                        <!-- <RowDefinition Height="0.15*"/> -->
-                        <RowDefinition Height="0.80*"/>
-                        <RowDefinition Height="0.20*"/>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <!-- <Image x:Name="Subject1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" /> -->
-                    <!-- <BoxView
-                        Grid.Column="0" Grid.Row="0" Color="{Binding Subject1Color}"
-                    /> -->
-            
+                    <Image x:Name="Shirt1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" />
+                    <Image x:Name="Shirt2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" />
+                    <Image x:Name="Shirt3" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" />
+                    <Image x:Name="Shirt4" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" />
+                    <Image x:Name="Shirt5" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="1" />
+
+                    <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label x:Name="Fiber2" Grid.Row="1" Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label x:Name="Fiber3" Grid.Row="2" Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label x:Name="Fiber4" Grid.Row="3" Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label x:Name="Fiber5" Grid.Row="4" Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" />
+                
+                    <!-- BoxView behind the ListView for visual delimiting -->
+                    <BoxView Grid.Row="0" Grid.Column="2"  Grid.RowSpan="5" Color="#C5C5C5" />
+
+                    <ListView
+                        x:Name="DevicesList"
+                        IsPullToRefreshEnabled="true"
+                        CachingStrategy="RecycleElement"
+                        ItemSelected="OnItemSelected"
+                        Grid.Row="0" Grid.Column="2" Grid.RowSpan="5"
+                    >
+                        <ListView.Header>
+                            <StackLayout BackgroundColor="#D2D2D2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="Name" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" FontAttributes="Bold" />
+                                </Grid>
+                            </StackLayout>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate><ViewCell><StackLayout>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding Name}" TextColor="#000000" />
+                                </Grid>
+                            </StackLayout></ViewCell></DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
                 </Grid>
 
-                <ListView
-                    x:Name="DevicesList"
-                    IsPullToRefreshEnabled="true"
-                    CachingStrategy="RecycleElement"
-                    ItemSelected="OnItemSelected"
-                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                >
-                    <ListView.Header>
-                        <StackLayout BackgroundColor="#D2D2D2">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.50*"/>
-                                    <!--<ColumnDefinition Width="0.30*"/>-->
-                                    <ColumnDefinition Width="0.50*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="Name"         VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" FontAttributes="Bold" />
-                                <!--<Label Grid.Column="1" Text="ID"           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" />-->
-                                <Label Grid.Column="1" Text="Connectable?" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" FontAttributes="Bold" />
-                            </Grid>
-                        </StackLayout>
-                    </ListView.Header>
-
-                    <ListView.ItemTemplate>
-                        <DataTemplate><ViewCell><StackLayout>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.35*"/>
-                                            <ColumnDefinition Width="0.40*"/>
-                                            <ColumnDefinition Width="0.25*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Label Grid.Column="0" Text="{Binding Name}" TextColor="#000000" />
-                                        <Label Grid.Column="1" Text="{Binding Id}" HorizontalTextAlignment="Center" TextColor="#000000" />
-                                        <Label Grid.Column="2" Text="{Binding IsConnectable}" HorizontalTextAlignment="Center">
-                                            <Label.Triggers>
-                                                <DataTrigger TargetType="Label" Binding="{Binding IsConnectable}" Value="false">
-                                                    <Setter Property="TextColor" Value="Red" />
-                                                </DataTrigger>
-                                                <DataTrigger TargetType="Label" Binding="{Binding IsConnectable}" Value="true">
-                                                    <Setter Property="TextColor" Value="Green" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
-                                    </Grid>
-                        </StackLayout></ViewCell></DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
             <Button 
-                Grid.Row="2" Grid.Column="0"
+                Grid.Row="1" Grid.Column="0"
                 Text="Search" FontSize="Large"
                 Clicked="SearchDevices" 
                 BackgroundColor="#0C0C0C" TextColor="#FFFFFF"
@@ -99,7 +87,7 @@
                 HorizontalOptions="FillAndExpand"
             />
             <Button 
-                Grid.Row="2" Grid.Column="1"
+                Grid.Row="1" Grid.Column="1"
                 Text="Read" FontSize="Large"
                 Clicked="ToConnectedPage" 
                 BackgroundColor="#005FCF" TextColor="#FFFFFF"

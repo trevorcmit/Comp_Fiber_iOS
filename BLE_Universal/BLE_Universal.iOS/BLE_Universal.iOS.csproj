@@ -152,4 +152,8 @@
       <Name>BLE_Universal</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Man30.png" />
+    <BundleResource Include="Resources\Green30.jpeg" />
+  </ItemGroup>
 </Project>
