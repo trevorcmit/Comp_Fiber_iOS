@@ -25,7 +25,6 @@ namespace BLE_Universal
         public ObservableCollection<IDevice> list;
 
         public IDevice device1, device2, device3, device4, device5;
-
         public Color Subject1Color, Subject2Color, Subject3Color, Subject4Color, Subject5Color;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -91,9 +90,7 @@ namespace BLE_Universal
             {
                 // Filter out devices by IFM prefix.
                 if ((!list.Contains(args.Device)) && (args.Device.Name != null) && (args.Device.Name.Contains("IFM")))
-                {
                     list.Add(args.Device);
-                }
             });
         }
 
@@ -110,9 +107,7 @@ namespace BLE_Universal
         private async void ToConnectedPage(object sender, EventArgs e)
         {
             if (device1 == null)
-            {
                 await DisplayAlert("Error!", "Not connected to a device.", "OK");
-            }
             else
             {
                 // We cannot use null devices as inputs to the constructor.
@@ -176,8 +171,7 @@ namespace BLE_Universal
                 "Connect", "Cancel"
             );
 
-            if (!result)
-                return -1;
+            if (!result) return -1;   // For debugging if necessary
 
             await adapter.StopScanningForDevicesAsync(); // Stop Scanner
 

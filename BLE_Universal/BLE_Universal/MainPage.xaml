@@ -5,7 +5,6 @@
     x:Class="BLE_Universal.MainPage"
 >
     <ContentPage.Content>
-
         <StackLayout Orientation="Vertical"> <!-- Overarching StackLayout -->
 
             <Grid BackgroundColor="#FFFFFF">
@@ -55,12 +54,12 @@
                         Grid.Row="0" Grid.Column="2" Grid.RowSpan="5"
                     >
                         <ListView.Header>
-                            <StackLayout BackgroundColor="#D2D2D2">
+                            <StackLayout BackgroundColor="#C2C2C2">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="Name" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" FontAttributes="Bold" />
+                                    <Label Grid.Column="0" Text="Fibers Detected" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" TextColor="#000000" FontAttributes="Bold" />
                                 </Grid>
                             </StackLayout>
                         </ListView.Header>
@@ -97,6 +96,5 @@
         </Grid>
 
         </StackLayout> <!-- Overarching StackLayout -->
-
     </ContentPage.Content>
 </ContentPage>

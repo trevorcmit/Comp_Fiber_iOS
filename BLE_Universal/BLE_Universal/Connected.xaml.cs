@@ -1,9 +1,9 @@
 ﻿using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.EventArgs;
-using Plugin.BLE.Abstractions.Exceptions;
-using Plugin.BLE.Abstractions.Utils;
+// using Plugin.BLE.Abstractions.EventArgs;
+// using Plugin.BLE.Abstractions.Exceptions;
+// using Plugin.BLE.Abstractions.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +18,6 @@ using Xamarin;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-// using LiveChartsCore.Defaults;
 
 
 
@@ -36,27 +35,44 @@ namespace BLE_Universal
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public ObservableCollection<IService> Serv1 = new ObservableCollection<IService>();
-        public ObservableCollection<IService> Serv2 = new ObservableCollection<IService>();
         public ObservableCollection<ICharacteristic> Char1 = new ObservableCollection<ICharacteristic>();
         public ObservableCollection<ICharacteristic> Char2 = new ObservableCollection<ICharacteristic>();
 
-        public ObservableCollection<IService> d1s1, d1s2 = new ObservableCollection<IService>();
-        public ObservableCollection<IService> d2s1, d2s2 = new ObservableCollection<IService>();
-        public ObservableCollection<IService> d3s1, d3s2 = new ObservableCollection<IService>();
-        public ObservableCollection<IService> d4s1, d4s2 = new ObservableCollection<IService>();
-        public ObservableCollection<IService> d5s1, d5s2 = new ObservableCollection<IService>();
-        public ObservableCollection<ICharacteristic> d1c1, d1c2 = new ObservableCollection<ICharacteristic>();
-        public ObservableCollection<ICharacteristic> d2c1, d2c2 = new ObservableCollection<ICharacteristic>();
-        public ObservableCollection<ICharacteristic> d3c1, d3c2 = new ObservableCollection<ICharacteristic>();
-        public ObservableCollection<ICharacteristic> d4c1, d4c2 = new ObservableCollection<ICharacteristic>();
-        public ObservableCollection<ICharacteristic> d5c1, d5c2 = new ObservableCollection<ICharacteristic>();
-
-        // public ObservableCollection<string> d1_temp1, d1_temp2, d1_temp3 = new ObservableCollection<string>();
-        // public ObservableCollection<string> d2_temp1, d2_temp2, d2_temp3 = new ObservableCollection<string>();
-        // public ObservableCollection<string> d3_temp1, d3_temp2, d3_temp3 = new ObservableCollection<string>();
-        // public ObservableCollection<string> d4_temp1, d4_temp2, d4_temp3 = new ObservableCollection<string>();
-        // public ObservableCollection<string> d5_temp1, d5_temp2, d5_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<IService> d1s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d1s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d2s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d2s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d3s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d3s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d4s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d4s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d5s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d5s2 = new ObservableCollection<IService>();        
+        public ObservableCollection<ICharacteristic> d1c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d1c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d2c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d2c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d3c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d3c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d4c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d4c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d5c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d5c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<string> d1_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d1_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d1_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d2_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d2_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d2_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d3_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d3_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d3_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d4_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d4_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d4_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d5_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d5_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d5_temp3 = new ObservableCollection<string>();
 
         // Tester OC for updating Temp Data Live
         public ObservableCollection<string> ACCEL_DATA1 = new ObservableCollection<string>();
@@ -69,83 +85,90 @@ namespace BLE_Universal
         {
             InitializeComponent();
 
-            if (d1 != null)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                device1 = d1;
-                Fiber1.Text = device1.Name;
-                Box1.Color = Color.FromHex("#EFEFEF");
-                SetupDevices(0);
-            }
-            else
-            {
-                Fiber1.Text = "Not connected";
-                Box1.Color = Color.FromHex("#858585");
-            }
+                Temp1_1.ItemsSource = d1_temp1; Temp1_2.ItemsSource = d1_temp2; Temp1_3.ItemsSource = d1_temp3;
+                Temp2_1.ItemsSource = d2_temp1; Temp2_2.ItemsSource = d2_temp2; Temp2_3.ItemsSource = d2_temp3;
+                Temp3_1.ItemsSource = d3_temp1; Temp3_2.ItemsSource = d3_temp2; Temp3_3.ItemsSource = d3_temp3;
+                Temp4_1.ItemsSource = d4_temp1; Temp4_2.ItemsSource = d4_temp2; Temp4_3.ItemsSource = d4_temp3;
+                Temp5_1.ItemsSource = d5_temp1; Temp5_2.ItemsSource = d5_temp2; Temp5_3.ItemsSource = d5_temp3;
+            });
 
-            if (d2 != null)
+            for (int i = 0; i < 5; i++)
             {
-                device2 = d2;
-                Fiber2.Text = device2.Name;
-                Box2.Color = Color.FromHex("#EFEFEF");
-                SetupDevices(1);
-            }
-            else
-            {
-                Fiber2.Text = "Not connected";
-                Box2.Color = Color.FromHex("#858585");
-            }
+                IDevice currentDevice = null;
+                Label currentFiberLabel = null;
+                BoxView currentBoxView = null;
+                ObservableCollection<string> currentTemp1 = null;
+                ObservableCollection<string> currentTemp2 = null;
+                ObservableCollection<string> currentTemp3 = null;
 
-            if (d3 != null)
-            {
-                device3 = d3;
-                Fiber3.Text = device3.Name;
-                Box3.Color = Color.FromHex("#EFEFEF");
-                SetupDevices(2);
-            }
-            else
-            {
-                Fiber3.Text = "Not connected";
-                Box3.Color = Color.FromHex("#858585");
-            }
+                switch (i)
+                {
+                    case 0:
+                        currentDevice = d1;
+                        currentFiberLabel = Fiber1;
+                        currentBoxView = Box1;
+                        currentTemp1 = d1_temp1;
+                        currentTemp2 = d1_temp2;
+                        currentTemp3 = d1_temp3;
+                        break;
+                    case 1:
+                        currentDevice = d2;
+                        currentFiberLabel = Fiber2;
+                        currentBoxView = Box2;
+                        currentTemp1 = d2_temp1;
+                        currentTemp2 = d2_temp2;
+                        currentTemp3 = d2_temp3;
+                        break;
+                    case 2:
+                        currentDevice = d3;
+                        currentFiberLabel = Fiber3;
+                        currentBoxView = Box3;
+                        currentTemp1 = d3_temp1;
+                        currentTemp2 = d3_temp2;
+                        currentTemp3 = d3_temp3;
+                        break;
+                    case 3:
+                        currentDevice = d4;
+                        currentFiberLabel = Fiber4;
+                        currentBoxView = Box4;
+                        currentTemp1 = d4_temp1;
+                        currentTemp2 = d4_temp2;
+                        currentTemp3 = d4_temp3;
+                        break;
+                    case 4:
+                        currentDevice = d5;
+                        currentFiberLabel = Fiber5;
+                        currentBoxView = Box5;
+                        currentTemp1 = d5_temp1;
+                        currentTemp2 = d5_temp2;
+                        currentTemp3 = d5_temp3;
+                        break;
+                    default:
+                        break;
+                }
 
-            if (d4 != null)
-            {
-                device4 = d4;
-                Fiber4.Text = device4.Name;
-                Box4.Color = Color.FromHex("#EFEFEF");
-                SetupDevices(3);
-            }
-            else
-            {
-                Fiber4.Text = "Not connected";
-                Box4.Color = Color.FromHex("#858585");
-            }
-
-            if (d5 != null)
-            {
-                device5 = d5;
-                Fiber5.Text = device5.Name;
-                Box5.Color = Color.FromHex("#EFEFEF");
-                SetupDevices(4);
-            }
-            else
-            {
-                Fiber5.Text = "Not connected";
-                Box5.Color = Color.FromHex("#858585");
+                if (currentDevice != null)
+                {
+                    currentFiberLabel.Text = currentDevice.Name;
+                    currentBoxView.Color = Color.FromHex("#FFFFFF");
+                    SetupDevices(i);
+                    currentTemp1.Add("--");
+                    currentTemp2.Add("--");
+                    currentTemp3.Add("--");
+                }
+                else
+                {
+                    currentFiberLabel.Text = "Not connected";
+                    currentBoxView.Color = Color.FromHex("#808080");
+                    currentTemp1.Add("N/A");
+                    currentTemp2.Add("N/A");
+                    currentTemp3.Add("N/A");
+                }
             }
         }
-
-
-        public async void GetPermissions()
-        {
-            // Formerly held devices permissions. Not necessary on iOS.
-            // Currently only used to setup device naming scheme.
-            // Device.BeginInvokeOnMainThread(async () =>
-            // {
-            //     connectedDevice.Text = device1.Name;  // Set device name at top of UI
-            // });  
-        }
-
+        
 
         public async void SetupDevices(int index)
         {
@@ -154,8 +177,7 @@ namespace BLE_Universal
             switch (index)
             {
                 case 0:
-                    if (device1 == null)
-                        break;
+                    if (device1 == null) break;
                     s_ = await device1.GetServicesAsync();
                     for (int i = 0; i < s_.Count; i++)
                         switch (i)
@@ -174,29 +196,86 @@ namespace BLE_Universal
                                 break;
                         }
                     break;
-
                 case 1:
-                    if (device2 == null)
-                        break;
-                    s_ = await device1.GetServicesAsync();
+                    if (device2 == null) break;
+                    s_ = await device2.GetServicesAsync();
                     for (int i = 0; i < s_.Count; i++)
                         switch (i)
                         {
                             case 0:
-                                d1s1.Add(s_[i]);
+                                d2s1.Add(s_[i]);
                                 IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
-                                foreach (var c_ in c1) { d1c1.Add(c_); }
+                                foreach (var c_ in c1) { d2c1.Add(c_); }
                                 break;
                             case 1:
-                                d1s2.Add(s_[i]);
+                                d2s2.Add(s_[i]);
                                 IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
-                                foreach (var c_ in c2) { d1c2.Add(c_); }
+                                foreach (var c_ in c2) { d2c2.Add(c_); }
                                 break;
                             default:
                                 break;
                         }
                     break;
-                
+                case 2:
+                    if (device3 == null) break;
+                    s_ = await device3.GetServicesAsync();
+                    for (int i = 0; i < s_.Count; i++)
+                        switch (i)
+                        {
+                            case 0:
+                                d3s1.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c1) { d3c1.Add(c_); }
+                                break;
+                            case 1:
+                                d3s2.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c2) { d3c2.Add(c_); }
+                                break;
+                            default:
+                                break;
+                        }
+                    break;
+                case 3:
+                    if (device4 == null) break;
+                    s_ = await device4.GetServicesAsync();
+                    for (int i = 0; i < s_.Count; i++)
+                        switch (i)
+                        {
+                            case 0:
+                                d4s1.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c1) { d4c1.Add(c_); }
+                                break;
+                            case 1:
+                                d4s2.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c2) { d4c2.Add(c_); }
+                                break;
+                            default:
+                                break;
+                        }
+                    break;
+                case 4:
+                    if (device5 == null) break;
+                    s_ = await device5.GetServicesAsync();
+                    for (int i = 0; i < s_.Count; i++)
+                        switch (i)
+                        {
+                            case 0:
+                                d5s1.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c1) { d5c1.Add(c_); }
+                                break;
+                            case 1:
+                                d5s2.Add(s_[i]);
+                                IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
+                                foreach (var c_ in c2) { d5c2.Add(c_); }
+                                break;
+                            default:
+                                break;
+                        }
+                    break;
                 default:
                     break;
             }
@@ -216,18 +295,52 @@ namespace BLE_Universal
             epoch_bytes.CopyTo(epoch_array, 1);
             epoch_array[0] = 0x1D;
 
-            int error = await Char2[0].WriteAsync( epoch_array );
-            Task.Delay(1500).Wait();
-
-            error = await Char2[0].WriteAsync(new byte[] { 0x0C });
-            Task.Delay(1500).Wait();
-
-            while (true)
+            // Write the epoch time to all connected devices
+            if (device1 != null)
             {
-                int error_ = await CollectionCommand();
-                if (error_ != 0)
-                    continue;
+                int error = await d1c2[0].WriteAsync(epoch_array);
+                error = await d1c2[0].WriteAsync(new byte[] { 0x0C });
             }
+            if (device2 != null)
+            {
+                int error = await d2c2[0].WriteAsync(epoch_array);
+                error = await d2c2[0].WriteAsync(new byte[] { 0x0C });
+            }
+            if (device3 != null)
+            {
+                int error = await d3c2[0].WriteAsync(epoch_array);
+                error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
+            }
+            if (device4 != null)
+            {
+                int error = await d4c2[0].WriteAsync(epoch_array);
+                error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
+            }
+            if (device5 != null)
+            {
+                int error = await d5c2[0].WriteAsync(epoch_array);
+                error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
+            }
+
+            // Begin the collection process for all connected devices
+            // error = await d1c2[0].WriteAsync(new byte[] { 0x0C });
+            // error = await d2c2[0].WriteAsync(new byte[] { 0x0C });
+            // error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
+            // error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
+            // error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
+
+            // int error = await Char2[0].WriteAsync( epoch_array );
+            // Task.Delay(1500).Wait();
+
+            // error = await Char2[0].WriteAsync(new byte[] { 0x0C });
+            // Task.Delay(1500).Wait();
+
+            // while (true)
+            // {
+            //     int error_ = await CollectionCommand();
+            //     if (error_ != 0)
+            //         continue;
+            // }
         }
 
 
@@ -282,16 +395,43 @@ namespace BLE_Universal
 
         async void OnChipErase(object sender, EventArgs args)
         {
-            bool answer = await DisplayAlert(
-                "Be careful!", 
-                "Are you sure you want to erase the SPI flash?\n\nThe chip erase takes ~30 seconds.\nWait for the buttons to change color.", 
-                "Yes", "No"
+            // bool answer = await DisplayAlert(
+            //     "Be careful!", 
+            //     "Are you sure you want to erase the SPI flash?\n\nThe chip erase takes ~30 seconds.\nWait for the buttons to change color.", 
+            //     "Yes", "No"
+            // );
+
+            string action = await DisplayActionSheet(
+                "Which device would you like to erase?",
+                "Cancel",
+                null,
+                Fiber1.Text, Fiber2.Text, Fiber3.Text, Fiber4.Text, Fiber5.Text
             );
 
-            if (answer)
+            switch (action)
             {
-                await Char2[0].WriteAsync(new byte[] { 0xCE });
-                await Task.Delay(30000);  // wait 30 seconds
+                case "Cancel":
+                    break;
+                case "Not connected":
+                    await DisplayAlert("Error", "No device connected.", "OK");
+                    break;
+                case "Fiber 1":
+                    await d1c2[0].WriteAsync(new byte[] { 0xCE });
+                    break;
+                case "Fiber 2":
+                    await d2c2[0].WriteAsync(new byte[] { 0xCE });
+                    break;
+                case "Fiber 3":
+                    await d3c2[0].WriteAsync(new byte[] { 0xCE });
+                    break;
+                case "Fiber 4":
+                    await d4c2[0].WriteAsync(new byte[] { 0xCE });
+                    break;
+                case "Fiber 5":
+                    await d5c2[0].WriteAsync(new byte[] { 0xCE });
+                    break;
+                default:
+                    break;
             }
         }
 
