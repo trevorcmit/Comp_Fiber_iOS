@@ -177,8 +177,8 @@ namespace BLE_Universal
 
             try
             {
-                await adapter.ConnectToDeviceAsync(device1);
-                await DisplayAlert("Connected", "Status: " + device1.State, "OK");
+                await adapter.ConnectToDeviceAsync(d);
+                await DisplayAlert("Connected", "Status: " + d.State, "OK");
 
                 if (index==0)
                 {

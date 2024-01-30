@@ -1,9 +1,6 @@
 ﻿using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
-// using Plugin.BLE.Abstractions.EventArgs;
-// using Plugin.BLE.Abstractions.Exceptions;
-// using Plugin.BLE.Abstractions.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -107,6 +104,7 @@ namespace BLE_Universal
                 {
                     case 0:
                         currentDevice = d1;
+                        device1 = d1;
                         currentFiberLabel = Fiber1;
                         currentBoxView = Box1;
                         currentTemp1 = d1_temp1;
@@ -115,6 +113,7 @@ namespace BLE_Universal
                         break;
                     case 1:
                         currentDevice = d2;
+                        device2 = d2;
                         currentFiberLabel = Fiber2;
                         currentBoxView = Box2;
                         currentTemp1 = d2_temp1;
@@ -123,6 +122,7 @@ namespace BLE_Universal
                         break;
                     case 2:
                         currentDevice = d3;
+                        device3 = d3;
                         currentFiberLabel = Fiber3;
                         currentBoxView = Box3;
                         currentTemp1 = d3_temp1;
@@ -131,6 +131,7 @@ namespace BLE_Universal
                         break;
                     case 3:
                         currentDevice = d4;
+                        device4 = d4;
                         currentFiberLabel = Fiber4;
                         currentBoxView = Box4;
                         currentTemp1 = d4_temp1;
@@ -139,6 +140,7 @@ namespace BLE_Universal
                         break;
                     case 4:
                         currentDevice = d5;
+                        device5 = d5;
                         currentFiberLabel = Fiber5;
                         currentBoxView = Box5;
                         currentTemp1 = d5_temp1;
@@ -168,7 +170,7 @@ namespace BLE_Universal
                 }
             }
         }
-        
+
 
         public async void SetupDevices(int index)
         {
@@ -299,53 +301,34 @@ namespace BLE_Universal
             if (device1 != null)
             {
                 int error = await d1c2[0].WriteAsync(epoch_array);
+                Task.Delay(1000).Wait();
                 error = await d1c2[0].WriteAsync(new byte[] { 0x0C });
             }
             if (device2 != null)
             {
                 int error = await d2c2[0].WriteAsync(epoch_array);
+                Task.Delay(1000).Wait();
                 error = await d2c2[0].WriteAsync(new byte[] { 0x0C });
             }
             if (device3 != null)
             {
                 int error = await d3c2[0].WriteAsync(epoch_array);
+                Task.Delay(1000).Wait();
                 error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
             }
             if (device4 != null)
             {
                 int error = await d4c2[0].WriteAsync(epoch_array);
+                Task.Delay(1000).Wait();
                 error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
             }
             if (device5 != null)
             {
                 int error = await d5c2[0].WriteAsync(epoch_array);
+                Task.Delay(1000).Wait();
                 error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
             }
 
-            // Begin the collection process for all connected devices
-            // error = await d1c2[0].WriteAsync(new byte[] { 0x0C });
-            // error = await d2c2[0].WriteAsync(new byte[] { 0x0C });
-            // error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
-            // error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
-            // error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
-
-            // int error = await Char2[0].WriteAsync( epoch_array );
-            // Task.Delay(1500).Wait();
-
-            // error = await Char2[0].WriteAsync(new byte[] { 0x0C });
-            // Task.Delay(1500).Wait();
-
-            // while (true)
-            // {
-            //     int error_ = await CollectionCommand();
-            //     if (error_ != 0)
-            //         continue;
-            // }
-        }
-
-
-        async void OnCollectClicked(object sender, EventArgs args)
-        {
             while (true)
             {
                 int error_ = await CollectionCommand();
@@ -355,14 +338,24 @@ namespace BLE_Universal
         }
 
 
+        async void OnCollectClicked(object sender, EventArgs args)
+        {
+            // while (true)
+            // {
+            //     int error_ = await CollectionCommand();
+            //     if (error_ != 0)
+            //         continue;
+            // }
+        }
+
+
         public async Task<int> CollectionCommand()
         {
-            Task.Delay(900).Wait();
+            (byte[], int) bytes;
 
-            (byte[], int) bytes = await Char2[2].ReadAsync();
-
-            if (bytes.Item1.Count()==6)
+            if (device1 != null)
             {
+                bytes = await d1c2[2].ReadAsync();
                 string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
                 string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
                 string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
@@ -370,37 +363,138 @@ namespace BLE_Universal
                 string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
                 string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
 
-                if (!(ACCEL_DATA1.ElementAt(0)==temp1_string))
+                if (!(d1_temp1.ElementAt(0)==temp1_string))
                 {
-                    ACCEL_DATA1.RemoveAt(0);
-                    ACCEL_DATA1.Add(temp1_string);
+                    d1_temp1.RemoveAt(0);
+                    d1_temp1.Add(temp1_string);
                 }
-
-                if (!(ACCEL_DATA2.ElementAt(0)==temp2_string))
+                if (!(d1_temp2.ElementAt(0)==temp2_string))
                 {
-                    ACCEL_DATA2.RemoveAt(0);
-                    ACCEL_DATA2.Add(temp2_string);
+                    d1_temp2.RemoveAt(0);
+                    d1_temp2.Add(temp2_string);
                 }
-
-                if (!(ACCEL_DATA3.ElementAt(0)==temp3_string))
+                if (!(d1_temp3.ElementAt(0)==temp3_string))
                 {
-                    ACCEL_DATA3.RemoveAt(0);
-                    ACCEL_DATA3.Add(temp3_string);
+                    d1_temp3.RemoveAt(0);
+                    d1_temp3.Add(temp3_string);
                 }
             }
-            
-            return bytes.Item2;
+
+            if (device2 != null)
+            {
+                bytes = await d2c2[2].ReadAsync();
+                string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
+                string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
+                string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
+                string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
+                string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
+                string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
+
+                if (!(d2_temp1.ElementAt(0)==temp1_string))
+                {
+                    d2_temp1.RemoveAt(0);
+                    d2_temp1.Add(temp1_string);
+                }
+                if (!(d2_temp2.ElementAt(0)==temp2_string))
+                {
+                    d2_temp2.RemoveAt(0);
+                    d2_temp2.Add(temp2_string);
+                }
+                if (!(d2_temp3.ElementAt(0)==temp3_string))
+                {
+                    d2_temp3.RemoveAt(0);
+                    d2_temp3.Add(temp3_string);
+                }
+            }
+
+            if (device3 != null)
+            {
+                bytes = await d3c2[2].ReadAsync();
+                string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
+                string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
+                string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
+                string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
+                string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
+                string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
+
+                if (!(d3_temp1.ElementAt(0)==temp1_string))
+                {
+                    d3_temp1.RemoveAt(0);
+                    d3_temp1.Add(temp1_string);
+                }
+                if (!(d3_temp2.ElementAt(0)==temp2_string))
+                {
+                    d3_temp2.RemoveAt(0);
+                    d3_temp2.Add(temp2_string);
+                }
+                if (!(d3_temp3.ElementAt(0)==temp3_string))
+                {
+                    d3_temp3.RemoveAt(0);
+                    d3_temp3.Add(temp3_string);
+                }
+            }
+
+            if (device4 != null)
+            {
+                bytes = await d4c2[2].ReadAsync();
+                string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
+                string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
+                string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
+                string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
+                string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
+                string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
+
+                if (!(d4_temp1.ElementAt(0)==temp1_string))
+                {
+                    d4_temp1.RemoveAt(0);
+                    d4_temp1.Add(temp1_string);
+                }
+                if (!(d4_temp2.ElementAt(0)==temp2_string))
+                {
+                    d4_temp2.RemoveAt(0);
+                    d4_temp2.Add(temp2_string);
+                }
+                if (!(d4_temp3.ElementAt(0)==temp3_string))
+                {
+                    d4_temp3.RemoveAt(0);
+                    d4_temp3.Add(temp3_string);
+                }
+            }
+
+            if (device5 != null)
+            {
+                bytes = await d5c2[2].ReadAsync();
+                string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
+                string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
+                string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
+                string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
+                string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
+                string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
+
+                if (!(d5_temp1.ElementAt(0)==temp1_string))
+                {
+                    d5_temp1.RemoveAt(0);
+                    d5_temp1.Add(temp1_string);
+                }
+                if (!(d5_temp2.ElementAt(0)==temp2_string))
+                {
+                    d5_temp2.RemoveAt(0);
+                    d5_temp2.Add(temp2_string);
+                }
+                if (!(d5_temp3.ElementAt(0)==temp3_string))
+                {
+                    d5_temp3.RemoveAt(0);
+                    d5_temp3.Add(temp3_string);
+                }
+            }
+
+            Task.Delay(500).Wait();
+            return 0;
         }
 
 
         async void OnChipErase(object sender, EventArgs args)
         {
-            // bool answer = await DisplayAlert(
-            //     "Be careful!", 
-            //     "Are you sure you want to erase the SPI flash?\n\nThe chip erase takes ~30 seconds.\nWait for the buttons to change color.", 
-            //     "Yes", "No"
-            // );
-
             string action = await DisplayActionSheet(
                 "Which device would you like to erase?",
                 "Cancel",

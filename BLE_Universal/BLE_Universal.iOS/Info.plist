@@ -5,13 +5,10 @@
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
-		<integer>2</integer>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -29,7 +26,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.computingfiber.BLEUniversal</string>
 	<key>CFBundleVersion</key>
-	<string>1.4</string>
+	<string>1.7.4</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -37,7 +34,7 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Allow the app to connect to the Computing Fiber.</string>
+	<string>App communicates using CoreBluetooth</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location is necessary for BLE functionality.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
@@ -45,8 +42,22 @@
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4</string>
+	<string>1.7.4</string>
 	<key>MinimumOSVersion</key>
 	<string>9.0</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necessary to compile.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Necessary to compile.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Necessary to compile.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necessary to compile.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Necessary to compile.</string>
+	<key>NSSiriUsageDescription</key>
+	<string>Necessary to compile.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Necessary to compile.</string>
 </dict>
 </plist>
