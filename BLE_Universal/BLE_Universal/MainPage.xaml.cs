@@ -1,5 +1,4 @@
 ﻿using Plugin.BLE;
-using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
@@ -10,8 +9,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.UI.Views;
+using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+
 
 
 namespace BLE_Universal
@@ -23,19 +25,46 @@ namespace BLE_Universal
         public IAdapter adapter;
         public IBluetoothLE bluetoothBLE;
         public ObservableCollection<IDevice> list;
-
         public IDevice device1, device2, device3, device4, device5;
-        public Color Subject1Color, Subject2Color, Subject3Color, Subject4Color, Subject5Color;
+        Popup popup;
+        int SELECTED;
+        public Dictionary<char, float> S = new Dictionary<char, float>() { { '0', 1.0f }, { '1', -1.0f } };
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        // Bound variables for XAML of five devices
-        public ImageSource im1, im2, im3, im4, im5;
-        public string f1, f2, f3, f4, f5;
+        public ObservableCollection<IService> d1s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d1s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d2s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d2s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d3s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d3s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d4s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d4s2 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d5s1 = new ObservableCollection<IService>();
+        public ObservableCollection<IService> d5s2 = new ObservableCollection<IService>();        
+        public ObservableCollection<ICharacteristic> d1c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d1c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d2c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d2c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d3c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d3c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d4c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d4c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d5c1 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<ICharacteristic> d5c2 = new ObservableCollection<ICharacteristic>();
+        public ObservableCollection<string> d1_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d1_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d1_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d2_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d2_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d2_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d3_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d3_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d3_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d4_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d4_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d4_temp3 = new ObservableCollection<string>();
+        public ObservableCollection<string> d5_temp1 = new ObservableCollection<string>();
+        public ObservableCollection<string> d5_temp2 = new ObservableCollection<string>();
+        public ObservableCollection<string> d5_temp3 = new ObservableCollection<string>();
 
 
         public MainPage()
@@ -43,10 +72,10 @@ namespace BLE_Universal
             InitializeComponent();
             adapter = CrossBluetoothLE.Current.Adapter;
             bluetoothBLE = CrossBluetoothLE.Current;
+            SELECTED = 0;
 
             // Set up list of devices
             list = new ObservableCollection<IDevice>();
-            DevicesList.ItemsSource = list;
 
             // Set up event handlers
             adapter.DeviceDiscovered += OnDeviceDiscovered;
@@ -69,18 +98,6 @@ namespace BLE_Universal
                 Fiber4.TextColor = Color.FromHex("#000000");
                 Fiber5.TextColor = Color.FromHex("#000000");
             });
-
-            // Check for location permission
-            GetLocationPermission();
-        }
-
-
-        private async void GetLocationPermission()
-        {
-            if (Device.RuntimePlatform==Device.Android)
-            {
-                var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-            }
         }
 
 
@@ -88,7 +105,6 @@ namespace BLE_Universal
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                // Filter out devices by IFM prefix.
                 if ((!list.Contains(args.Device)) && (args.Device.Name != null) && (args.Device.Name.Contains("IFM")))
                     list.Add(args.Device);
             });
@@ -104,54 +120,75 @@ namespace BLE_Universal
         }
 
 
-        private async void ToConnectedPage(object sender, EventArgs e)
+        private async void ConnectDevice(object sender, EventArgs e)
         {
-            if (device1 == null)
-                await DisplayAlert("Error!", "Not connected to a device.", "OK");
-            else
-            {
-                // We cannot use null devices as inputs to the constructor.
-                // Thus we must check how many devices are connected/passable.
+            list.Clear();
+            var listview = new ListView { ItemsSource = list };
+            listview.ItemSelected += OnItemSelected;
 
-                if (device2 == null)
-                    await Navigation.PushAsync( new ConnectedPage(device1) );
-                else if (device3 == null)
-                    await Navigation.PushAsync( new ConnectedPage(device1, device2) );
-                else if (device4 == null)
-                    await Navigation.PushAsync( new ConnectedPage(device1, device2, device3) );
-                else if (device5 == null)
-                    await Navigation.PushAsync( new ConnectedPage(device1, device2, device3, device4) );
-                else
-                    await Navigation.PushAsync( new ConnectedPage(device1, device2, device3, device4, device5) );
-            }
+            // Get button clicked so we don't need five button functions
+            Button clicked = (Button)sender;
+            if      (clicked==Button1) SELECTED = 1;
+            else if (clicked==Button2) SELECTED = 2;
+            else if (clicked==Button3) SELECTED = 3;
+            else if (clicked==Button4) SELECTED = 4;
+            else if (clicked==Button5) SELECTED = 5;
+
+            popup = new Popup
+            {
+                Content = new StackLayout
+                {
+                    Children =
+                    {
+                        new Label      // Header of List
+                        {
+                            Text = "Connect to Subject " + SELECTED.ToString(),
+                            FontAttributes = FontAttributes.Bold,
+                            FontSize = 24,
+                            Margin = new Thickness(0, 10)
+                        },
+                        listview,     // List of Devices Found
+                        new Button    // Close Button
+                        {
+                            Text = "Search",
+                            FontSize=20,
+                            Command = new Command(() => SearchDevices(null, null)),
+                            BackgroundColor = Color.FromHex("#0C0C0C"),
+                        }
+                    }
+                }
+            };
+
+            // Show the Popup
+            var result = await App.Current.MainPage.Navigation.ShowPopupAsync(popup);
         }
 
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (device1==null)
+            if (SELECTED==1 && device1==null)
             {
-                device1 = DevicesList.SelectedItem as IDevice;
+                device1 = e.SelectedItem as IDevice;
                 await Setup_Device(0, device1);
             }
-            else if (device2==null)
+            else if (SELECTED==2 && device2==null)
             {
-                device2 = DevicesList.SelectedItem as IDevice;
+                device2 = e.SelectedItem as IDevice;
                 await Setup_Device(1, device2);
             }
-            else if (device3==null)
+            else if (SELECTED==3 && device3==null)
             {
-                device3 = DevicesList.SelectedItem as IDevice;
+                device3 = e.SelectedItem as IDevice;
                 await Setup_Device(2, device3);
             }
-            else if (device4==null)
+            else if (SELECTED==4 && device4==null)
             {
-                device4 = DevicesList.SelectedItem as IDevice;
+                device4 = e.SelectedItem as IDevice;
                 await Setup_Device(3, device4);
             }
-            else if (device5==null)
+            else if (SELECTED==5 && device5==null)
             {
-                device5 = DevicesList.SelectedItem as IDevice;
+                device5 = e.SelectedItem as IDevice;
                 await Setup_Device(4, device5);
             }
             else
@@ -164,21 +201,20 @@ namespace BLE_Universal
 
         async Task<int> Setup_Device(int index, IDevice d)
         {
-            var result = await DisplayAlert
-            (
-                "Connect fiber to Subject " + (index + 1).ToString() + ".",
-                "Do you want to connect to " + d.Name + "?",
-                "Connect", "Cancel"
-            );
-
-            if (!result) return -1;   // For debugging if necessary
+            // var result = await DisplayAlert
+            // (
+            //     "Connect fiber to Subject " + (index + 1).ToString() + ".",
+            //     "Do you want to connect to " + d.Name + "?",
+            //     "Connect", "Cancel"
+            // );
+            // if (!result) return -1;   // For debugging if necessary
 
             await adapter.StopScanningForDevicesAsync(); // Stop Scanner
 
             try
             {
                 await adapter.ConnectToDeviceAsync(d);
-                await DisplayAlert("Connected", "Status: " + d.State, "OK");
+                // await DisplayAlert("Connected", "Status: " + d.State, "OK");
 
                 if (index==0)
                 {
@@ -197,6 +233,7 @@ namespace BLE_Universal
                     Fiber3.Text = d.Name;
                     Fiber3.TextColor = Color.FromHex("#008F30");
                     Shirt3.Source = new FileImageSource { File = "Green30.jpeg" };
+
                 }
                 else if (index==3)
                 {
@@ -211,13 +248,66 @@ namespace BLE_Universal
                     Shirt5.Source = new FileImageSource { File = "Green30.jpeg" };
                 }
 
+                popup.Dismiss(null); // Dismiss the popup automatically
+
                 return 0;
             }
             catch (DeviceConnectionException ex)
             {
-                await DisplayAlert("Error", ex.Message, "OK");
+                await DisplayAlert("Error!", ex.Message, "Ok");
                 return 1;
             }
+        }
+
+
+        /**************************************************
+         * Combine two bytes into a single binary string.
+        **************************************************/
+        static string CombineBytesToBinaryString(byte byte1, byte byte2)
+        {
+            return Convert.ToString(byte1, 2).PadLeft(8, '0') + Convert.ToString(byte2, 2).PadLeft(8, '0');
+        }
+
+
+        /****************************************************************************
+         * Convert a binary string to a float.
+         * Function written by ChatGPT 3.5, converted from my original Python code.
+        ****************************************************************************/
+        float ParseFloat16(string binfloat)
+        {
+            // Map sign bit string to multiplicand
+            // Dictionary<char, float> S = new Dictionary<char, float>()
+            // {
+            //     { '0', 1.0f },
+            //     { '1', -1.0f },
+            // };
+
+            char sign = binfloat[0];
+            string exp = binfloat.Substring(1, 5);
+            string mantissa = binfloat.Substring(6);
+
+            if (exp == "00000")
+            {
+                if (mantissa == "0000000000")  // Underflow
+                    return 0.0f;
+                else
+                    return S[sign] * (float)Math.Pow(2, -14) * (Convert.ToInt32(mantissa, 2) * (float)Math.Pow(2, -10));
+            }
+            else if (exp == "11111")    // Overflow case
+            {
+                if (sign == '0')
+                    return float.NaN;   // Currently set to NaN, this could be float.PositiveInfinity
+                else if (sign == '1')
+                    return float.NaN;   // Currently set to NaN, this could be float.NegativeInfinity
+            }
+            else
+            {
+                float fraction = 1.0f + (Convert.ToInt32(mantissa, 2) * (float)Math.Pow(2, -10));
+                return S[sign] * fraction * (float)Math.Pow(2, Convert.ToInt32(exp, 2) - 15); // 15 is half-precision bias
+            }
+
+            // This line is unreachable, but C# requires a return statement in all code paths
+            return 0.0f;
         }
 
     }
