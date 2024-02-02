@@ -17,7 +17,6 @@
                     <RowDefinition Height="0.15*" /> <!-- Row 2 -->
                     <RowDefinition Height="0.15*" /> <!-- Row 3 -->
                     <RowDefinition Height="0.15*" /> <!-- Row 4 -->
-
                     <RowDefinition Height="0.01*" />
                     <RowDefinition Height="0.24*" /> <!-- Row 6 -->
                 </Grid.RowDefinitions>
@@ -253,24 +252,27 @@
                 </Grid>
 
 
-            <!--
-            <Button 
-                Grid.Row="1" Grid.Column="0"
-                Text="Search" FontSize="Large"
-                Clicked="SearchDevices" 
-                BackgroundColor="#0C0C0C" TextColor="#FFFFFF"
-                HeightRequest="100" CornerRadius="12"
-                HorizontalOptions="FillAndExpand"
-            />
-            <Button 
-                Grid.Row="1" Grid.Column="1"
-                Text="Read" FontSize="Large"
-                Clicked="ToConnectedPage" 
-                BackgroundColor="#005FCF" TextColor="#FFFFFF"
-                HeightRequest="100" CornerRadius="12"
-                HorizontalOptions="FillAndExpand"
-            />
-            -->
+            <Grid Grid.Row="6" Grid.Column="0">
+                <Grid.ColumnDefinitions><ColumnDefinition/></Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.33*" />
+                    <RowDefinition Height="0.33*" />
+                    <RowDefinition Height="0.33*" />
+                </Grid.RowDefinitions>
+                <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Color="#000000" />
+                <Button
+                    Grid.Row="0" Grid.Column="0" FontSize="18" Clicked="OnStartClicked" 
+                    Text="Start Data Collection (0x0C)" TextColor="White" BackgroundColor="#008F1F"
+                />
+                <Button
+                    Grid.Row="1" Grid.Column="0" FontSize="18" Clicked="OnCollectClicked" 
+                    Text="Resume Temperature Reading" TextColor="White" BackgroundColor="#0F00BF"
+                />
+                <Button
+                    Grid.Row="2" Grid.Column="0" FontSize="18" Clicked="OnChipErase" 
+                    Text="Chip Erase (0xCE)" TextColor="White" BackgroundColor="#990F0F"
+                />
+            </Grid>
 
         </Grid>
 

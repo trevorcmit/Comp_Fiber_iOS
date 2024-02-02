@@ -50,6 +50,20 @@
     },
     {
       "scale": "1x",
+      "size": "512x512",
+      "idiom": "iphone",
+      "filename": "Icon512.png"
+    },
+    {
+      "scale": "2x",
+      "size": "512x512",
+      "idiom": "iphone",
+      "filename": "Icon1024.png"
+    },
+
+
+    {
+      "scale": "1x",
       "size": "20x20",
       "idiom": "ipad",
       "filename": "Icon20.png"
@@ -114,6 +128,8 @@
       "idiom": "ipad",
       "filename": "Icon167.png"
     },
+
+    
     {
       "scale": "1x",
       "size": "1024x1024",
@@ -127,11 +143,10 @@
       "filename": "Icon1024.png"
     },
     {
+      "idiom": "universal",
+      "filename": "Icon1024.png",
       "scale": "1x",
-      "size": "1024x1024",
-      "idiom": "ipad-marketing",
-      "filename": "Icon1024.png"
-    
+      "size": "1024x1024"
     }
   ],
   "properties": {},
