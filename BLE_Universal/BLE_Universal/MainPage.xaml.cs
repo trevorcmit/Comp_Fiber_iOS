@@ -5,7 +5,7 @@ using Plugin.BLE.Abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+// using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,16 +91,11 @@ namespace BLE_Universal
                 Shirt3.Source = new FileImageSource { File = "Man30.png" };
                 Shirt4.Source = new FileImageSource { File = "Man30.png" };
                 Shirt5.Source = new FileImageSource { File = "Man30.png" };
-                Fiber1.Text = "Not Connected";
-                Fiber2.Text = "Not Connected";
-                Fiber3.Text = "Not Connected";
-                Fiber4.Text = "Not Connected";
-                Fiber5.Text = "Not Connected";
-                Fiber1.TextColor = Color.FromHex("#000000");
-                Fiber2.TextColor = Color.FromHex("#000000");
-                Fiber3.TextColor = Color.FromHex("#000000");
-                Fiber4.TextColor = Color.FromHex("#000000");
-                Fiber5.TextColor = Color.FromHex("#000000");
+                Fiber1.Text = "Not Connected"; Fiber1.TextColor = Color.FromHex("#000000");
+                Fiber2.Text = "Not Connected"; Fiber2.TextColor = Color.FromHex("#000000");
+                Fiber3.Text = "Not Connected"; Fiber3.TextColor = Color.FromHex("#000000");
+                Fiber4.Text = "Not Connected"; Fiber4.TextColor = Color.FromHex("#000000");
+                Fiber5.Text = "Not Connected"; Fiber5.TextColor = Color.FromHex("#000000");
                 Temp1_1.ItemsSource = d1_temp1; Temp1_2.ItemsSource = d1_temp2; Temp1_3.ItemsSource = d1_temp3;
                 Temp2_1.ItemsSource = d2_temp1; Temp2_2.ItemsSource = d2_temp2; Temp2_3.ItemsSource = d2_temp3;
                 Temp3_1.ItemsSource = d3_temp1; Temp3_2.ItemsSource = d3_temp2; Temp3_3.ItemsSource = d3_temp3;
@@ -130,56 +125,7 @@ namespace BLE_Universal
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                if (args.Device == device1)
-                {
-                    Fiber1.Text = "Not Connected";
-                    Fiber1.TextColor = Color.FromHex("#000000");
-                    Shirt1.Source = new FileImageSource { File = "Man30.png" };
-                    device1 = null;
-                    d1s1.Clear(); d1s2.Clear(); d1c1.Clear(); d1c2.Clear();
-                    d1_temp1.Clear(); d1_temp2.Clear(); d1_temp3.Clear();
-                    d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
-                }
-                else if (args.Device == device2)
-                {
-                    Fiber2.Text = "Not Connected";
-                    Fiber2.TextColor = Color.FromHex("#000000");
-                    Shirt2.Source = new FileImageSource { File = "Man30.png" };
-                    device2 = null;
-                    d2s1.Clear(); d2s2.Clear(); d2c1.Clear(); d2c2.Clear();
-                    d2_temp1.Clear(); d2_temp2.Clear(); d2_temp3.Clear();
-                    d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
-                }
-                else if (args.Device == device3)
-                {
-                    Fiber3.Text = "Not Connected";
-                    Fiber3.TextColor = Color.FromHex("#000000");
-                    Shirt3.Source = new FileImageSource { File = "Man30.png" };
-                    device3 = null;
-                    d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
-                    d3_temp1.Clear(); d3_temp2.Clear(); d3_temp3.Clear();
-                    d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
-                }
-                else if (args.Device == device4)
-                {
-                    Fiber4.Text = "Not Connected";
-                    Fiber4.TextColor = Color.FromHex("#000000");
-                    Shirt4.Source = new FileImageSource { File = "Man30.png" };
-                    device4 = null;
-                    d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
-                    d4_temp1.Clear(); d4_temp2.Clear(); d4_temp3.Clear();
-                    d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
-                }
-                else if (args.Device == device5)
-                {
-                    Fiber5.Text = "Not Connected";
-                    Fiber5.TextColor = Color.FromHex("#000000");
-                    Shirt5.Source = new FileImageSource { File = "Man30.png" };
-                    device5 = null;
-                    d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
-                    d5_temp1.Clear(); d5_temp2.Clear(); d5_temp3.Clear();
-                    d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
-                }
+                ClearDevice(args.Device);
             });
         }
 
@@ -222,19 +168,23 @@ namespace BLE_Universal
                             Margin = new Thickness(0, 10)
                         },
                         listview,     // List of Devices Found
-                        new Button    // Close Button
-                        {
-                            Text = "Search",
-                            FontSize=20,
-                            Command = new Command(() => SearchDevices(null, null)),
-                            BackgroundColor = Color.FromHex("#0C0C0C"),
-                        }
+                        // new Button    // Close Button
+                        // {
+                        //     Text = "Search",
+                        //     FontSize=20,
+                        //     Command = new Command(() => SearchDevices(null, null)),
+                        //     BackgroundColor = Color.FromHex("#0C0C0C"),
+                        // }
                     }
                 }
             };
 
+            SearchDevices(null, null);
+
             // Show the Popup
             var result = await App.Current.MainPage.Navigation.ShowPopupAsync(popup);
+
+            // SearchDevices(null, null);
         }
 
 
@@ -497,7 +447,8 @@ namespace BLE_Universal
                     if (error_ != 0)
                         continue;
                 }
-                catch (Exception ex)
+                // catch (Exception ex)
+                catch (DeviceConnectionException ex)
                 {
                     await DisplayAlert("Error disconnected!", ex.Message, "Ok.");
                     break;
@@ -525,71 +476,73 @@ namespace BLE_Universal
                 if (device5!=null)
                     await ProcessDeviceData(device5, d5c2, d5_temp1, d5_temp2, d5_temp3);
             }
-            catch (Exception ex)
+            // catch (Exception ex)
+            catch (DeviceConnectionException ex)
             {
                 Device.BeginInvokeOnMainThread
                 (
                     async () => await DisplayAlert("Error!", ex.Message, "Ok.")
                 );
             }
-
             return 0;
         }
 
 
+        /**********************************************************************
+         * Remove a device from the list of connected devices if disconnected
+        **********************************************************************/
         private void ClearDevice(IDevice device)
         {
-            // do same thing as when OnDeviceDisconnect
-                    if (device == device1)
-                    {
-                        Fiber1.Text = "Not Connected";
-                        Fiber1.TextColor = Color.FromHex("#000000");
-                        Shirt1.Source = new FileImageSource { File = "Man30.png" };
-                        device1 = null;
-                        d1s1.Clear(); d1s2.Clear(); d1c1.Clear(); d1c2.Clear();
-                        d1_temp1.Clear(); d1_temp2.Clear(); d1_temp3.Clear();
-                        d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
-                    }
-                    else if (device == device2)
-                    {
-                        Fiber2.Text = "Not Connected";
-                        Fiber2.TextColor = Color.FromHex("#000000");
-                        Shirt2.Source = new FileImageSource { File = "Man30.png" };
-                        device2 = null;
-                        d2s1.Clear(); d2s2.Clear(); d2c1.Clear(); d2c2.Clear();
-                        d2_temp1.Clear(); d2_temp2.Clear(); d2_temp3.Clear();
-                        d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
-                    }
-                    else if (device == device3)
-                    {
-                        Fiber3.Text = "Not Connected";
-                        Fiber3.TextColor = Color.FromHex("#000000");
-                        Shirt3.Source = new FileImageSource { File = "Man30.png" };
-                        device3 = null;
-                        d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
-                        d3_temp1.Clear(); d3_temp2.Clear(); d3_temp3.Clear();
-                        d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
-                    }
-                    else if (device == device4)
-                    {
-                        Fiber4.Text = "Not Connected";
-                        Fiber4.TextColor = Color.FromHex("#000000");
-                        Shirt4.Source = new FileImageSource { File = "Man30.png" };
-                        device4 = null;
-                        d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
-                        d4_temp1.Clear(); d4_temp2.Clear(); d4_temp3.Clear();
-                        d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
-                    }
-                    else if (device == device5)
-                    {
-                        Fiber5.Text = "Not Connected";
-                        Fiber5.TextColor = Color.FromHex("#000000");
-                        Shirt5.Source = new FileImageSource { File = "Man30.png" };
-                        device5 = null;
-                        d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
-                        d5_temp1.Clear(); d5_temp2.Clear(); d5_temp3.Clear();
-                        d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
-                    }
+            if (device == device1)
+            {
+                Fiber1.Text = "Not Connected";
+                Fiber1.TextColor = Color.FromHex("#000000");
+                Shirt1.Source = new FileImageSource { File = "Man30.png" };
+                device1 = null;
+                d1s1.Clear(); d1s2.Clear(); d1c1.Clear(); d1c2.Clear();
+                d1_temp1.Clear(); d1_temp2.Clear(); d1_temp3.Clear();
+                d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
+            }
+            else if (device == device2)
+            {
+                Fiber2.Text = "Not Connected";
+                Fiber2.TextColor = Color.FromHex("#000000");
+                Shirt2.Source = new FileImageSource { File = "Man30.png" };
+                device2 = null;
+                d2s1.Clear(); d2s2.Clear(); d2c1.Clear(); d2c2.Clear();
+                d2_temp1.Clear(); d2_temp2.Clear(); d2_temp3.Clear();
+                d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
+            }
+            else if (device == device3)
+            {
+                Fiber3.Text = "Not Connected";
+                Fiber3.TextColor = Color.FromHex("#000000");
+                Shirt3.Source = new FileImageSource { File = "Man30.png" };
+                device3 = null;
+                d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
+                d3_temp1.Clear(); d3_temp2.Clear(); d3_temp3.Clear();
+                d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
+            }
+            else if (device == device4)
+            {
+                Fiber4.Text = "Not Connected";
+                Fiber4.TextColor = Color.FromHex("#000000");
+                Shirt4.Source = new FileImageSource { File = "Man30.png" };
+                device4 = null;
+                d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
+                d4_temp1.Clear(); d4_temp2.Clear(); d4_temp3.Clear();
+                d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
+            }
+            else if (device == device5)
+            {
+                Fiber5.Text = "Not Connected";
+                Fiber5.TextColor = Color.FromHex("#000000");
+                Shirt5.Source = new FileImageSource { File = "Man30.png" };
+                device5 = null;
+                d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
+                d5_temp1.Clear(); d5_temp2.Clear(); d5_temp3.Clear();
+                d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
+            }
         }
 
 
@@ -602,24 +555,19 @@ namespace BLE_Universal
         {
             try
             {
-                // Check that device exists
-                if (device==null)
+                if (device==null)  // Check that device exists
                     return;
                     
-                // Check that index 2 exists
-                if (connection.Count < 3)
+                if (connection.Count < 3)   // Check that index 2 exists
                     return;
 
-                // var bytes = await connection[2].ReadAsync();
-                // var bytes = await connection[2]?.ReadAsync();
                 (byte[], int) bytes;
-
-                // use FromExpcetion to safely do readasync()
                 try
                 {
                     bytes = await connection[2]?.ReadAsync();
                 }
-                catch (Exception ex)
+                // catch (Exception ex)
+                catch (DeviceConnectionException ex)
                 {
                     ClearDevice(device);
                     return;
@@ -629,9 +577,9 @@ namespace BLE_Universal
                 if (bytes.Item1 == null || bytes.Item1.Length < 6)
                     return;
 
-                string t1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
-                string t2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
-                string t3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
+                string t1 = CombineBytesToBinaryString( bytes.Item1[0], bytes.Item1[1] );
+                string t2 = CombineBytesToBinaryString( bytes.Item1[2], bytes.Item1[3] );
+                string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
                 string temp1_string = Math.Round( ParseFloat16(t1), 1).ToString() + "°";
                 string temp2_string = Math.Round( ParseFloat16(t2), 1).ToString() + "°";
                 string temp3_string = Math.Round( ParseFloat16(t3), 1).ToString() + "°";
@@ -654,157 +602,10 @@ namespace BLE_Universal
             }
             catch (Exception ex)
             {
-                // Device.BeginInvokeOnMainThread
-                // (
-                    // async () => await DisplayAlert("Device disconnected!", ex.Message, "Ok.")
-                // );
                 ClearDevice(device);
+                return;
             }
         }
-
-
-        // public async Task<int> CollectionCommand()
-        // {
-        //     (byte[], int) bytes;
-
-        //     if (device1 != null)
-        //     {
-        //         bytes = await d1c2[2].ReadAsync();
-        //         string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
-        //         string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
-        //         string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
-        //         string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
-        //         string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
-        //         string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
-
-        //         if (!(d1_temp1.ElementAt(0)==temp1_string))
-        //         {
-        //             d1_temp1.RemoveAt(0);
-        //             d1_temp1.Add(temp1_string);
-        //         }
-        //         if (!(d1_temp2.ElementAt(0)==temp2_string))
-        //         {
-        //             d1_temp2.RemoveAt(0);
-        //             d1_temp2.Add(temp2_string);
-        //         }
-        //         if (!(d1_temp3.ElementAt(0)==temp3_string))
-        //         {
-        //             d1_temp3.RemoveAt(0);
-        //             d1_temp3.Add(temp3_string);
-        //         }
-        //     }
-
-        //     if (device2 != null)
-        //     {
-        //         bytes = await d2c2[2].ReadAsync();
-        //         string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
-        //         string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
-        //         string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
-        //         string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
-        //         string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
-        //         string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
-
-        //         if (!(d2_temp1.ElementAt(0)==temp1_string))
-        //         {
-        //             d2_temp1.RemoveAt(0);
-        //             d2_temp1.Add(temp1_string);
-        //         }
-        //         if (!(d2_temp2.ElementAt(0)==temp2_string))
-        //         {
-        //             d2_temp2.RemoveAt(0);
-        //             d2_temp2.Add(temp2_string);
-        //         }
-        //         if (!(d2_temp3.ElementAt(0)==temp3_string))
-        //         {
-        //             d2_temp3.RemoveAt(0);
-        //             d2_temp3.Add(temp3_string);
-        //         }
-        //     }
-
-        //     if (device3 != null)
-        //     {
-        //         bytes = await d3c2[2].ReadAsync();
-        //         string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
-        //         string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
-        //         string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
-        //         string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
-        //         string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
-        //         string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
-
-        //         if (!(d3_temp1.ElementAt(0)==temp1_string))
-        //         {
-        //             d3_temp1.RemoveAt(0);
-        //             d3_temp1.Add(temp1_string);
-        //         }
-        //         if (!(d3_temp2.ElementAt(0)==temp2_string))
-        //         {
-        //             d3_temp2.RemoveAt(0);
-        //             d3_temp2.Add(temp2_string);
-        //         }
-        //         if (!(d3_temp3.ElementAt(0)==temp3_string))
-        //         {
-        //             d3_temp3.RemoveAt(0);
-        //             d3_temp3.Add(temp3_string);
-        //         }
-        //     }
-
-        //     if (device4 != null)
-        //     {
-        //         bytes = await d4c2[2].ReadAsync();
-        //         string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
-        //         string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
-        //         string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
-        //         string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
-        //         string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
-        //         string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
-
-        //         if (!(d4_temp1.ElementAt(0)==temp1_string))
-        //         {
-        //             d4_temp1.RemoveAt(0);
-        //             d4_temp1.Add(temp1_string);
-        //         }
-        //         if (!(d4_temp2.ElementAt(0)==temp2_string))
-        //         {
-        //             d4_temp2.RemoveAt(0);
-        //             d4_temp2.Add(temp2_string);
-        //         }
-        //         if (!(d4_temp3.ElementAt(0)==temp3_string))
-        //         {
-        //             d4_temp3.RemoveAt(0);
-        //             d4_temp3.Add(temp3_string);
-        //         }
-        //     }
-
-        //     if (device5 != null)
-        //     {
-        //         bytes = await d5c2[2].ReadAsync();
-        //         string temp1 = CombineBytesToBinaryString(bytes.Item1[0], bytes.Item1[1]);
-        //         string temp2 = CombineBytesToBinaryString(bytes.Item1[2], bytes.Item1[3]);
-        //         string temp3 = CombineBytesToBinaryString(bytes.Item1[4], bytes.Item1[5]);
-        //         string temp1_string = Math.Round( ParseFloat16(temp1), 1).ToString() + "°";
-        //         string temp2_string = Math.Round( ParseFloat16(temp2), 1).ToString() + "°";
-        //         string temp3_string = Math.Round( ParseFloat16(temp3), 1).ToString() + "°";
-
-        //         if (!(d5_temp1.ElementAt(0)==temp1_string))
-        //         {
-        //             d5_temp1.RemoveAt(0);
-        //             d5_temp1.Add(temp1_string);
-        //         }
-        //         if (!(d5_temp2.ElementAt(0)==temp2_string))
-        //         {
-        //             d5_temp2.RemoveAt(0);
-        //             d5_temp2.Add(temp2_string);
-        //         }
-        //         if (!(d5_temp3.ElementAt(0)==temp3_string))
-        //         {
-        //             d5_temp3.RemoveAt(0);
-        //             d5_temp3.Add(temp3_string);
-        //         }
-        //     }
-
-        //     // Task.Delay(500).Wait();
-        //     return 0;
-        // }
 
 
         /********************************************************
@@ -813,7 +614,6 @@ namespace BLE_Universal
         async void OnCollectClicked(object sender, EventArgs args)
         {
             // TO-DO!!!
-
             // while (true)
             // {
             //     int error_ = await CollectionCommand();
