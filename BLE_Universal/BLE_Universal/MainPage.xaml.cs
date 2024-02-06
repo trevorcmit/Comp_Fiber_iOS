@@ -5,7 +5,6 @@ using Plugin.BLE.Abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-// using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +12,13 @@ using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+
+// Added for Plotting Section
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 
 
@@ -28,9 +34,22 @@ namespace BLE_Universal
         public ObservableCollection<IDevice> list;
         public IDevice device1, device2, device3, device4, device5;
         Popup popup;
+        Popup graph;
         int SELECTED;
         public DateTime START;
+        UInt64 epoch_time;
         public Dictionary<char, float> S = new Dictionary<char, float>() { { '0', 1.0f }, { '1', -1.0f } };
+
+        // For LiveChartsPlotting
+        public Axis[] x_axis { get; set; } = { new Axis { Name="Time Elapsed (s)", TextSize=14 } };
+        public Axis[] y_axis { get; set; } = { new Axis { Name="Temperature (°C)", TextSize=14 } };
+
+        public ObservableCollection<ObservablePoint> d1_points = new ObservableCollection<ObservablePoint>();
+        public ObservableCollection<ObservablePoint> d2_points = new ObservableCollection<ObservablePoint>();
+        public ObservableCollection<ObservablePoint> d3_points = new ObservableCollection<ObservablePoint>();
+        public ObservableCollection<ObservablePoint> d4_points = new ObservableCollection<ObservablePoint>();
+        public ObservableCollection<ObservablePoint> d5_points = new ObservableCollection<ObservablePoint>();
+        public ObservableCollection<ISeries> Series { get; set; }
         //*********************************************************************************
 
         public ObservableCollection<IService> d1s1 = new ObservableCollection<IService>();
@@ -111,6 +130,7 @@ namespace BLE_Universal
         }
 
 
+        // HANDLER: Handle the scanning of devices
         private void OnDeviceDiscovered(object sender, DeviceEventArgs args)
         {
             Device.BeginInvokeOnMainThread(() =>
@@ -121,6 +141,7 @@ namespace BLE_Universal
         }
 
 
+        // HANDLER: Handle the disconnection of devices
         private void OnDeviceDisconnected(object sender, DeviceEventArgs args)
         {
             Device.BeginInvokeOnMainThread(() =>
@@ -140,6 +161,7 @@ namespace BLE_Universal
         }
 
 
+        // BUTTON: Connect to a device
         private async void ConnectDevice(object sender, EventArgs e)
         {
             list.Clear();
@@ -164,17 +186,10 @@ namespace BLE_Universal
                         {
                             Text = "Connect to Subject " + SELECTED.ToString(),
                             FontAttributes = FontAttributes.Bold,
-                            FontSize = 24,
+                            FontSize = 26,
                             Margin = new Thickness(0, 10)
                         },
                         listview,     // List of Devices Found
-                        // new Button    // Close Button
-                        // {
-                        //     Text = "Search",
-                        //     FontSize=20,
-                        //     Command = new Command(() => SearchDevices(null, null)),
-                        //     BackgroundColor = Color.FromHex("#0C0C0C"),
-                        // }
                     }
                 }
             };
@@ -183,11 +198,10 @@ namespace BLE_Universal
 
             // Show the Popup
             var result = await App.Current.MainPage.Navigation.ShowPopupAsync(popup);
-
-            // SearchDevices(null, null);
         }
 
 
+        // BUTTON: Attempt connection for associated device slot
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (SELECTED==1 && device1==null)
@@ -223,59 +237,138 @@ namespace BLE_Universal
         }
 
 
+        // HELPER FUNCTION: Set up the device for connection
         async Task<int> Setup_Device(int index, IDevice d)
         {
             await adapter.StopScanningForDevicesAsync(); // Stop Scanner
 
-            try
+            if (index==0)
             {
-                await adapter.ConnectToDeviceAsync(d);
-
-                if (index==0)
+                try 
                 {
+                    await adapter.ConnectToDeviceAsync(d);
                     Fiber1.Text = d.Name;
                     Fiber1.TextColor = Color.FromHex("#008F20");
                     Shirt1.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(0);
                 }
-                else if (index==1)
+                catch (DeviceConnectionException ex)
                 {
+                    Fiber1.Text = "Device Connection Error! Please retry.";
+                    Fiber1.TextColor = Color.FromHex("#002AD1");
+                    Shirt1.Source = new FileImageSource { File = "Blue.jpg" };
+                    return -1;
+                }
+                catch (Exception ex)
+                {
+                    Fiber1.Text = "Backend error! Please retry.";
+                    Fiber1.TextColor = Color.FromHex("#E60008");
+                    Shirt1.Source = new FileImageSource { File = "Red.png" };
+                    return 1;
+                }
+            }
+            else if (index==1)
+            {
+                try 
+                {
+                    await adapter.ConnectToDeviceAsync(d);
                     Fiber2.Text = d.Name;
                     Fiber2.TextColor = Color.FromHex("#008F20");
                     Shirt2.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(1);
                 }
-                else if (index==2)
+                catch (DeviceConnectionException ex)
                 {
+                    Fiber2.Text = "Device Connection Error! Please retry.";
+                    Fiber2.TextColor = Color.FromHex("#002AD1");
+                    Shirt2.Source = new FileImageSource { File = "Blue.jpg" };
+                    return -1;
+                }
+                catch (Exception ex)
+                {
+                    Fiber2.Text = "Backend error! Please retry.";
+                    Fiber2.TextColor = Color.FromHex("#E60008");
+                    Shirt2.Source = new FileImageSource { File = "Red.png" };
+                    return 1;
+                }
+            }
+            else if (index==2)
+            {
+                try 
+                {
+                    await adapter.ConnectToDeviceAsync(d);
                     Fiber3.Text = d.Name;
                     Fiber3.TextColor = Color.FromHex("#008F20");
                     Shirt3.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(2);
                 }
-                else if (index==3)
+                catch (DeviceConnectionException ex)
                 {
+                    Fiber3.Text = "Device Connection Error! Please retry.";
+                    Fiber3.TextColor = Color.FromHex("#002AD1");
+                    Shirt3.Source = new FileImageSource { File = "Blue.jpg" };
+                    return -1;
+                }
+                catch (Exception ex)
+                {
+                    Fiber3.Text = "Backend error! Please retry.";
+                    Fiber3.TextColor = Color.FromHex("#E60008");
+                    Shirt3.Source = new FileImageSource { File = "Red.png" };
+                    return 1;
+                }
+            }
+            else if (index==3)
+            {
+                try 
+                {
+                    await adapter.ConnectToDeviceAsync(d);
                     Fiber4.Text = d.Name;
                     Fiber4.TextColor = Color.FromHex("#008F20");
                     Shirt4.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(3);
                 }
-                else if (index==4)
+                catch (DeviceConnectionException ex)
                 {
+                    Fiber4.Text = "Device Connection Error! Please retry.";
+                    Fiber4.TextColor = Color.FromHex("#002AD1");
+                    Shirt4.Source = new FileImageSource { File = "Blue.jpg" };
+                    return -1;
+                }
+                catch (Exception ex)
+                {
+                    Fiber4.Text = "Backend error! Please retry.";
+                    Fiber4.TextColor = Color.FromHex("#E60008");
+                    Shirt4.Source = new FileImageSource { File = "Red.png" };
+                    return 1;
+                }
+            }
+            else if (index==4)
+            {
+                try 
+                {
+                    await adapter.ConnectToDeviceAsync(d);
                     Fiber5.Text = d.Name;
                     Fiber5.TextColor = Color.FromHex("#008F20");
                     Shirt5.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(4);
                 }
-
-                popup.Dismiss(null); // Dismiss the popup automatically
-
-                return 0;
+                catch (DeviceConnectionException ex)
+                {
+                    Fiber5.Text = "Device Connection Error! Please retry.";
+                    Fiber5.TextColor = Color.FromHex("#002AD1");
+                    Shirt5.Source = new FileImageSource { File = "Blue.jpg" };
+                    return -1;
+                }
+                catch (Exception ex)
+                {
+                    Fiber5.Text = "Backend error! Please retry.";
+                    Fiber5.TextColor = Color.FromHex("#E60008");
+                    Shirt5.Source = new FileImageSource { File = "Red.png" };
+                    return 1;
+                }
             }
-            catch (DeviceConnectionException ex)
-            {
-                await DisplayAlert("Error!", ex.Message, "Ok");
-                return 1;
-            }
+
+            return 0;
         }
 
 
@@ -401,7 +494,7 @@ namespace BLE_Universal
 
             // Write Epoch time in exactly 8 bytes of space, with 0x1D command on the head
             // example: { 0x1D, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x5E, 0x5D, 0x5C }
-            UInt64 epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
             byte[] epoch_array = new byte[9];
             epoch_bytes.CopyTo(epoch_array, 1);
@@ -447,13 +540,12 @@ namespace BLE_Universal
                     if (error_ != 0)
                         continue;
                 }
-                // catch (Exception ex)
                 catch (DeviceConnectionException ex)
                 {
-                    await DisplayAlert("Error disconnected!", ex.Message, "Ok.");
+                    // await DisplayAlert("Error disconnected!", ex.Message, "Ok.");
                     break;
                 }
-                await Task.Delay(750);
+                await Task.Delay(800);
             }
         }
 
@@ -465,24 +557,19 @@ namespace BLE_Universal
         {
             try
             {
-                if (device1!=null)
-                    await ProcessDeviceData(device1, d1c2, d1_temp1, d1_temp2, d1_temp3);
-                if (device2!=null)
-                    await ProcessDeviceData(device2, d2c2, d2_temp1, d2_temp2, d2_temp3);
-                if (device3!=null)
-                    await ProcessDeviceData(device3, d3c2, d3_temp1, d3_temp2, d3_temp3);
-                if (device4!=null)
-                    await ProcessDeviceData(device4, d4c2, d4_temp1, d4_temp2, d4_temp3);
-                if (device5!=null)
-                    await ProcessDeviceData(device5, d5c2, d5_temp1, d5_temp2, d5_temp3);
+                if (device1!=null) await ProcessDeviceData(device1, d1c2, d1_temp1, d1_temp2, d1_temp3);
+                if (device2!=null) await ProcessDeviceData(device2, d2c2, d2_temp1, d2_temp2, d2_temp3);
+                if (device3!=null) await ProcessDeviceData(device3, d3c2, d3_temp1, d3_temp2, d3_temp3);
+                if (device4!=null) await ProcessDeviceData(device4, d4c2, d4_temp1, d4_temp2, d4_temp3);
+                if (device5!=null) await ProcessDeviceData(device5, d5c2, d5_temp1, d5_temp2, d5_temp3);
             }
-            // catch (Exception ex)
             catch (DeviceConnectionException ex)
             {
-                Device.BeginInvokeOnMainThread
-                (
-                    async () => await DisplayAlert("Error!", ex.Message, "Ok.")
-                );
+                // Device.BeginInvokeOnMainThread
+                // (
+                //     async() => await DisplayAlert("Error!", ex.Message, "Ok.")
+                // );
+                return -1;
             }
             return 0;
         }
@@ -600,9 +687,13 @@ namespace BLE_Universal
                     temp3.Add(temp3_string);
                 }
             }
-            catch (Exception ex)
+            catch (DeviceConnectionException ex)
             {
                 ClearDevice(device);
+                return;
+            }
+            catch (Exception ex)
+            {
                 return;
             }
         }
@@ -613,13 +704,129 @@ namespace BLE_Universal
         ********************************************************/
         async void OnCollectClicked(object sender, EventArgs args)
         {
-            // TO-DO!!!
-            // while (true)
+            // Popup for LiveCharts
+            // Series = new ObservableCollection<ISeries>{};
+
+            // if (device1 != null)
             // {
-            //     int error_ = await CollectionCommand();
-            //     if (error_ != 0)
-            //         continue;
+            //     Series.Add(new LineSeries<ObservablePoint>
+            //     {
+            //         Values = d1_points,
+            //         Fill = null,
+            //         Name = device1.Name
+            //     });
             // }
+            // if (device2 != null)
+            // {
+            //     Series.Add(new LineSeries<ObservablePoint>
+            //     {
+            //         Values = d2_points,
+            //         Fill = null,
+            //         Name = device2.Name
+            //     });
+            // }
+            // if (device3 != null)
+            // {
+            //     Series.Add(new LineSeries<ObservablePoint>
+            //     {
+            //         Values = d3_points,
+            //         Fill = null,
+            //         Name = device3.Name
+            //     });
+            // }
+            // if (device4 != null)
+            // {
+            //     Series.Add(new LineSeries<ObservablePoint>
+            //     {
+            //         Values = d4_points,
+            //         Fill = null,
+            //         Name = device4.Name
+            //     });
+            // }
+            // if (device5 != null)
+            // {
+            //     Series.Add(new LineSeries<ObservablePoint>
+            //     {
+            //         Values = d5_points,
+            //         Fill = null,
+            //         Name = device5.Name
+            //     });
+            // }
+
+            // Popup a CartesianChart
+            // graph = new Popup
+            // {
+                // Content = new StackLayout
+                // {
+                //     CartesianChart
+                //     {
+                //         Series = Series,
+                //         XAxes = x_axis,
+                //         YAxes = y_axis,
+                //         LegendBackground = new SolidColorPaint { Color = SKColors.White },
+                //         LegendBorder = new SolidColorPaint { Color = SKColors.Black },
+                //         LegendPadding = 10,
+                //         LegendMargin = 10,
+                //         LegendFont = new SKPaint { TextSize = 14, IsAntialias = true, Color = SKColors.Black },
+                //         LegendTextPaint = new SKPaint { TextSize = 14, IsAntialias = true, Color = SKColors.Black }
+                //     }
+                // }
+            // };
+        }
+
+        // HELPER: Clears device to Blue (-1) Disconnection State
+        private void ClearDeviceConnectionException(IDevice device)
+        {
+            if (device == device1)
+            {
+                Fiber1.Text = "Device Connection Error! Tap to retry connecting.";
+                Fiber1.TextColor = Color.FromHex("#002AD1");
+                Shirt1.Source = new FileImageSource { File = "Blue.jpg" };
+                device1 = null;
+                d1s1.Clear(); d1s2.Clear(); d1c1.Clear(); d1c2.Clear();
+                d1_temp1.Clear(); d1_temp2.Clear(); d1_temp3.Clear();
+                d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
+            }
+            else if (device == device2)
+            {
+                Fiber2.Text = "Device Connection Error! Tap to retry connecting.";
+                Fiber2.TextColor = Color.FromHex("#002AD1");
+                Shirt2.Source = new FileImageSource { File = "Blue.jpg" };
+                device2 = null;
+                d2s1.Clear(); d2s2.Clear(); d2c1.Clear(); d2c2.Clear();
+                d2_temp1.Clear(); d2_temp2.Clear(); d2_temp3.Clear();
+                d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
+            }
+            else if (device == device3)
+            {
+                Fiber3.Text = "Device Connection Error! Tap to retry connecting.";
+                Fiber3.TextColor = Color.FromHex("#002AD1");
+                Shirt3.Source = new FileImageSource { File = "Blue.jpg" };
+                device3 = null;
+                d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
+                d3_temp1.Clear(); d3_temp2.Clear(); d3_temp3.Clear();
+                d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
+            }
+            else if (device == device4)
+            {
+                Fiber4.Text = "Device Connection Error! Tap to retry connecting.";
+                Fiber4.TextColor = Color.FromHex("#002AD1");
+                Shirt4.Source = new FileImageSource { File = "Blue.jpg" };
+                device4 = null;
+                d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
+                d4_temp1.Clear(); d4_temp2.Clear(); d4_temp3.Clear();
+                d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
+            }
+            else if (device == device5)
+            {
+                Fiber5.Text = "Device Connection Error! Tap to retry connecting.";
+                Fiber5.TextColor = Color.FromHex("#002AD1");
+                Shirt5.Source = new FileImageSource { File = "Blue.jpg" };
+                device5 = null;
+                d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
+                d5_temp1.Clear(); d5_temp2.Clear(); d5_temp3.Clear();
+                d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
+            }
         }
 
 
@@ -632,30 +839,42 @@ namespace BLE_Universal
                 "Which device would you like to erase?",
                 "Cancel",
                 null,
-                Fiber1.Text, Fiber2.Text, Fiber3.Text, Fiber4.Text, Fiber5.Text
+                "1", "2", "3", "4", "5"
             );
 
             switch (action)
             {
                 case "Cancel":
                     break;
-                case "Not connected":
-                    await DisplayAlert("Error", "No device connected.", "OK");
+                case "1":
+                    if (device1 == null)
+                        await DisplayAlert("Error", "No device connected.", "OK");
+                    else
+                        await d1c2[0].WriteAsync(new byte[] { 0xCE });
                     break;
-                case "Fiber 1":
-                    await d1c2[0].WriteAsync(new byte[] { 0xCE });
+                case "2":
+                    if (device2 == null)
+                        await DisplayAlert("Error", "No device connected.", "OK");
+                    else
+                        await d2c2[0].WriteAsync(new byte[] { 0xCE });
                     break;
-                case "Fiber 2":
-                    await d2c2[0].WriteAsync(new byte[] { 0xCE });
+                case "3":
+                    if (device3 == null)
+                        await DisplayAlert("Error", "No device connected.", "OK");
+                    else
+                        await d3c2[0].WriteAsync(new byte[] { 0xCE });
                     break;
-                case "Fiber 3":
-                    await d3c2[0].WriteAsync(new byte[] { 0xCE });
+                case "4":
+                    if (device4 == null)
+                        await DisplayAlert("Error", "No device connected.", "OK");
+                    else
+                        await d4c2[0].WriteAsync(new byte[] { 0xCE });
                     break;
-                case "Fiber 4":
-                    await d4c2[0].WriteAsync(new byte[] { 0xCE });
-                    break;
-                case "Fiber 5":
-                    await d5c2[0].WriteAsync(new byte[] { 0xCE });
+                case "5":
+                    if (device5 == null)
+                        await DisplayAlert("Error", "No device connected.", "OK");
+                    else
+                        await d5c2[0].WriteAsync(new byte[] { 0xCE });
                     break;
                 default:
                     break;
