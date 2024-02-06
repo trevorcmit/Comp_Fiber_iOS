@@ -36,6 +36,7 @@ namespace BLE_Universal
         Popup popup;
         Popup graph;
         int SELECTED;
+        int ERROR;
         public DateTime START;
         UInt64 epoch_time;
         public Dictionary<char, float> S = new Dictionary<char, float>() { { '0', 1.0f }, { '1', -1.0f } };
@@ -89,6 +90,7 @@ namespace BLE_Universal
         public ObservableCollection<string> d5_temp3 = new ObservableCollection<string>();
 
 
+        // CONSTRUCTOR: Initialize the MainPage
         public MainPage()
         {
             InitializeComponent();
@@ -252,18 +254,20 @@ namespace BLE_Universal
                     Shirt1.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(0);
                 }
-                catch (DeviceConnectionException ex)
+                catch (DeviceConnectionException)
                 {
                     Fiber1.Text = "Device Connection Error! Please retry.";
                     Fiber1.TextColor = Color.FromHex("#002AD1");
                     Shirt1.Source = new FileImageSource { File = "Blue.jpg" };
+                    popup.Dismiss(null);
                     return -1;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Fiber1.Text = "Backend error! Please retry.";
                     Fiber1.TextColor = Color.FromHex("#E60008");
                     Shirt1.Source = new FileImageSource { File = "Red.png" };
+                    popup.Dismiss(null);
                     return 1;
                 }
             }
@@ -277,18 +281,20 @@ namespace BLE_Universal
                     Shirt2.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(1);
                 }
-                catch (DeviceConnectionException ex)
+                catch (DeviceConnectionException)
                 {
                     Fiber2.Text = "Device Connection Error! Please retry.";
                     Fiber2.TextColor = Color.FromHex("#002AD1");
                     Shirt2.Source = new FileImageSource { File = "Blue.jpg" };
+                    popup.Dismiss(null);
                     return -1;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Fiber2.Text = "Backend error! Please retry.";
                     Fiber2.TextColor = Color.FromHex("#E60008");
                     Shirt2.Source = new FileImageSource { File = "Red.png" };
+                    popup.Dismiss(null);
                     return 1;
                 }
             }
@@ -302,18 +308,20 @@ namespace BLE_Universal
                     Shirt3.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(2);
                 }
-                catch (DeviceConnectionException ex)
+                catch (DeviceConnectionException)
                 {
                     Fiber3.Text = "Device Connection Error! Please retry.";
                     Fiber3.TextColor = Color.FromHex("#002AD1");
                     Shirt3.Source = new FileImageSource { File = "Blue.jpg" };
+                    popup.Dismiss(null);
                     return -1;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Fiber3.Text = "Backend error! Please retry.";
                     Fiber3.TextColor = Color.FromHex("#E60008");
                     Shirt3.Source = new FileImageSource { File = "Red.png" };
+                    popup.Dismiss(null);
                     return 1;
                 }
             }
@@ -327,18 +335,20 @@ namespace BLE_Universal
                     Shirt4.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(3);
                 }
-                catch (DeviceConnectionException ex)
+                catch (DeviceConnectionException)
                 {
                     Fiber4.Text = "Device Connection Error! Please retry.";
                     Fiber4.TextColor = Color.FromHex("#002AD1");
                     Shirt4.Source = new FileImageSource { File = "Blue.jpg" };
+                    popup.Dismiss(null);
                     return -1;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Fiber4.Text = "Backend error! Please retry.";
                     Fiber4.TextColor = Color.FromHex("#E60008");
                     Shirt4.Source = new FileImageSource { File = "Red.png" };
+                    popup.Dismiss(null);
                     return 1;
                 }
             }
@@ -352,22 +362,25 @@ namespace BLE_Universal
                     Shirt5.Source = new FileImageSource { File = "Green30.jpeg" };
                     ServicesAndCharacteristics(4);
                 }
-                catch (DeviceConnectionException ex)
+                catch (DeviceConnectionException)
                 {
                     Fiber5.Text = "Device Connection Error! Please retry.";
                     Fiber5.TextColor = Color.FromHex("#002AD1");
                     Shirt5.Source = new FileImageSource { File = "Blue.jpg" };
+                    popup.Dismiss(null);
                     return -1;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Fiber5.Text = "Backend error! Please retry.";
                     Fiber5.TextColor = Color.FromHex("#E60008");
                     Shirt5.Source = new FileImageSource { File = "Red.png" };
+                    popup.Dismiss(null);
                     return 1;
                 }
             }
 
+            popup.Dismiss(null);
             return 0;
         }
 
@@ -494,10 +507,21 @@ namespace BLE_Universal
 
             // Write Epoch time in exactly 8 bytes of space, with 0x1D command on the head
             // example: { 0x1D, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x5E, 0x5D, 0x5C }
-            epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
+            // epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            // byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
             byte[] epoch_array = new byte[9];
-            epoch_bytes.CopyTo(epoch_array, 1);
+
+            // do it by month, day, hour, minute, second, with leftover 0 bytes
+            epoch_array[1] = (byte)DateTime.Now.Month;
+            epoch_array[2] = (byte)DateTime.Now.Day;
+            epoch_array[3] = (byte)DateTime.Now.Hour;
+            epoch_array[4] = (byte)DateTime.Now.Minute;
+            epoch_array[5] = (byte)DateTime.Now.Second;
+            epoch_array[6] = 0xAB;
+            epoch_array[7] = 0xCD;
+            epoch_array[8] = 0xEF;
+
+            // epoch_bytes.CopyTo(epoch_array, 1);
             epoch_array[0] = 0x1D;
 
             // Write the epoch time to all connected devices
@@ -538,14 +562,20 @@ namespace BLE_Universal
                 {
                     int error_ = await CollectionCommand();
                     if (error_ != 0)
+                        // break;
                         continue;
                 }
-                catch (DeviceConnectionException ex)
+                catch (DeviceConnectionException)
                 {
                     // await DisplayAlert("Error disconnected!", ex.Message, "Ok.");
                     break;
                 }
-                await Task.Delay(800);
+                catch (Exception)
+                {
+                    // await DisplayAlert("Error!", ex.Message, "Ok.");
+                    break;
+                }
+                await Task.Delay(1000);
             }
         }
 
@@ -557,11 +587,16 @@ namespace BLE_Universal
         {
             try
             {
-                if (device1!=null) await ProcessDeviceData(device1, d1c2, d1_temp1, d1_temp2, d1_temp3);
-                if (device2!=null) await ProcessDeviceData(device2, d2c2, d2_temp1, d2_temp2, d2_temp3);
-                if (device3!=null) await ProcessDeviceData(device3, d3c2, d3_temp1, d3_temp2, d3_temp3);
-                if (device4!=null) await ProcessDeviceData(device4, d4c2, d4_temp1, d4_temp2, d4_temp3);
-                if (device5!=null) await ProcessDeviceData(device5, d5c2, d5_temp1, d5_temp2, d5_temp3);
+                if (device1!=null)
+                    await ProcessDeviceData(device1, d1c2, d1_temp1, d1_temp2, d1_temp3);
+                if (device2!=null)
+                    await ProcessDeviceData(device2, d2c2, d2_temp1, d2_temp2, d2_temp3);
+                if (device3!=null)
+                    await ProcessDeviceData(device3, d3c2, d3_temp1, d3_temp2, d3_temp3);
+                if (device4!=null)
+                    await ProcessDeviceData(device4, d4c2, d4_temp1, d4_temp2, d4_temp3);
+                if (device5!=null)
+                    await ProcessDeviceData(device5, d5c2, d5_temp1, d5_temp2, d5_temp3);
             }
             catch (DeviceConnectionException ex)
             {
@@ -575,64 +610,6 @@ namespace BLE_Universal
         }
 
 
-        /**********************************************************************
-         * Remove a device from the list of connected devices if disconnected
-        **********************************************************************/
-        private void ClearDevice(IDevice device)
-        {
-            if (device == device1)
-            {
-                Fiber1.Text = "Not Connected";
-                Fiber1.TextColor = Color.FromHex("#000000");
-                Shirt1.Source = new FileImageSource { File = "Man30.png" };
-                device1 = null;
-                d1s1.Clear(); d1s2.Clear(); d1c1.Clear(); d1c2.Clear();
-                d1_temp1.Clear(); d1_temp2.Clear(); d1_temp3.Clear();
-                d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
-            }
-            else if (device == device2)
-            {
-                Fiber2.Text = "Not Connected";
-                Fiber2.TextColor = Color.FromHex("#000000");
-                Shirt2.Source = new FileImageSource { File = "Man30.png" };
-                device2 = null;
-                d2s1.Clear(); d2s2.Clear(); d2c1.Clear(); d2c2.Clear();
-                d2_temp1.Clear(); d2_temp2.Clear(); d2_temp3.Clear();
-                d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
-            }
-            else if (device == device3)
-            {
-                Fiber3.Text = "Not Connected";
-                Fiber3.TextColor = Color.FromHex("#000000");
-                Shirt3.Source = new FileImageSource { File = "Man30.png" };
-                device3 = null;
-                d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
-                d3_temp1.Clear(); d3_temp2.Clear(); d3_temp3.Clear();
-                d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
-            }
-            else if (device == device4)
-            {
-                Fiber4.Text = "Not Connected";
-                Fiber4.TextColor = Color.FromHex("#000000");
-                Shirt4.Source = new FileImageSource { File = "Man30.png" };
-                device4 = null;
-                d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
-                d4_temp1.Clear(); d4_temp2.Clear(); d4_temp3.Clear();
-                d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
-            }
-            else if (device == device5)
-            {
-                Fiber5.Text = "Not Connected";
-                Fiber5.TextColor = Color.FromHex("#000000");
-                Shirt5.Source = new FileImageSource { File = "Man30.png" };
-                device5 = null;
-                d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
-                d5_temp1.Clear(); d5_temp2.Clear(); d5_temp3.Clear();
-                d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
-            }
-        }
-
-
         private async Task ProcessDeviceData(
             IDevice device, 
             ObservableCollection<ICharacteristic> connection, 
@@ -640,8 +617,8 @@ namespace BLE_Universal
             ObservableCollection<string> temp2,
             ObservableCollection<string> temp3)
         {
-            try
-            {
+            // try
+            // {
                 if (device==null)  // Check that device exists
                     return;
                     
@@ -653,23 +630,36 @@ namespace BLE_Universal
                 {
                     bytes = await connection[2]?.ReadAsync();
                 }
-                // catch (Exception ex)
-                catch (DeviceConnectionException ex)
+                catch (DeviceConnectionException)
+                {
+                    ClearDeviceConnectionException(device);
+                    return;
+                }
+                catch (Exception)
                 {
                     ClearDevice(device);
                     return;
                 }
 
                 // Exit if bytes or bytes.Item1 is null or insufficiently initialized
-                if (bytes.Item1 == null || bytes.Item1.Length < 6)
+                if (bytes.Item1 == null || bytes.Item1.Length < 4)
                     return;
 
                 string t1 = CombineBytesToBinaryString( bytes.Item1[0], bytes.Item1[1] );
                 string t2 = CombineBytesToBinaryString( bytes.Item1[2], bytes.Item1[3] );
-                string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
                 string temp1_string = Math.Round( ParseFloat16(t1), 1).ToString() + "°";
                 string temp2_string = Math.Round( ParseFloat16(t2), 1).ToString() + "°";
-                string temp3_string = Math.Round( ParseFloat16(t3), 1).ToString() + "°";
+
+                if (bytes.Item1.Length==6)
+                {
+                    string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
+                    string temp3_string = Math.Round( ParseFloat16(t3), 1).ToString() + "°";
+                    if (!(temp3.ElementAt(0)==temp3_string))
+                    {
+                        temp3.RemoveAt(0);
+                        temp3.Add(temp3_string);
+                    }
+                }
 
                 if (!(temp1.ElementAt(0)==temp1_string))
                 {
@@ -681,27 +671,22 @@ namespace BLE_Universal
                     temp2.RemoveAt(0);
                     temp2.Add(temp2_string);
                 }
-                if (!(temp3.ElementAt(0)==temp3_string))
-                {
-                    temp3.RemoveAt(0);
-                    temp3.Add(temp3_string);
-                }
-            }
-            catch (DeviceConnectionException ex)
-            {
-                ClearDevice(device);
-                return;
-            }
-            catch (Exception ex)
-            {
-                return;
-            }
+
+            // }
+            // catch (DeviceConnectionException)
+            // {
+            //     ClearDeviceConnectionException(device);
+            //     return;
+            // }
+            // catch (Exception)
+            // {
+            //     ClearDevice(device);
+            //     return;
+            // }
         }
 
 
-        /********************************************************
-         * Resume collection of data after command already sent.
-        ********************************************************/
+        // BUTTON: Resume collection of data after command already sent.
         async void OnCollectClicked(object sender, EventArgs args)
         {
             // Popup for LiveCharts
@@ -774,6 +759,63 @@ namespace BLE_Universal
             // };
         }
 
+
+        // HELPER: Remove a device from the list of connected devices if misc. exception
+        private void ClearDevice(IDevice device)
+        {
+            if (device == device1)
+            {
+                Fiber1.Text = "Not Connected";
+                Fiber1.TextColor = Color.FromHex("#000000");
+                Shirt1.Source = new FileImageSource { File = "Man30.png" };
+                device1 = null;
+                d1s1.Clear(); d1s2.Clear(); d1c1.Clear(); d1c2.Clear();
+                d1_temp1.Clear(); d1_temp2.Clear(); d1_temp3.Clear();
+                d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
+            }
+            else if (device == device2)
+            {
+                Fiber2.Text = "Not Connected";
+                Fiber2.TextColor = Color.FromHex("#000000");
+                Shirt2.Source = new FileImageSource { File = "Man30.png" };
+                device2 = null;
+                d2s1.Clear(); d2s2.Clear(); d2c1.Clear(); d2c2.Clear();
+                d2_temp1.Clear(); d2_temp2.Clear(); d2_temp3.Clear();
+                d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
+            }
+            else if (device == device3)
+            {
+                Fiber3.Text = "Not Connected";
+                Fiber3.TextColor = Color.FromHex("#000000");
+                Shirt3.Source = new FileImageSource { File = "Man30.png" };
+                device3 = null;
+                d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
+                d3_temp1.Clear(); d3_temp2.Clear(); d3_temp3.Clear();
+                d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
+            }
+            else if (device == device4)
+            {
+                Fiber4.Text = "Not Connected";
+                Fiber4.TextColor = Color.FromHex("#000000");
+                Shirt4.Source = new FileImageSource { File = "Man30.png" };
+                device4 = null;
+                d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
+                d4_temp1.Clear(); d4_temp2.Clear(); d4_temp3.Clear();
+                d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
+            }
+            else if (device == device5)
+            {
+                Fiber5.Text = "Not Connected";
+                Fiber5.TextColor = Color.FromHex("#000000");
+                Shirt5.Source = new FileImageSource { File = "Man30.png" };
+                device5 = null;
+                d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
+                d5_temp1.Clear(); d5_temp2.Clear(); d5_temp3.Clear();
+                d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
+            }
+        }
+
+
         // HELPER: Clears device to Blue (-1) Disconnection State
         private void ClearDeviceConnectionException(IDevice device)
         {
@@ -830,9 +872,7 @@ namespace BLE_Universal
         }
 
 
-        /***************************************************
-         * Perform Chip Erase (0xCE) with device selector.
-        ***************************************************/
+        // BUTTON: Perform Chip Erase (0xCE) with device selector.
         async void OnChipErase(object sender, EventArgs args)
         {
             string action = await DisplayActionSheet(
