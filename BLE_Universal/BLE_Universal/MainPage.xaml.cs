@@ -1,4 +1,5 @@
 ﻿using Plugin.BLE;
+using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
@@ -137,7 +138,7 @@ namespace BLE_Universal
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                if ((!list.Contains(args.Device)) && (args.Device.Name != null) && (args.Device.Name.Contains("IFM")))
+                if ((!list.Contains(args.Device)) && (args.Device.Name != null) && args.Device.Name.Contains("IFM"))
                     list.Add(args.Device);
             });
         }
@@ -158,7 +159,8 @@ namespace BLE_Universal
         {
             list.Clear();
             adapter.ScanTimeout = 10000;
-            adapter.ScanMode = ScanMode.Balanced;
+            // adapter.ScanMode = ScanMode.Balanced;
+            adapter.ScanMode = ScanMode.LowLatency;
             await adapter.StartScanningForDevicesAsync();
         }
 
@@ -184,16 +186,16 @@ namespace BLE_Universal
                 {
                     Children =
                     {
-                        new Label      // Header of List
+                        new Label   // Header of List
                         {
                             Text = "Connect to Subject " + SELECTED.ToString(),
                             FontAttributes = FontAttributes.Bold,
                             FontSize = 26,
                             Margin = new Thickness(0, 10)
                         },
-                        listview,     // List of Devices Found
+                        listview,  // List of Devices Found
                     }
-                }
+                },
             };
 
             SearchDevices(null, null);
@@ -385,9 +387,7 @@ namespace BLE_Universal
         }
 
 
-        /***********************************************************
-         * Set up the services and characteristics specific device.
-        ***********************************************************/
+        // HELPER FUNCTION: Set up the services and characteristics specific device.
         public async void ServicesAndCharacteristics(int index)
         {
             IReadOnlyList<IService> s_;
@@ -500,26 +500,32 @@ namespace BLE_Universal
         }
 
 
-        // Write Command to BLE Device to trigger MCU collection of accel. data
+        // BUTTON: Write Command to BLE Device to trigger MCU collection of accel. data
         async void OnStartClicked(object sender, EventArgs args)
         {
             START = DateTime.Now; // Setup Start DateTime for X-Axis of LiveChart
 
             // Write Epoch time in exactly 8 bytes of space, with 0x1D command on the head
             // example: { 0x1D, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x5E, 0x5D, 0x5C }
-            // epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            // byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
-            byte[] epoch_array = new byte[9];
+            epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
+            byte[] epoch_array = new byte[ 9 ];
 
             // do it by month, day, hour, minute, second, with leftover 0 bytes
-            epoch_array[1] = (byte)DateTime.Now.Month;
-            epoch_array[2] = (byte)DateTime.Now.Day;
-            epoch_array[3] = (byte)DateTime.Now.Hour;
-            epoch_array[4] = (byte)DateTime.Now.Minute;
-            epoch_array[5] = (byte)DateTime.Now.Second;
-            epoch_array[6] = 0xAB;
-            epoch_array[7] = 0xCD;
-            epoch_array[8] = 0xEF;
+            // epoch_array[1] = (byte)DateTime.Now.Month;
+            // epoch_array[2] = (byte)DateTime.Now.Day;
+            // epoch_array[3] = (byte)DateTime.Now.Hour;
+            // epoch_array[4] = (byte)DateTime.Now.Minute;
+            // epoch_array[5] = (byte)DateTime.Now.Second;
+            // epoch_array[6] = 0xAB;
+            // epoch_array[7] = 0xCD;
+            // epoch_array[8] = 0xEF;
+
+            epoch_array[1] = 0x12;
+            epoch_array[2] = 0x34;
+            epoch_array[3] = 0x56;
+            epoch_array[4] = 0x78;
+            epoch_array[5] = 0x9A;
 
             // epoch_bytes.CopyTo(epoch_array, 1);
             epoch_array[0] = 0x1D;
@@ -556,33 +562,30 @@ namespace BLE_Universal
                 error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
             }
 
+            await Task.Delay(1000);
             while (true)
             {
                 try
                 {
                     int error_ = await CollectionCommand();
                     if (error_ != 0)
-                        // break;
                         continue;
                 }
                 catch (DeviceConnectionException)
                 {
-                    // await DisplayAlert("Error disconnected!", ex.Message, "Ok.");
-                    break;
+                    continue;
                 }
                 catch (Exception)
                 {
-                    // await DisplayAlert("Error!", ex.Message, "Ok.");
-                    break;
+                    // break;
+                    continue;
                 }
                 await Task.Delay(1000);
             }
         }
 
 
-        /***********************************************
-         * Holds the loop for collecting data over BLE.
-        ***********************************************/
+        // HELPER FUNCTION: Holds the loop for collecting data over BLE.
         public async Task<int> CollectionCommand()
         {
             try
@@ -598,18 +601,19 @@ namespace BLE_Universal
                 if (device5!=null)
                     await ProcessDeviceData(device5, d5c2, d5_temp1, d5_temp2, d5_temp3);
             }
-            catch (DeviceConnectionException ex)
+            catch (DeviceConnectionException)
             {
-                // Device.BeginInvokeOnMainThread
-                // (
-                //     async() => await DisplayAlert("Error!", ex.Message, "Ok.")
-                // );
                 return -1;
+            }
+            catch (Exception)
+            {
+                return 1;
             }
             return 0;
         }
 
 
+        // HELPER FUNCTION: Read and update the characteristics of the associated device
         private async Task ProcessDeviceData(
             IDevice device, 
             ObservableCollection<ICharacteristic> connection, 
@@ -617,146 +621,82 @@ namespace BLE_Universal
             ObservableCollection<string> temp2,
             ObservableCollection<string> temp3)
         {
-            // try
-            // {
-                if (device==null)  // Check that device exists
-                    return;
+            if (device==null)         // Check that device exists
+                return;
                     
-                if (connection.Count < 3)   // Check that index 2 exists
-                    return;
+            if (connection.Count < 3) // Check that index 2 exists
+                return;
 
-                (byte[], int) bytes;
-                try
-                {
-                    bytes = await connection[2]?.ReadAsync();
-                }
-                catch (DeviceConnectionException)
-                {
-                    ClearDeviceConnectionException(device);
-                    return;
-                }
-                catch (Exception)
-                {
-                    ClearDevice(device);
-                    return;
-                }
+            (byte[], int) bytes;
+            try
+            {
+                bytes = await connection[2]?.ReadAsync();
+            }
+            catch (DeviceConnectionException)
+            {
+                ClearDeviceConnectionException(device);
+                return;
+            }
+            catch (Exception)
+            {
+                ClearDevice(device);
+                return;
+            }
 
-                // Exit if bytes or bytes.Item1 is null or insufficiently initialized
-                if (bytes.Item1 == null || bytes.Item1.Length < 4)
-                    return;
+            // Exit if bytes or bytes.Item1 is null or insufficiently initialized
+            if (bytes.Item1 == null || bytes.Item1.Length < 4)
+                return;
 
-                string t1 = CombineBytesToBinaryString( bytes.Item1[0], bytes.Item1[1] );
-                string t2 = CombineBytesToBinaryString( bytes.Item1[2], bytes.Item1[3] );
-                string temp1_string = Math.Round( ParseFloat16(t1), 1).ToString() + "°";
-                string temp2_string = Math.Round( ParseFloat16(t2), 1).ToString() + "°";
+            string t1 = CombineBytesToBinaryString( bytes.Item1[0], bytes.Item1[1] );
+            string t2 = CombineBytesToBinaryString( bytes.Item1[2], bytes.Item1[3] );
+            string temp1_string = Math.Round( ParseFloat16(t1), 1).ToString() + "°";
+            string temp2_string = Math.Round( ParseFloat16(t2), 1).ToString() + "°";
 
-                if (bytes.Item1.Length==6)
+            if (bytes.Item1.Length==6)
+            {
+                string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
+                string temp3_string = Math.Round( ParseFloat16(t3), 1).ToString() + "°";
+                if (!(temp3.ElementAt(0)==temp3_string))
                 {
-                    string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
-                    string temp3_string = Math.Round( ParseFloat16(t3), 1).ToString() + "°";
-                    if (!(temp3.ElementAt(0)==temp3_string))
-                    {
-                        temp3.RemoveAt(0);
-                        temp3.Add(temp3_string);
-                    }
+                    temp3.RemoveAt(0);
+                    temp3.Add(temp3_string);
                 }
+            }
 
-                if (!(temp1.ElementAt(0)==temp1_string))
-                {
-                    temp1.RemoveAt(0);
-                    temp1.Add(temp1_string);
-                }
-                if (!(temp2.ElementAt(0)==temp2_string))
-                {
-                    temp2.RemoveAt(0);
-                    temp2.Add(temp2_string);
-                }
-
-            // }
-            // catch (DeviceConnectionException)
-            // {
-            //     ClearDeviceConnectionException(device);
-            //     return;
-            // }
-            // catch (Exception)
-            // {
-            //     ClearDevice(device);
-            //     return;
-            // }
+            if (!(temp1.ElementAt(0)==temp1_string))
+            {
+                temp1.RemoveAt(0);
+                temp1.Add(temp1_string);
+            }
+            if (!(temp2.ElementAt(0)==temp2_string))
+            {
+                temp2.RemoveAt(0);
+                temp2.Add(temp2_string);
+            }
         }
 
 
         // BUTTON: Resume collection of data after command already sent.
         async void OnCollectClicked(object sender, EventArgs args)
         {
-            // Popup for LiveCharts
-            // Series = new ObservableCollection<ISeries>{};
-
-            // if (device1 != null)
-            // {
-            //     Series.Add(new LineSeries<ObservablePoint>
-            //     {
-            //         Values = d1_points,
-            //         Fill = null,
-            //         Name = device1.Name
-            //     });
-            // }
-            // if (device2 != null)
-            // {
-            //     Series.Add(new LineSeries<ObservablePoint>
-            //     {
-            //         Values = d2_points,
-            //         Fill = null,
-            //         Name = device2.Name
-            //     });
-            // }
-            // if (device3 != null)
-            // {
-            //     Series.Add(new LineSeries<ObservablePoint>
-            //     {
-            //         Values = d3_points,
-            //         Fill = null,
-            //         Name = device3.Name
-            //     });
-            // }
-            // if (device4 != null)
-            // {
-            //     Series.Add(new LineSeries<ObservablePoint>
-            //     {
-            //         Values = d4_points,
-            //         Fill = null,
-            //         Name = device4.Name
-            //     });
-            // }
-            // if (device5 != null)
-            // {
-            //     Series.Add(new LineSeries<ObservablePoint>
-            //     {
-            //         Values = d5_points,
-            //         Fill = null,
-            //         Name = device5.Name
-            //     });
-            // }
-
-            // Popup a CartesianChart
-            // graph = new Popup
-            // {
-                // Content = new StackLayout
-                // {
-                //     CartesianChart
-                //     {
-                //         Series = Series,
-                //         XAxes = x_axis,
-                //         YAxes = y_axis,
-                //         LegendBackground = new SolidColorPaint { Color = SKColors.White },
-                //         LegendBorder = new SolidColorPaint { Color = SKColors.Black },
-                //         LegendPadding = 10,
-                //         LegendMargin = 10,
-                //         LegendFont = new SKPaint { TextSize = 14, IsAntialias = true, Color = SKColors.Black },
-                //         LegendTextPaint = new SKPaint { TextSize = 14, IsAntialias = true, Color = SKColors.Black }
-                //     }
-                // }
-            // };
+            while (true)
+            {
+                try
+                {
+                    int error_ = await CollectionCommand();
+                    if (error_ != 0)
+                        continue;
+                }
+                catch (DeviceConnectionException)
+                {
+                    continue;
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+                await Task.Delay(1000);
+            }
         }
 
 
@@ -922,19 +862,14 @@ namespace BLE_Universal
         }
 
 
-        /**************************************************
-         * Combine two bytes into a single binary string.
-        **************************************************/
+        // HELPER FUNCTION: Combine two bytes into a single binary string.
         static string CombineBytesToBinaryString(byte byte1, byte byte2)
         {
             return Convert.ToString(byte1, 2).PadLeft(8, '0') + Convert.ToString(byte2, 2).PadLeft(8, '0');
         }
 
 
-        /****************************************************************************
-         * Convert a binary string to a float.
-         * Function written by ChatGPT 3.5, converted from my original Python code.
-        ****************************************************************************/
+        // HELPER FUNCTION: Convert a binary string to a float, written by ChatGPT 3.5, converted from my original Python code.
         float ParseFloat16(string binfloat)
         {
             char sign = binfloat[0];

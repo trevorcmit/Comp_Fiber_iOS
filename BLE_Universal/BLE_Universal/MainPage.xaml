@@ -9,7 +9,7 @@
 
             <Grid BackgroundColor="#FFFFFF" RowSpacing="20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.15*" /> <!-- Row 0 -->
@@ -36,7 +36,6 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt1" Grid.Row="1" Grid.Column="0" />
-                    <!-- <BoxView x:Name="Box1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2"/> -->
                     <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp1_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
@@ -82,7 +81,6 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt2" Grid.Row="1" Grid.Column="0" />
-                    <!-- <BoxView x:Name="Box2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2"/> -->
                     <Label x:Name="Fiber2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp2_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
@@ -128,7 +126,6 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt3" Grid.Row="1" Grid.Column="0" />
-                    <!-- <BoxView x:Name="Box3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2"/> -->
                     <Label x:Name="Fiber3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp3_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
@@ -174,7 +171,6 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt4" Grid.Row="1" Grid.Column="0" />
-                    <!-- <BoxView x:Name="Box4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2"/> -->
                     <Label x:Name="Fiber4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp4_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
@@ -220,7 +216,6 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt5" Grid.Row="1" Grid.Column="0" />
-                    <!-- <BoxView x:Name="Box5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2"/> -->
                     <Label x:Name="Fiber5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp5_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
@@ -253,24 +248,26 @@
 
 
             <Grid Grid.Row="6" Grid.Column="0">
-                <Grid.ColumnDefinitions><ColumnDefinition/></Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.33*" />
-                    <RowDefinition Height="0.33*" />
-                    <RowDefinition Height="0.33*" />
+                    <RowDefinition Height="0.33*"/>
+                    <RowDefinition Height="0.33*"/>
+                    <RowDefinition Height="0.33*"/>
                 </Grid.RowDefinitions>
                 <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Color="#000000" />
                 <Button
-                    Grid.Row="0" Grid.Column="0" FontSize="18" Clicked="OnStartClicked" 
-                    Text="Start Data Collection (0x0C)" TextColor="White" BackgroundColor="#008F1F"
+                    Grid.Row="0" Grid.Column="0" FontSize="19" Clicked="OnStartClicked" 
+                    Text="Start Data Collection" TextColor="White" BackgroundColor="#008F1F"
                 />
                 <Button
-                    Grid.Row="1" Grid.Column="0" FontSize="18" Clicked="OnCollectClicked" 
+                    Grid.Row="1" Grid.Column="0" FontSize="19" Clicked="OnCollectClicked" 
                     Text="Resume Temperature Reading" TextColor="White" BackgroundColor="#0F00BF"
                 />
                 <Button
-                    Grid.Row="2" Grid.Column="0" FontSize="18" Clicked="OnChipErase" 
-                    Text="Chip Erase (0xCE)" TextColor="White" BackgroundColor="#990F0F"
+                    Grid.Row="2" Grid.Column="0" FontSize="19" Clicked="OnChipErase" 
+                    Text="Chip Erase" TextColor="White" BackgroundColor="#990F0F"
                 />
             </Grid>
 
