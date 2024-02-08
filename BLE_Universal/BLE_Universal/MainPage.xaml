@@ -3,27 +3,30 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="BLE_Universal.MainPage"
+    NavigationPage.HasNavigationBar="False"    
 >
     <ContentPage.Content>
-        <StackLayout Orientation="Vertical"> <!-- Overarching StackLayout -->
+        <StackLayout Orientation="Vertical">  <!-- Overarching StackLayout -->
 
-            <Grid BackgroundColor="#FFFFFF" RowSpacing="20">
+            <Grid BackgroundColor="#FFFFFF" RowSpacing="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.15*" /> <!-- Row 0 -->
-                    <RowDefinition Height="0.15*" /> <!-- Row 1 -->
-                    <RowDefinition Height="0.15*" /> <!-- Row 2 -->
-                    <RowDefinition Height="0.15*" /> <!-- Row 3 -->
-                    <RowDefinition Height="0.15*" /> <!-- Row 4 -->
-                    <RowDefinition Height="0.01*" />
-                    <RowDefinition Height="0.24*" /> <!-- Row 6 -->
+                    <RowDefinition Height="0.06*" />  <!-- Row 0 -->
+
+                    <RowDefinition Height="0.16*" />  <!-- Row 1 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 2 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 3 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 4 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 5 -->
+
+                    <RowDefinition Height="0.14*" />  <!-- Row 6 -->
                 </Grid.RowDefinitions>
 
 
                 <!-- Fiber 1 -->
-                <Grid Grid.Row="0" Grid.Column="0">
+                <Grid Grid.Row="1" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
                         <ColumnDefinition Width="0.25*"/>
@@ -68,7 +71,7 @@
 
 
                 <!-- Fiber 2 -->
-                <Grid Grid.Row="1" Grid.Column="0">
+                <Grid Grid.Row="2" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
                         <ColumnDefinition Width="0.25*"/>
@@ -113,7 +116,7 @@
 
 
                 <!-- Fiber 3 -->
-                <Grid Grid.Row="2" Grid.Column="0">
+                <Grid Grid.Row="3" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
                         <ColumnDefinition Width="0.25*"/>
@@ -158,7 +161,7 @@
 
 
                 <!-- Fiber 4 -->
-                <Grid Grid.Row="3" Grid.Column="0">
+                <Grid Grid.Row="4" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
                         <ColumnDefinition Width="0.25*"/>
@@ -203,7 +206,7 @@
 
 
                 <!-- Fiber 5 -->
-                <Grid Grid.Row="4" Grid.Column="0">
+                <Grid Grid.Row="5" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
                         <ColumnDefinition Width="0.25*"/>
@@ -247,31 +250,28 @@
                 </Grid>
 
 
-            <Grid Grid.Row="6" Grid.Column="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="0.33*"/>
-                    <RowDefinition Height="0.33*"/>
-                    <RowDefinition Height="0.33*"/>
-                </Grid.RowDefinitions>
-                <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Color="#000000" />
-                <Button
-                    Grid.Row="0" Grid.Column="0" FontSize="19" Clicked="OnStartClicked" 
-                    Text="Start Data Collection" TextColor="White" BackgroundColor="#008F1F"
-                />
-                <Button
-                    Grid.Row="1" Grid.Column="0" FontSize="19" Clicked="OnCollectClicked" 
-                    Text="Resume Temperature Reading" TextColor="White" BackgroundColor="#0F00BF"
-                />
-                <Button
-                    Grid.Row="2" Grid.Column="0" FontSize="19" Clicked="OnChipErase" 
-                    Text="Chip Erase" TextColor="White" BackgroundColor="#990F0F"
-                />
-            </Grid>
+                <Grid Grid.Row="6" Grid.Column="0" BackgroundColor="#AFAFAF">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.45*"/>
+                        <ColumnDefinition Width="0.10*"/>
+                        <ColumnDefinition Width="0.45*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.7*"/>
+                        <RowDefinition Height="0.3*"/>
+                    </Grid.RowDefinitions>
 
-        </Grid>
+                    <Label Text="Start" Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
+                    <Label Text="Erase" Grid.Row="1" Grid.Column="2" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
+
+                    <Image x:Name="startimage" Grid.Row="0" Grid.Column="0" />
+                    <Image x:Name="eraseimage" Grid.Row="0" Grid.Column="2" />
+
+                    <Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Clicked="OnStartClicked" />
+                    <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Clicked="OnChipErase"  />
+                </Grid>
+
+            </Grid>
 
         </StackLayout> <!-- Overarching StackLayout -->
     </ContentPage.Content>

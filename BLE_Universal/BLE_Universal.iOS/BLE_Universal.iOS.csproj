@@ -72,6 +72,7 @@
     <MtouchLink>SdkOnly</MtouchLink>
     <CodesignProvision>iOS Team Store Provisioning Profile: com.computingfiber.BLEUniversal</CodesignProvision>
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchDebug>true</MtouchDebug>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -165,5 +166,7 @@
     <BundleResource Include="Resources\Green30.jpeg" />
     <BundleResource Include="Resources\Red.png" />
     <BundleResource Include="Resources\Blue.jpg" />
+    <BundleResource Include="Resources\start.png" />
+    <BundleResource Include="Resources\erase.png" />
   </ItemGroup>
 </Project>
