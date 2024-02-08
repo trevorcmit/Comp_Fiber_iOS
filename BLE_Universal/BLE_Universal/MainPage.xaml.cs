@@ -37,6 +37,8 @@ namespace BLE_Universal
         UInt64 epoch_time;
         public Dictionary<char, float> S = new Dictionary<char, float>() { { '0', 1.0f }, { '1', -1.0f } };
 
+        bool IS_COLLECTION_RUNNING;
+
         // For LiveChartsPlotting
         // public Axis[] x_axis { get; set; } = { new Axis { Name="Time Elapsed (s)", TextSize=14 } };
         // public Axis[] y_axis { get; set; } = { new Axis { Name="Temperature (°C)", TextSize=14 } };
@@ -123,7 +125,10 @@ namespace BLE_Universal
                 Temp3_1.ItemsSource = d3_temp1; Temp3_2.ItemsSource = d3_temp2; Temp3_3.ItemsSource = d3_temp3;
                 Temp4_1.ItemsSource = d4_temp1; Temp4_2.ItemsSource = d4_temp2; Temp4_3.ItemsSource = d4_temp3;
                 Temp5_1.ItemsSource = d5_temp1; Temp5_2.ItemsSource = d5_temp2; Temp5_3.ItemsSource = d5_temp3;
+                StartColor.Color = Color.FromHex("#AFAFAF");
             });
+
+            IS_COLLECTION_RUNNING = false;
 
             d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
             d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
@@ -482,21 +487,23 @@ namespace BLE_Universal
             // epoch_array[4] = (byte)DateTime.Now.Minute;
             // epoch_array[5] = (byte)DateTime.Now.Second;
 
-            epoch_array[0] = 0x1D; // Command
-            epoch_array[1] = 0x12; // Test bytes currently
+            epoch_array[0] = 0x1D;   // Command
+            epoch_array[1] = 0x12;   // Test bytes currently
             epoch_array[2] = 0x34;
             epoch_array[3] = 0x56;
             epoch_array[4] = 0x78;
             epoch_array[5] = 0x9A;
 
-            List<string> validOptions = new List<string>();
+            List<string> validOptions = new List<string>
+            {
+                "RESUME"
+            };
 
             string str1 = device1?.Name;
             string str2 = device2?.Name;
             string str3 = device3?.Name;
             string str4 = device4?.Name;
             string str5 = device5?.Name;
-
             if (str1 != null) validOptions.Add(str1);
             if (str2 != null) validOptions.Add(str2);
             if (str3 != null) validOptions.Add(str3);
@@ -544,24 +551,98 @@ namespace BLE_Universal
                 Task.Delay(1000).Wait();
                 error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
             }
+
+            else if (action=="RESUME")
+            {
+                if (!IS_COLLECTION_RUNNING)
+                {
+                    await CollectLoop();
+                }
+            }
+
+            else if (action=="START ALL")
+            {
+                // TO DO FOR 2.3!!
+            }
+
             else return;
 
-            
-            await Task.Delay(1000);
-            while (true)
+            // await Task.Delay(1000);
+            // while (true)
+            // {
+            //     try
+            //     {
+            //         int error_ = await CollectionCommand();
+            //         if (error_ != 0)
+            //             continue;
+            //     }
+            //     catch (Exception)
+            //     {
+            //         continue;
+            //     }
+            //     await Task.Delay(1000);
+            // }
+
+            if (!IS_COLLECTION_RUNNING)
             {
-                try
-                {
-                    int error_ = await CollectionCommand();
-                    if (error_ != 0)
-                        continue;
-                }
-                catch (Exception)
-                {
-                    continue;
-                }
-                await Task.Delay(1000);
+                await CollectLoop();
+                // IS_COLLECTION_RUNNING = true;
+                // StartColor = Color.FromHex("#1CFF59");
+                // await Task.Run(async () =>
+                // {
+                //     while (IS_COLLECTION_RUNNING)
+                //     {
+                //         await Task.Delay(1000);
+                //         try
+                //         {
+                //             int error_ = await CollectionCommand();
+                //             if (error_ != 0)
+                //             {
+                //                 StartColor = Color.FromHex("#FF2432");
+                //                 IS_COLLECTION_RUNNING = false;
+                //             }
+                //         }
+                //         catch (Exception)
+                //         {
+                //             StartColor = Color.FromHex("#FF2432");
+                //             IS_COLLECTION_RUNNING = false;
+                //             break;
+                //         }
+                //     }
+                // });
             }
+
+            return;
+        }
+
+
+        public async Task<int> CollectLoop()
+        {
+            IS_COLLECTION_RUNNING = true;
+                StartColor.Color = Color.FromHex("#1CFF59");
+                await Task.Run(async () =>
+                {
+                    while (IS_COLLECTION_RUNNING)
+                    {
+                        await Task.Delay(1000);
+                        try
+                        {
+                            int error_ = await CollectionCommand();
+                            if (error_ != 0)
+                            {
+                                StartColor.Color = Color.FromHex("#FF2432");
+                                IS_COLLECTION_RUNNING = false;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            StartColor.Color = Color.FromHex("#FF2432");
+                            IS_COLLECTION_RUNNING = false;
+                            break;
+                        }
+                    }
+                });
+            return 0;
         }
 
 
@@ -578,6 +659,7 @@ namespace BLE_Universal
             }
             catch (Exception)
             {
+                IS_COLLECTION_RUNNING = false;
                 return 1;
             }
             return 0;
