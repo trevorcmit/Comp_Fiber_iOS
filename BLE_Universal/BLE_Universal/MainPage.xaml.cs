@@ -1,7 +1,7 @@
 ﻿using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
-// using Plugin.BLE.Abstractions.Exceptions;
+using Plugin.BLE.Abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
-// using Xamarin.Essentials;
+using Xamarin.Essentials;
 
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+// using LiveChartsCore;
+// using LiveChartsCore.Defaults;
+// using LiveChartsCore.SkiaSharpView;
+// using LiveChartsCore.SkiaSharpView.Painting;
+// using SkiaSharp;
 using System.Threading;
 
 
@@ -252,7 +252,7 @@ namespace BLE_Universal
 
             if (index==0)
             {
-                try 
+                try
                 {
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber1.Text = d.Name;
@@ -272,7 +272,7 @@ namespace BLE_Universal
             }
             else if (index==1)
             {
-                try 
+                try
                 {
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber2.Text = d.Name;
@@ -292,7 +292,7 @@ namespace BLE_Universal
             }
             else if (index==2)
             {
-                try 
+                try
                 {
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber3.Text = d.Name;
@@ -313,7 +313,7 @@ namespace BLE_Universal
             }
             else if (index==3)
             {
-                try 
+                try
                 {
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber4.Text = d.Name;
@@ -333,12 +333,13 @@ namespace BLE_Universal
             }
             else if (index==4)
             {
-                try 
+                try
                 {
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber5.Text = d.Name;
                     Fiber5.TextColor = Color.FromHex("#004A10");
                     Shirt5.Source = new FileImageSource { File = "Green30.jpeg" };
+                    cancelsource5 = new CancellationTokenSource(); canceltoken5 = cancelsource5.Token;
                     ServicesAndCharacteristics(4);
                 }
                 catch (Exception)
@@ -524,31 +525,31 @@ namespace BLE_Universal
             if (action==str1)
             {
                 int error = await d1c2[0].WriteAsync(epoch_array);
-                Task.Delay(1000).Wait();
+                Task.Delay(1200).Wait();
                 error = await d1c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str2)
             {
                 int error = await d2c2[0].WriteAsync(epoch_array);
-                Task.Delay(1000).Wait();
+                Task.Delay(1200).Wait();
                 error = await d2c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str3)
             {
                 int error = await d3c2[0].WriteAsync(epoch_array);
-                Task.Delay(1000).Wait();
+                Task.Delay(1200).Wait();
                 error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str4)
             {
                 int error = await d4c2[0].WriteAsync(epoch_array);
-                Task.Delay(1000).Wait();
+                Task.Delay(1200).Wait();
                 error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str5)
             {
                 int error = await d5c2[0].WriteAsync(epoch_array);
-                Task.Delay(1000).Wait();
+                Task.Delay(1200).Wait();
                 error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
             }
 
@@ -567,49 +568,15 @@ namespace BLE_Universal
 
             else return;
 
-            // await Task.Delay(1000);
-            // while (true)
-            // {
-            //     try
-            //     {
-            //         int error_ = await CollectionCommand();
-            //         if (error_ != 0)
-            //             continue;
-            //     }
-            //     catch (Exception)
-            //     {
-            //         continue;
-            //     }
-            //     await Task.Delay(1000);
-            // }
-
+            Task.Delay(500).Wait();
             if (!IS_COLLECTION_RUNNING)
             {
-                await CollectLoop();
-                // IS_COLLECTION_RUNNING = true;
-                // StartColor = Color.FromHex("#1CFF59");
-                // await Task.Run(async () =>
-                // {
-                //     while (IS_COLLECTION_RUNNING)
-                //     {
-                //         await Task.Delay(1000);
-                //         try
-                //         {
-                //             int error_ = await CollectionCommand();
-                //             if (error_ != 0)
-                //             {
-                //                 StartColor = Color.FromHex("#FF2432");
-                //                 IS_COLLECTION_RUNNING = false;
-                //             }
-                //         }
-                //         catch (Exception)
-                //         {
-                //             StartColor = Color.FromHex("#FF2432");
-                //             IS_COLLECTION_RUNNING = false;
-                //             break;
-                //         }
-                //     }
-                // });
+                int error = await CollectLoop();
+                if (error != 0)
+                {
+                    StartColor.Color = Color.FromHex("#FF2432");
+                    IS_COLLECTION_RUNNING = false;
+                }
             }
 
             return;
@@ -642,7 +609,7 @@ namespace BLE_Universal
                         }
                     }
                 });
-            return 0;
+            return -1;
         }
 
 
@@ -729,7 +696,6 @@ namespace BLE_Universal
             if (device == device1)
             {
                 cancelsource1.Cancel();
-                // Fiber1.Text = "Not Connected";
                 Fiber1.TextColor = Color.FromHex("#707070");
                 Shirt1.Source = new FileImageSource { File = "Man30.png" };
                 device1 = null;
@@ -740,7 +706,6 @@ namespace BLE_Universal
             else if (device == device2)
             {
                 cancelsource2.Cancel();
-                // Fiber2.Text = "Not Connected";
                 Fiber2.TextColor = Color.FromHex("#707070");
                 Shirt2.Source = new FileImageSource { File = "Man30.png" };
                 device2 = null;
@@ -751,7 +716,6 @@ namespace BLE_Universal
             else if (device == device3)
             {
                 cancelsource3.Cancel();
-                // Fiber3.Text = "Not Connected";
                 Fiber3.TextColor = Color.FromHex("#707070");
                 Shirt3.Source = new FileImageSource { File = "Man30.png" };
                 device3 = null;
@@ -762,7 +726,6 @@ namespace BLE_Universal
             else if (device == device4)
             {
                 cancelsource4.Cancel();
-                // Fiber4.Text = "Not Connected";
                 Fiber4.TextColor = Color.FromHex("#707070");
                 Shirt4.Source = new FileImageSource { File = "Man30.png" };
                 device4 = null;
@@ -773,7 +736,6 @@ namespace BLE_Universal
             else if (device == device5)
             {
                 cancelsource5.Cancel();
-                // Fiber5.Text = "Not Connected";
                 Fiber5.TextColor = Color.FromHex("#707070");
                 Shirt5.Source = new FileImageSource { File = "Man30.png" };
                 device5 = null;

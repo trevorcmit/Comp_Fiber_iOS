@@ -26,7 +26,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.computingfiber.BLEUniversal</string>
 	<key>CFBundleVersion</key>
-	<string>2.2</string>
+	<string>2.3</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -42,9 +42,9 @@
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2</string>
+	<string>2.3</string>
 	<key>MinimumOSVersion</key>
-	<string>9.0</string>
+	<string>15.0</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Necessary to compile.</string>
 	<key>NSCalendarsUsageDescription</key>

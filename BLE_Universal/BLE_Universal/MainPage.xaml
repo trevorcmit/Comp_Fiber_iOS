@@ -252,17 +252,17 @@
 
                 <Grid Grid.Row="6" Grid.Column="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.45*"/>
-                        <ColumnDefinition Width="0.10*"/>
-                        <ColumnDefinition Width="0.45*"/>
+                        <ColumnDefinition Width="0.40*"/>
+                        <ColumnDefinition Width="0.20*"/>
+                        <ColumnDefinition Width="0.40*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.7*"/>
                         <RowDefinition Height="0.3*"/>
                     </Grid.RowDefinitions>
 
-                    <BoxView x:Name="StartColor" Grid.Row="0" Grid.Column="0" CornerRadius="5" Grid.RowSpan="2" />
-                    <BoxView Grid.Row="0" Grid.Column="2" Color="#AFAFAF" CornerRadius="5" Grid.RowSpan="2" />
+                    <BoxView Grid.Row="0" Grid.Column="0" CornerRadius="25" Grid.RowSpan="2" x:Name="StartColor" />
+                    <BoxView Grid.Row="0" Grid.Column="2" CornerRadius="25" Grid.RowSpan="2" Color="#AFAFAF" />
 
                     <Label Text="Start" Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
                     <Label Text="Erase" Grid.Row="1" Grid.Column="2" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
