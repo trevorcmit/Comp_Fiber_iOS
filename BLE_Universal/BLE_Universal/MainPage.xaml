@@ -14,16 +14,13 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.06*" />  <!-- Row 0 -->
-
                     <RowDefinition Height="0.16*" />  <!-- Row 1 -->
                     <RowDefinition Height="0.16*" />  <!-- Row 2 -->
                     <RowDefinition Height="0.16*" />  <!-- Row 3 -->
                     <RowDefinition Height="0.16*" />  <!-- Row 4 -->
                     <RowDefinition Height="0.16*" />  <!-- Row 5 -->
-
                     <RowDefinition Height="0.14*" />  <!-- Row 6 -->
                 </Grid.RowDefinitions>
-
 
                 <!-- Fiber 1 -->
                 <Grid Grid.Row="1" Grid.Column="0">
@@ -39,9 +36,9 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt1" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                    <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
-                    <Label x:Name="Time1" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/>
+                    <!-- <Label x:Name="Time1" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
 
                     <ListView x:Name="Temp1_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -86,9 +83,9 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt2" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                    <Label x:Name="Fiber2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
-                    <Label x:Name="Time2" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/>
+                    <!-- <Label x:Name="Time2" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
 
                     <ListView x:Name="Temp2_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -133,9 +130,9 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt3" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                    <Label x:Name="Fiber3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
-                    <Label x:Name="Time3" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/>
+                    <!-- <Label x:Name="Time3" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
 
                     <ListView x:Name="Temp3_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -180,9 +177,9 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt4" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                    <Label x:Name="Fiber4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
-                    <Label x:Name="Time4" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/>
+                    <!-- <Label x:Name="Time4" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
 
                     <ListView x:Name="Temp4_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -227,9 +224,9 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt5" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+                    <Label x:Name="Fiber5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
-                    <Label x:Name="Time5" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/>
+                    <!-- <Label x:Name="Time5" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
 
                     <ListView x:Name="Temp5_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>

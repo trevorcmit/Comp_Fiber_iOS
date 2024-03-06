@@ -19,7 +19,6 @@ using Xamarin.Essentials;
 // using SkiaSharp;
 
 
-
 namespace BLE_Universal
 {
     public partial class MainPage : ContentPage
@@ -35,38 +34,39 @@ namespace BLE_Universal
         public IDevice temp_device;
         Popup popup;
         int SELECTED;
-        // public DateTime START;
         public Dictionary<char, float> S = new Dictionary<char, float>() { { '0', 1.0f }, { '1', -1.0f } };
 
         bool IS_COLLECTION_RUNNING;
 
         public Dictionary<string, string> BLE_MAP = new Dictionary<string, string>
         {
-            {"IFM_FIBER_51", "1A. MEDIC_Shirt 1"},
-            {"IFM_FIBER_52", "1A. CASUALTY_Shirt 2"},
-            {"IFM_FIBER_57", "1A. STRETCHER_Shirt 3"},
+            {"IFM_FIBER_51", "1A. Subject 1 Shirt 1"},
+            {"IFM_FIBER_52", "1B. Subject 2 Shirt 2"},
+            {"IFM_FIBER_57", "1B. Subject 16 Shirt 3"},
 
-            {"IFM_FIBER_54", "1B. MEDIC_Shirt 5"},
-            {"IFM_FIBER_55", "1B. CASUALTY_Shirt 6"},
-            {"IFM_FIBER_61", "1B. STRETCHER_Shirt 7"},
+            {"IFM_FIBER_54", "2B. Subject 5 Shirt 5"},
+            {"IFM_FIBER_55", "1A. Subject 7 Shirt 6"},
+            {"IFM_FIBER_61", "2B. Subject 6 Shirt 7"},
 
-            {"IFM_FIBER_56", "2A. MEDIC_Shirt 8"},
-            {"IFM_FIBER_71", "2A. CASUALTY_Shirt 9"},
-            {"IFM_FIBER_67", "2A. STRETCHER_Shirt 10"},
+            {"IFM_FIBER_56", "1B. Subject 22 Shirt 8"},
+            {"IFM_FIBER_71", "2A. Subject 24 Shirt 9"},
+            {"IFM_FIBER_67", "1B. Subject 10 Shirt 10"},
 
-            {"IFM_FIBER_76", "2B. MEDIC_Shirt 13"},
-            {"IFM_FIBER_63", "2B. CASUALTY_Shirt 18"},
-            {"IFM_FIBER_64", "2B. STRETCHER_Shirt 15"},
+            {"IFM_FIBER_76", "1A. Subject 19 Shirt 13"},
+            {"IFM_FIBER_63", "2B. Subject 14 Shirt 14"},
+            {"IFM_FIBER_64", "1A. Subject 15 Shirt 15"},
 
-            {"IFM_FIBER_72", "3A. MEDIC_Shirt 17"},
-            {"IFM_FIBER_99", "3A. CASUALTY_Shirt 18"},
-            {"IFM_FIBER_98", "3A. STRETCHER_Shirt 19"},
+            {"IFM_FIBER_72", "2A. Subject 17 Shirt 17"},
+            {"IFM_FIBER_99", "2B. Subject 18 Shirt 18"},
+            {"IFM_FIBER_98", "2B. Subject 25 Shirt 19"},
 
-            {"IFM_FIBER_75",  "3B. MEDIC_Shirt 20"},
-            {"IFM_FIBER_102", "3B. CASUALTY_Shirt 21"},
-            {"IFM_FIBER_103", "3B. STRETCHER_Shirt 22"},
+            {"IFM_FIBER_75",  "1A. Subject 20 Shirt 20"},
+            {"IFM_FIBER_102", "1B. Subject 21 Shirt 21"},
+            {"IFM_FIBER_103", "2A. Subject 11 Shirt 22"},
 
-            {"IFM_FIBER_104", "SPARE_Shirt 23"}
+            {"IFM_FIBER_104", "2A. Subject 23 Shirt 23"},
+
+            {"IFM_FIBER_53", "2A. Subject 4 Shirt 4"},
         };
         
         //***********************************************************************************************************
@@ -114,7 +114,6 @@ namespace BLE_Universal
         //***********************************************************************************************************
 
 
-
         // CONSTRUCTOR: Initialize the MainPage
         public MainPage()
         {
@@ -149,7 +148,6 @@ namespace BLE_Universal
                 Temp4_1.ItemsSource = d4_temp1; Temp4_2.ItemsSource = d4_temp2; Temp4_3.ItemsSource = d4_temp3;
                 Temp5_1.ItemsSource = d5_temp1; Temp5_2.ItemsSource = d5_temp2; Temp5_3.ItemsSource = d5_temp3;
                 StartColor.Color = Color.FromHex("#AFAFAF");
-                Time1.Text = ""; Time2.Text = ""; Time3.Text=""; Time4.Text=""; Time5.Text="";
             });
 
             IS_COLLECTION_RUNNING = false;
@@ -258,31 +256,26 @@ namespace BLE_Universal
 
             if (SELECTED==1 && device1==null)
             {
-                // device1 = e.SelectedItem as IDevice;
                 device1 = temp_device;
                 await Setup_Device(0, device1);
             }
             else if (SELECTED==2 && device2==null)
             {
-                // device2 = e.SelectedItem as IDevice;
                 device2 = temp_device;
                 await Setup_Device(1, device2);
             }
             else if (SELECTED==3 && device3==null)
             {
-                // device3 = e.SelectedItem as IDevice;
                 device3 = temp_device;
                 await Setup_Device(2, device3);
             }
             else if (SELECTED==4 && device4==null)
             {
-                // device4 = e.SelectedItem as IDevice;
                 device4 = temp_device;
                 await Setup_Device(3, device4);
             }
             else if (SELECTED==5 && device5==null)
             {
-                // device5 = e.SelectedItem as IDevice;
                 device5 = temp_device;
                 await Setup_Device(4, device5);
             }
@@ -304,7 +297,6 @@ namespace BLE_Universal
                 try
                 {
                     await adapter.ConnectToDeviceAsync(d);
-                    // Fiber1.Text = d.Name;
                     Fiber1.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber1.TextColor = Color.FromHex("#004A10");
                     Shirt1.Source = new FileImageSource { File = "Green30.jpeg" };
@@ -325,7 +317,6 @@ namespace BLE_Universal
                 try
                 {
                     await adapter.ConnectToDeviceAsync(d);
-                    // Fiber2.Text = d.Name;
                     Fiber2.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber2.TextColor = Color.FromHex("#004A10");
                     Shirt2.Source = new FileImageSource { File = "Green30.jpeg" };
@@ -346,7 +337,6 @@ namespace BLE_Universal
                 try
                 {
                     await adapter.ConnectToDeviceAsync(d);
-                    // Fiber3.Text = d.Name;
                     Fiber3.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber3.TextColor = Color.FromHex("#004A10");
                     Shirt3.Source = new FileImageSource { File = "Green30.jpeg" };
@@ -368,7 +358,6 @@ namespace BLE_Universal
                 try
                 {
                     await adapter.ConnectToDeviceAsync(d);
-                    // Fiber4.Text = d.Name;
                     Fiber4.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber4.TextColor = Color.FromHex("#004A10");
                     Shirt4.Source = new FileImageSource { File = "Green30.jpeg" };
@@ -389,7 +378,6 @@ namespace BLE_Universal
                 try
                 {
                     await adapter.ConnectToDeviceAsync(d);
-                    // Fiber5.Text = d.Name;
                     Fiber5.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber5.TextColor = Color.FromHex("#004A10");
                     Shirt5.Source = new FileImageSource { File = "Green30.jpeg" };
@@ -559,11 +547,6 @@ namespace BLE_Universal
             string str3 = device3?.Name;
             string str4 = device4?.Name;
             string str5 = device5?.Name;
-            if (str1 != null) validOptions.Add(str1);
-            if (str2 != null) validOptions.Add(str2);
-            if (str3 != null) validOptions.Add(str3);
-            if (str4 != null) validOptions.Add(str4);
-            if (str5 != null) validOptions.Add(str5);
 
             if (validOptions.Count == 0)
             {
@@ -581,35 +564,30 @@ namespace BLE_Universal
             {
                 int error = await d1c2[0].WriteAsync(epoch_array);
                 Task.Delay(1200).Wait();
-                Time1.Text = "Started at " + DateTime.Now.ToString("HH:mm:ss");
                 error = await d1c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str2)
             {
                 int error = await d2c2[0].WriteAsync(epoch_array);
                 Task.Delay(1200).Wait();
-                Time2.Text = "Started at " + DateTime.Now.ToString("HH:mm:ss");
                 error = await d2c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str3)
             {
                 int error = await d3c2[0].WriteAsync(epoch_array);
                 Task.Delay(1200).Wait();
-                Time3.Text = "Started at " + DateTime.Now.ToString("HH:mm:ss");
                 error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str4)
             {
                 int error = await d4c2[0].WriteAsync(epoch_array);
                 Task.Delay(1200).Wait();
-                Time4.Text = "Started at " + DateTime.Now.ToString("HH:mm:ss");
                 error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str5)
             {
                 int error = await d5c2[0].WriteAsync(epoch_array);
                 Task.Delay(1200).Wait();
-                Time5.Text = "Started at " + DateTime.Now.ToString("HH:mm:ss");
                 error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
             }
 
@@ -621,14 +599,14 @@ namespace BLE_Universal
                 }
             }
 
-            else if (action=="START ALL")
-            {
+            // else if (action=="START ALL")
+            // {
                 // TO DO FOR 2.3!!
-            }
+            // }
 
             else return;
 
-            Task.Delay(500).Wait();
+            Task.Delay(600).Wait();
             if (!IS_COLLECTION_RUNNING)
             {
                 int error = await CollectLoop();
@@ -732,13 +710,6 @@ namespace BLE_Universal
                 {
                     temp3.RemoveAt(0);
                     temp3.Add(temp3_string);
-
-                    // Change Time based on device number
-                    // if (device==device1)      Time1.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                    // else if (device==device2) Time2.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                    // else if (device==device3) Time3.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                    // else if (device==device4) Time4.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                    // else if (device==device5) Time5.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
                 }
             }
 
@@ -746,25 +717,11 @@ namespace BLE_Universal
             {
                 temp1.RemoveAt(0);
                 temp1.Add(temp1_string);
-
-                // Change Time based on device number
-                // if (device==device1)      Time1.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device2) Time2.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device3) Time3.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device4) Time4.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device5) Time5.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
             }
             if (!(temp2.ElementAt(0)==temp2_string))
             {
                 temp2.RemoveAt(0);
                 temp2.Add(temp2_string);
-
-                // Change Time based on device number
-                // if (device==device1)      Time1.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device2) Time2.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device3) Time3.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device4) Time4.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
-                // else if (device==device5) Time5.Text = "update: " + DateTime.Now.ToString("HH:mm:ss");
             }
 
             Task.Delay(1000).Wait();
