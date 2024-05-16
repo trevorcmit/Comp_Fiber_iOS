@@ -12,11 +12,11 @@ using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 using Xamarin.Essentials;
-// using LiveChartsCore;
-// using LiveChartsCore.Defaults;
-// using LiveChartsCore.SkiaSharpView;
-// using LiveChartsCore.SkiaSharpView.Painting;
-// using SkiaSharp;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 
 namespace BLE_Universal
@@ -25,7 +25,7 @@ namespace BLE_Universal
     {
         // Plugin.BLE Documentation for Xamarin Forms package
         // https://github.com/dotnet-bluetooth-le/dotnet-bluetooth-le
-        //***********************************************************************************************************
+        //---------------------------------------------------------------------------------------
         public IAdapter adapter;
         public IBluetoothLE bluetoothBLE;
         public ObservableCollection<IDevice> list;
@@ -69,7 +69,7 @@ namespace BLE_Universal
             {"IFM_FIBER_53", "2A. Subject 4 Shirt 4"},
         };
         
-        //***********************************************************************************************************
+        //---------------------------------------------------------------------------------------
 
         CancellationTokenSource cancelsource1; CancellationToken canceltoken1;
         CancellationTokenSource cancelsource2; CancellationToken canceltoken2;
@@ -111,6 +111,39 @@ namespace BLE_Universal
         public ObservableCollection<string> d5_temp1 = new ObservableCollection<string>();
         public ObservableCollection<string> d5_temp2 = new ObservableCollection<string>();
         public ObservableCollection<string> d5_temp3 = new ObservableCollection<string>();
+
+        // ***
+        private Dictionary<string, ObservableCollection<ObservablePoint>> _tags1;
+
+        ObservableCollection<ISeries> _Series1;
+        public ObservableCollection<ISeries> Series1
+        {
+            get { return this._Series1;}
+            set
+            {
+                this._Series1 = value;
+                OnPropertyChanged("Series1");
+            }
+        }
+
+        public Axis[] x_axis { get; set; } = {
+            new Axis
+            {
+                Name = "Seconds Elapsed",
+                TextSize=14,
+            }
+        };
+
+        public Axis[] y_axis { get; set; } = {
+            new Axis
+            {
+                Name = "Temperature (°C)",
+                TextSize=14,
+                MinLimit=-5,
+                MaxLimit=30,
+            }
+        };
+
         //***********************************************************************************************************
 
 
@@ -147,7 +180,7 @@ namespace BLE_Universal
                 Temp3_1.ItemsSource = d3_temp1; Temp3_2.ItemsSource = d3_temp2; Temp3_3.ItemsSource = d3_temp3;
                 Temp4_1.ItemsSource = d4_temp1; Temp4_2.ItemsSource = d4_temp2; Temp4_3.ItemsSource = d4_temp3;
                 Temp5_1.ItemsSource = d5_temp1; Temp5_2.ItemsSource = d5_temp2; Temp5_3.ItemsSource = d5_temp3;
-                StartColor.Color = Color.FromHex("#AFAFAF");
+                StartColor.Color = Color.FromHex("#AEAEAE");
             });
 
             IS_COLLECTION_RUNNING = false;
@@ -157,6 +190,23 @@ namespace BLE_Universal
             d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
             d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
             d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
+
+            // ****************
+            // Initialize LiveCharts Series and Dictionaries
+            _tags1 = new Dictionary<string, ObservableCollection<ObservablePoint>>
+            {
+                { "Forearm",  new ObservableCollection<ObservablePoint>() },
+                { "Underarm", new ObservableCollection<ObservablePoint>() },
+                { "Waist",    new ObservableCollection<ObservablePoint>() },
+            };
+
+            Series1 = new ObservableCollection<ISeries>
+            {
+                new LineSeries<ObservablePoint> { Name="Forearm",  Values=_tags1["Forearm"],  Fill=null, GeometrySize=3, },
+                new LineSeries<ObservablePoint> { Name="Underarm", Values=_tags1["Underarm"], Fill=null, GeometrySize=3, },
+                new LineSeries<ObservablePoint> { Name="Waist",    Values=_tags1["Waist"],    Fill=null, GeometrySize=3, },
+            };
+            // ****************
         }
 
 
@@ -172,9 +222,7 @@ namespace BLE_Universal
                     string dev_name = BLE_MAP.ContainsKey(args.Device.Name) ? BLE_MAP[args.Device.Name] : args.Device.Name;
 
                     if (!namelist.Contains(dev_name))
-                    {
                         namelist.Add(dev_name);
-                    }
                 }
             });
         }
@@ -200,13 +248,63 @@ namespace BLE_Universal
         }
 
 
+        // BUTTON: Plot Data
+        private async void PlotData(object sender, EventArgs e)
+        {
+            // Get button clicked so we don't need five button functions
+            // Button clicked = (Button)sender;
+            // if      (clicked==Graph1) SELECTED = 1;
+            // else if (clicked==Button2) SELECTED = 2;
+            // else if (clicked==Button3) SELECTED = 3;
+            // else if (clicked==Button4) SELECTED = 4;
+            // else if (clicked==Button5) SELECTED = 5;
+
+            // LiveCharts Cartesian Chart in the Popup
+
+
+            popup = new Popup
+            {
+                Content = new StackLayout
+                {
+                    Children =
+                    {
+                        new Label   // Header of List
+                        {
+                            Text = "Plot of Subject 1",
+                            FontAttributes = FontAttributes.Bold,
+                            FontSize = 26,
+                            Margin = new Thickness(0, 10)
+                        },
+                        new CartesianChart<Page, ISeries>
+                        {
+                            Series = Series1,
+                            XAxes = x_axis,
+                            YAxes = y_axis,
+                        },
+                        new CartesianChart<MainPage, ISeries>
+                        {
+                            Series = Series1,
+                            XAxes = x_axis,
+                            YAxes = y_axis,
+                        },
+                        // new CartesianChart<LiveChartsCore.Drawing.DrawingContext, ISeries>
+                        // {
+                        //     Series = Series1,
+                        //     XAxes = x_axis,
+                        //     YAxes = y_axis,
+                        // },
+                    }
+                },
+                Size = new Size(600, 600),
+            };
+
+            var result = await App.Current.MainPage.Navigation.ShowPopupAsync(popup);
+        }
+
+
         // BUTTON: Connect to a device
         private async void ConnectDevice(object sender, EventArgs e)
         {
-            // list.Clear();
-            // var listview = new ListView { ItemsSource = list };
-            // listview.ItemSelected += OnItemSelected;
-
             list.Clear();
             namelist.Clear();
             var listview = new ListView { ItemsSource = namelist };
@@ -521,25 +619,27 @@ namespace BLE_Universal
             // example: { 0x1D, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x5E, 0x5D, 0x5C }
             // epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             // byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
-            byte[] epoch_array = new byte[ 9 ];
-            // epoch_bytes.CopyTo(epoch_array, 1);
-            // do it by month, day, hour, minute, second, with leftover 0 bytes
-            // epoch_array[1] = (byte)DateTime.Now.Month;
-            // epoch_array[2] = (byte)DateTime.Now.Day;
-            // epoch_array[3] = (byte)DateTime.Now.Hour;
-            // epoch_array[4] = (byte)DateTime.Now.Minute;
-            // epoch_array[5] = (byte)DateTime.Now.Second;
 
-            epoch_array[0] = 0x1D;   // Command
-            epoch_array[1] = 0x12;   // Test bytes currently
-            epoch_array[2] = 0x34;
-            epoch_array[3] = 0x56;
-            epoch_array[4] = 0x78;
-            epoch_array[5] = 0x9A;
+            byte[] epoch_array = new byte[ 8 ];
+            epoch_array[0] = 0x1D;  // Command
+            epoch_array[1] = 0x07;  // 1st byte of 2024
+            epoch_array[2] = 0xE8;  // 2nd byte of 2024
+            epoch_array[3] = (byte)DateTime.Now.Month;
+            epoch_array[4] = (byte)DateTime.Now.Day;
+            epoch_array[5] = (byte)DateTime.Now.Hour;
+            epoch_array[6] = (byte)DateTime.Now.Minute;
+            epoch_array[7] = (byte)DateTime.Now.Second;
+            // epoch_array[0] = 0x1D;   // Command
+            // epoch_array[1] = 0x12;   // Test bytes currently
+            // epoch_array[2] = 0x34;
+            // epoch_array[3] = 0x56;
+            // epoch_array[4] = 0x78;
+            // epoch_array[5] = 0x9A;
 
             List<string> validOptions = new List<string>
             {
-                "RESUME"
+                "START",
+                "RESUME",
             };
 
             string str1 = device1?.Name;
@@ -554,6 +654,7 @@ namespace BLE_Universal
                 return;
             }
 
+            // Setup a selection of devices, returns the selected device name
             string action = await DisplayActionSheet(
                 "Select a device to start data collection", "Cancel", null,
                 validOptions.ToArray()
@@ -563,31 +664,31 @@ namespace BLE_Universal
             if (action==str1)
             {
                 int error = await d1c2[0].WriteAsync(epoch_array);
-                Task.Delay(1200).Wait();
+                Task.Delay(1500).Wait();
                 error = await d1c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str2)
             {
                 int error = await d2c2[0].WriteAsync(epoch_array);
-                Task.Delay(1200).Wait();
+                Task.Delay(1500).Wait();
                 error = await d2c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str3)
             {
                 int error = await d3c2[0].WriteAsync(epoch_array);
-                Task.Delay(1200).Wait();
+                Task.Delay(1500).Wait();
                 error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str4)
             {
                 int error = await d4c2[0].WriteAsync(epoch_array);
-                Task.Delay(1200).Wait();
+                Task.Delay(1500).Wait();
                 error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
             }
             else if (action==str5)
             {
                 int error = await d5c2[0].WriteAsync(epoch_array);
-                Task.Delay(1200).Wait();
+                Task.Delay(1500).Wait();
                 error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
             }
 
@@ -598,11 +699,6 @@ namespace BLE_Universal
                     await CollectLoop();
                 }
             }
-
-            // else if (action=="START ALL")
-            // {
-                // TO DO FOR 2.3!!
-            // }
 
             else return;
 
@@ -697,20 +793,31 @@ namespace BLE_Universal
             if (bytes.Item1 == null || bytes.Item1.Length < 4)
                 return;
 
+            // Convert the hex values into strings
             string t1 = CombineBytesToBinaryString( bytes.Item1[0], bytes.Item1[1] );
             string t2 = CombineBytesToBinaryString( bytes.Item1[2], bytes.Item1[3] );
-            string temp1_string = Math.Round( ParseFloat16(t1), 1).ToString() + "°";
-            string temp2_string = Math.Round( ParseFloat16(t2), 1).ToString() + "°";
+
+            // Convert the strings into float16 values
+            float value1 = ParseFloat16(t1);
+            float value2 = ParseFloat16(t2);
+
+            // Convert the float16 values into rounded strings
+            string temp1_string = Math.Round(value1, 1).ToString() + "°";
+            string temp2_string = Math.Round(value2, 1).ToString() + "°";
 
             if (bytes.Item1.Length==6)
             {
                 string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
-                string temp3_string = Math.Round( ParseFloat16(t3), 1).ToString() + "°";
+                float value3 = ParseFloat16(t3);
+                string temp3_string = Math.Round(value3, 1).ToString() + "°";
                 if (!(temp3.ElementAt(0)==temp3_string))
                 {
                     temp3.RemoveAt(0);
                     temp3.Add(temp3_string);
                 }
+
+                // TEMPORARY
+                _tags1["Waist"].Add(new ObservablePoint { X = DateTime.Now.Second, Y = value3 });
             }
 
             if (!(temp1.ElementAt(0)==temp1_string))
@@ -724,6 +831,13 @@ namespace BLE_Universal
                 temp2.Add(temp2_string);
             }
 
+            // Add to LiveCharts data for device1
+            if (device == device1)
+            {
+                _tags1["Forearm"].Add(new ObservablePoint { X = DateTime.Now.Second, Y = value1 });
+                _tags1["Underarm"].Add(new ObservablePoint { X = DateTime.Now.Second, Y = value2 });
+            }
+            
             Task.Delay(1000).Wait();
         }
 
@@ -804,38 +918,28 @@ namespace BLE_Universal
 
             if (action == str1)
             {
-                if (device1 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d1c2[0].WriteAsync(new byte[] { 0xCE });
+                if (device1 == null) await DisplayAlert("Error!", "No device connected.", "OK");
+                else await d1c2[0].WriteAsync(new byte[] { 0xCE });
             }
             else if (action == str2)
             {
-                if (device2 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d2c2[0].WriteAsync(new byte[] { 0xCE });
+                if (device2 == null) await DisplayAlert("Error!", "No device connected.", "OK");
+                else await d2c2[0].WriteAsync(new byte[] { 0xCE });
             }
             else if (action == str3)
             {
-                if (device3 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d3c2[0].WriteAsync(new byte[] { 0xCE });
+                if (device3 == null) await DisplayAlert("Error!", "No device connected.", "OK");
+                else await d3c2[0].WriteAsync(new byte[] { 0xCE });
             }
             else if (action == str4)
             {
-                if (device4 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d4c2[0].WriteAsync(new byte[] { 0xCE });
+                if (device4 == null) await DisplayAlert("Error!", "No device connected.", "OK");
+                else await d4c2[0].WriteAsync(new byte[] { 0xCE });
             }
             else if (action == str5)
             {
-                if (device5 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d5c2[0].WriteAsync(new byte[] { 0xCE });
+                if (device5 == null) await DisplayAlert("Error!", "No device connected.", "OK");
+                else await d5c2[0].WriteAsync(new byte[] { 0xCE });
             }
             else return; 
         }
@@ -879,5 +983,13 @@ namespace BLE_Universal
             return 0.0f;
         }
 
+    }
+
+    
+    internal class CartesianChart<T1, T2> : View
+    {
+        public ObservableCollection<ISeries> Series { get; set; }
+        public Axis[] XAxes { get; set; }
+        public Axis[] YAxes { get; set; }
     }
 }

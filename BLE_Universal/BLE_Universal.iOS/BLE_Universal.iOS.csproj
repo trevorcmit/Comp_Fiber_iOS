@@ -50,12 +50,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>Apple Distribution: Trevor Carter (46APV3ZYP2)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <!-- <CodesignEntitlements>Entitlements.plist</CodesignEntitlements> -->
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
-    <CodesignProvision>VS: com.computingfiber.BLEUniversal Development</CodesignProvision>
+    <CodesignProvision>computingfiber</CodesignProvision>
     <ExternalConsole>false</ExternalConsole>
     <Commandlineparameters></Commandlineparameters>
     <RunWithWarnings>true</RunWithWarnings>
@@ -67,10 +67,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>Apple Distribution: Trevor Carter (46APV3ZYP2)</CodesignKey>
+    <CodesignKey>Apple Development: Trevor Carter (UF74G5R7FG)</CodesignKey>
     <!-- <CodesignEntitlements>Entitlements.plist</CodesignEntitlements> -->
     <MtouchLink>SdkOnly</MtouchLink>
-    <CodesignProvision>iOS Team Store Provisioning Profile: com.computingfiber.BLEUniversal</CodesignProvision>
+    <CodesignProvision>Trevor IFM</CodesignProvision>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchDebug>true</MtouchDebug>
   </PropertyGroup>

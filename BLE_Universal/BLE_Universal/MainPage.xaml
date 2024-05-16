@@ -3,23 +3,42 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="BLE_Universal.MainPage"
-    NavigationPage.HasNavigationBar="False"    
+    NavigationPage.HasNavigationBar="False"   
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.XamarinForms" 
 >
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">  <!-- Overarching StackLayout -->
+
+            <!-- LiveCharts Cartesian Chart -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <lvc:CartesianChart 
+                    Series="{Binding Series1}" Grid.Row="0" Grid.Column="0"
+                    XAxes="{Binding x_axis}" YAxes="{Binding y_axis}"
+                />
+            </Grid>
 
             <Grid BackgroundColor="#FFFFFF" RowSpacing="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.06*" />  <!-- Row 0 -->
-                    <RowDefinition Height="0.16*" />  <!-- Row 1 -->
-                    <RowDefinition Height="0.16*" />  <!-- Row 2 -->
-                    <RowDefinition Height="0.16*" />  <!-- Row 3 -->
-                    <RowDefinition Height="0.16*" />  <!-- Row 4 -->
-                    <RowDefinition Height="0.16*" />  <!-- Row 5 -->
-                    <RowDefinition Height="0.14*" />  <!-- Row 6 -->
+                    <RowDefinition Height="0.06*" />  <!-- Row 0 Header Space? -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 1 Fiber 1 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 2 Fiber 2 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 3 Fiber 3 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 4 Fiber 4 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 5 Fiber 5 -->
+                    <RowDefinition Height="0.14*" />  <!-- Row 6 Buttons -->
                 </Grid.RowDefinitions>
 
                 <!-- Fiber 1 -->
@@ -36,9 +55,7 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt1" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
-
-                    <!-- <Label x:Name="Time1" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+                    <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="17" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp1_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -65,7 +82,8 @@
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
-                    <Button x:Name="Button1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                    <Button x:Name="Button1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Clicked="ConnectDevice" BorderWidth="2" BorderColor="Black" />
+                    <Button x:Name="Graph1"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Clicked="PlotData"      BorderWidth="1" BorderColor="#0E00AD" />
                 </Grid>
 
 
@@ -83,9 +101,7 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt2" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
-
-                    <!-- <Label x:Name="Time2" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+                    <Label x:Name="Fiber2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="17" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp2_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -112,7 +128,7 @@
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
-                    <Button x:Name="Button2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                    <Button x:Name="Button2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Clicked="ConnectDevice" BorderWidth="2" BorderColor="Black" />
                 </Grid>
 
 
@@ -130,9 +146,7 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt3" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
-
-                    <!-- <Label x:Name="Time3" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+                    <Label x:Name="Fiber3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="17" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp3_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -159,7 +173,7 @@
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
-                    <Button x:Name="Button3" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                    <Button x:Name="Button3" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Clicked="ConnectDevice" BorderWidth="2" BorderColor="Black" />
                 </Grid>
 
 
@@ -177,9 +191,7 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt4" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
-
-                    <!-- <Label x:Name="Time4" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+                    <Label x:Name="Fiber4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="17" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp4_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -206,7 +218,7 @@
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
-                    <Button x:Name="Button4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                    <Button x:Name="Button4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Clicked="ConnectDevice" BorderWidth="2" BorderColor="Black" />
                 </Grid>
 
 
@@ -224,9 +236,7 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="Shirt5" Grid.Row="1" Grid.Column="0" />
-                    <Label x:Name="Fiber5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
-
-                    <!-- <Label x:Name="Time5" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+                    <Label x:Name="Fiber5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="17" FontAttributes="Bold" />
 
                     <ListView x:Name="Temp5_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
                         <ListView.Header>
@@ -253,7 +263,7 @@
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
-                    <Button x:Name="Button5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                    <Button x:Name="Button5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Clicked="ConnectDevice" BorderWidth="2" BorderColor="Black" />
                 </Grid>
 
 

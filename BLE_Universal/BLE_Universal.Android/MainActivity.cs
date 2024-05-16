@@ -14,11 +14,9 @@ namespace BLE_Universal.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
-
             GetBLEPermission();
         }
 
@@ -34,7 +32,6 @@ namespace BLE_Universal.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
@@ -42,8 +39,7 @@ namespace BLE_Universal.Droid
 
     public class BluetoothConnectPermission : Xamarin.Essentials.Permissions.BasePlatformPermission
     {
-        public override (string androidPermission, bool isRuntime)[] RequiredPermissions
-            => new (string androidPermission, bool isRuntime)[]
+        public override (string androidPermission, bool isRuntime)[] RequiredPermissions => new (string androidPermission, bool isRuntime)[]
         {
             (Android.Manifest.Permission.BluetoothScan,    true),
             (Android.Manifest.Permission.BluetoothConnect, true),
