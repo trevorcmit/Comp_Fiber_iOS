@@ -11,22 +11,6 @@
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">  <!-- Overarching StackLayout -->
 
-            <!-- LiveCharts Cartesian Chart -->
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <lvc:CartesianChart 
-                    Series="{Binding Series1}" Grid.Row="0" Grid.Column="0"
-                    XAxes="{Binding x_axis}" YAxes="{Binding y_axis}"
-                />
-            </Grid>
-
             <Grid BackgroundColor="#FFFFFF" RowSpacing="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -178,6 +162,7 @@
 
 
                 <!-- Fiber 4 -->
+                <!--
                 <Grid Grid.Row="4" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
@@ -220,9 +205,11 @@
 
                     <Button x:Name="Button4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Clicked="ConnectDevice" BorderWidth="2" BorderColor="Black" />
                 </Grid>
+                -->
 
 
                 <!-- Fiber 5 -->
+                <!--
                 <Grid Grid.Row="5" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
@@ -265,6 +252,14 @@
 
                     <Button x:Name="Button5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Clicked="ConnectDevice" BorderWidth="2" BorderColor="Black" />
                 </Grid>
+                -->
+
+                <lvc:CartesianChart 
+                    Series="{Binding Series1}"
+                    Grid.Row="4" Grid.RowSpan="2"
+                    Grid.Column="0" Grid.ColumnSpan="1"
+                />
+                <!-- XAxes="{Binding X_axis}" YAxes="{Binding Y_axis}" -->
 
 
                 <Grid Grid.Row="6" Grid.Column="0">

@@ -5,6 +5,7 @@ using Plugin.BLE.Abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -105,28 +106,30 @@ namespace BLE_Universal
         public ObservableCollection<string> d3_temp1 = new ObservableCollection<string>();
         public ObservableCollection<string> d3_temp2 = new ObservableCollection<string>();
         public ObservableCollection<string> d3_temp3 = new ObservableCollection<string>();
-        public ObservableCollection<string> d4_temp1 = new ObservableCollection<string>();
-        public ObservableCollection<string> d4_temp2 = new ObservableCollection<string>();
-        public ObservableCollection<string> d4_temp3 = new ObservableCollection<string>();
-        public ObservableCollection<string> d5_temp1 = new ObservableCollection<string>();
-        public ObservableCollection<string> d5_temp2 = new ObservableCollection<string>();
-        public ObservableCollection<string> d5_temp3 = new ObservableCollection<string>();
 
         // ***
         private Dictionary<string, ObservableCollection<ObservablePoint>> _tags1;
+        public ObservableCollection<ISeries> Series1 { get; set; }
 
-        ObservableCollection<ISeries> _Series1;
-        public ObservableCollection<ISeries> Series1
-        {
-            get { return this._Series1;}
-            set
-            {
-                this._Series1 = value;
-                OnPropertyChanged("Series1");
-            }
-        }
+        // public event PropertyChangedEventHandler PropertyChanged;
+        // protected virtual void OnPropertyChanged(string propertyName = null)
+        // {
+        //     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        // }
 
-        public Axis[] x_axis { get; set; } = {
+        // ObservableCollection<ISeries> _Series1;
+        // public ObservableCollection<ISeries> Series1
+        // {
+        //     get { return this._Series1;}
+        //     set
+        //     {
+        //         this._Series1 = value;
+        //         // OnPropertyChanged("Series1");
+        //         // RaisePropertyChanged("Series1");
+        //     }
+        // }
+
+        public Axis[] X_axis { get; set; } = {
             new Axis
             {
                 Name = "Seconds Elapsed",
@@ -134,7 +137,7 @@ namespace BLE_Universal
             }
         };
 
-        public Axis[] y_axis { get; set; } = {
+        public Axis[] Y_axis { get; set; } = {
             new Axis
             {
                 Name = "Temperature (°C)",
@@ -143,6 +146,8 @@ namespace BLE_Universal
                 MaxLimit=30,
             }
         };
+
+        public DateTime START; // To calculate seconds elapsed in AddOrUpdateTagData()
 
         //***********************************************************************************************************
 
@@ -168,18 +173,18 @@ namespace BLE_Universal
                 Shirt1.Source = new FileImageSource { File = "Man30.png" };
                 Shirt2.Source = new FileImageSource { File = "Man30.png" };
                 Shirt3.Source = new FileImageSource { File = "Man30.png" };
-                Shirt4.Source = new FileImageSource { File = "Man30.png" };
-                Shirt5.Source = new FileImageSource { File = "Man30.png" };
+                // Shirt4.Source = new FileImageSource { File = "Man30.png" };
+                // Shirt5.Source = new FileImageSource { File = "Man30.png" };
                 Fiber1.Text = "Not Connected"; Fiber1.TextColor = Color.FromHex("#000000");
                 Fiber2.Text = "Not Connected"; Fiber2.TextColor = Color.FromHex("#000000");
                 Fiber3.Text = "Not Connected"; Fiber3.TextColor = Color.FromHex("#000000");
-                Fiber4.Text = "Not Connected"; Fiber4.TextColor = Color.FromHex("#000000");
-                Fiber5.Text = "Not Connected"; Fiber5.TextColor = Color.FromHex("#000000");
+                // Fiber4.Text = "Not Connected"; Fiber4.TextColor = Color.FromHex("#000000");
+                // Fiber5.Text = "Not Connected"; Fiber5.TextColor = Color.FromHex("#000000");
                 Temp1_1.ItemsSource = d1_temp1; Temp1_2.ItemsSource = d1_temp2; Temp1_3.ItemsSource = d1_temp3;
                 Temp2_1.ItemsSource = d2_temp1; Temp2_2.ItemsSource = d2_temp2; Temp2_3.ItemsSource = d2_temp3;
                 Temp3_1.ItemsSource = d3_temp1; Temp3_2.ItemsSource = d3_temp2; Temp3_3.ItemsSource = d3_temp3;
-                Temp4_1.ItemsSource = d4_temp1; Temp4_2.ItemsSource = d4_temp2; Temp4_3.ItemsSource = d4_temp3;
-                Temp5_1.ItemsSource = d5_temp1; Temp5_2.ItemsSource = d5_temp2; Temp5_3.ItemsSource = d5_temp3;
+                // Temp4_1.ItemsSource = d4_temp1; Temp4_2.ItemsSource = d4_temp2; Temp4_3.ItemsSource = d4_temp3;
+                // Temp5_1.ItemsSource = d5_temp1; Temp5_2.ItemsSource = d5_temp2; Temp5_3.ItemsSource = d5_temp3;
                 StartColor.Color = Color.FromHex("#AEAEAE");
             });
 
@@ -188,16 +193,16 @@ namespace BLE_Universal
             d1_temp1.Add("--"); d1_temp2.Add("--"); d1_temp3.Add("--");
             d2_temp1.Add("--"); d2_temp2.Add("--"); d2_temp3.Add("--");
             d3_temp1.Add("--"); d3_temp2.Add("--"); d3_temp3.Add("--");
-            d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
-            d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
+            // d4_temp1.Add("--"); d4_temp2.Add("--"); d4_temp3.Add("--");
+            // d5_temp1.Add("--"); d5_temp2.Add("--"); d5_temp3.Add("--");
 
             // ****************
             // Initialize LiveCharts Series and Dictionaries
             _tags1 = new Dictionary<string, ObservableCollection<ObservablePoint>>
             {
-                { "Forearm",  new ObservableCollection<ObservablePoint>() },
-                { "Underarm", new ObservableCollection<ObservablePoint>() },
-                { "Waist",    new ObservableCollection<ObservablePoint>() },
+                { "Forearm",  new ObservableCollection<ObservablePoint>{ } },
+                { "Underarm", new ObservableCollection<ObservablePoint>{ } },
+                { "Waist",    new ObservableCollection<ObservablePoint>{ } },
             };
 
             Series1 = new ObservableCollection<ISeries>
@@ -206,6 +211,10 @@ namespace BLE_Universal
                 new LineSeries<ObservablePoint> { Name="Underarm", Values=_tags1["Underarm"], Fill=null, GeometrySize=3, },
                 new LineSeries<ObservablePoint> { Name="Waist",    Values=_tags1["Waist"],    Fill=null, GeometrySize=3, },
             };
+
+            _tags1["Forearm"].Add(new ObservablePoint { X = 0.0, Y = 15.0 });
+
+            START = DateTime.Now;
             // ****************
         }
 
@@ -215,6 +224,8 @@ namespace BLE_Universal
         {
             Device.BeginInvokeOnMainThread(() =>
             {
+                _tags1["Underarm"].Add(new ObservablePoint { X = 0.0, Y = 15.0 });
+
                 if ((!list.Contains(args.Device)) && (args.Device.Name != null) && args.Device.Name.Contains("IFM"))
                 {
                     list.Add(args.Device);
@@ -261,44 +272,36 @@ namespace BLE_Universal
 
             // LiveCharts Cartesian Chart in the Popup
 
-
-            popup = new Popup
-            {
-                Content = new StackLayout
-                {
-                    Children =
-                    {
-                        new Label   // Header of List
-                        {
-                            Text = "Plot of Subject 1",
-                            FontAttributes = FontAttributes.Bold,
-                            FontSize = 26,
-                            Margin = new Thickness(0, 10)
-                        },
-                        new CartesianChart<Page, ISeries>
-                        {
-                            Series = Series1,
-                            XAxes = x_axis,
-                            YAxes = y_axis,
-                        },
-                        new CartesianChart<MainPage, ISeries>
-                        {
-                            Series = Series1,
-                            XAxes = x_axis,
-                            YAxes = y_axis,
-                        },
-                        // new CartesianChart<LiveChartsCore.Drawing.DrawingContext, ISeries>
-                        // {
-                        //     Series = Series1,
-                        //     XAxes = x_axis,
-                        //     YAxes = y_axis,
-                        // },
-                    }
-                },
-                Size = new Size(600, 600),
-            };
-
-            var result = await App.Current.MainPage.Navigation.ShowPopupAsync(popup);
+            // popup = new Popup
+            // {
+            //     Content = new StackLayout
+            //     {
+            //         Children =
+            //         {
+            //             new Label   // Header of List
+            //             {
+            //                 Text = "Plot of Subject 1",
+            //                 FontAttributes = FontAttributes.Bold,
+            //                 FontSize = 26,
+            //                 Margin = new Thickness(0, 10)
+            //             },
+            //             new CartesianChart<Page, ISeries>
+            //             {
+            //                 Series = Series1,
+            //                 XAxes = x_axis,
+            //                 YAxes = y_axis,
+            //             },
+            //             new CartesianChart<MainPage, ISeries>
+            //             {
+            //                 Series = Series1,
+            //                 XAxes = x_axis,
+            //                 YAxes = y_axis,
+            //             },
+            //         }
+            //     },
+            //     Size = new Size(600, 600),
+            // };
+            // var result = await App.Current.MainPage.Navigation.ShowPopupAsync(popup);
         }
 
 
@@ -315,8 +318,8 @@ namespace BLE_Universal
             if      (clicked==Button1) SELECTED = 1;
             else if (clicked==Button2) SELECTED = 2;
             else if (clicked==Button3) SELECTED = 3;
-            else if (clicked==Button4) SELECTED = 4;
-            else if (clicked==Button5) SELECTED = 5;
+            // else if (clicked==Button4) SELECTED = 4;
+            // else if (clicked==Button5) SELECTED = 5;
 
             popup = new Popup
             {
@@ -451,47 +454,6 @@ namespace BLE_Universal
                     return 1;
                 }
             }
-            else if (index==3)
-            {
-                try
-                {
-                    await adapter.ConnectToDeviceAsync(d);
-                    Fiber4.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
-                    Fiber4.TextColor = Color.FromHex("#004A10");
-                    Shirt4.Source = new FileImageSource { File = "Green30.jpeg" };
-                    cancelsource4 = new CancellationTokenSource(); canceltoken4 = cancelsource4.Token;
-                    ServicesAndCharacteristics(3);
-                }
-                catch (Exception)
-                {
-                    Fiber4.Text = "Error! Please retry.";
-                    Fiber4.TextColor = Color.FromHex("#E60008");
-                    Shirt4.Source = new FileImageSource { File = "Red.png" };
-                    popup.Dismiss(null);
-                    return 1;
-                }
-            }
-            else if (index==4)
-            {
-                try
-                {
-                    await adapter.ConnectToDeviceAsync(d);
-                    Fiber5.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
-                    Fiber5.TextColor = Color.FromHex("#004A10");
-                    Shirt5.Source = new FileImageSource { File = "Green30.jpeg" };
-                    cancelsource5 = new CancellationTokenSource(); canceltoken5 = cancelsource5.Token;
-                    ServicesAndCharacteristics(4);
-                }
-                catch (Exception)
-                {
-                    Fiber5.Text = "Error! Please retry.";
-                    Fiber5.TextColor = Color.FromHex("#E60008");
-                    Shirt5.Source = new FileImageSource { File = "Red.png" };
-                    popup.Dismiss(null);
-                    return 1;
-                }
-            }
-
             popup.Dismiss(null);
             return 0;
         }
@@ -564,48 +526,6 @@ namespace BLE_Universal
                                 break;
                         }
                     break;
-                case 3:
-                    if (device4 == null) break;
-                    s_ = await device4.GetServicesAsync();
-                    for (int i = 0; i < s_.Count; i++)
-                        switch (i)
-                        {
-                            case 0:
-                                d4s1.Add(s_[i]);
-                                IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
-                                foreach (var c_ in c1) { d4c1.Add(c_); }
-                                break;
-                            case 1:
-                                d4s2.Add(s_[i]);
-                                IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
-                                foreach (var c_ in c2) { d4c2.Add(c_); }
-                                break;
-                            default:
-                                break;
-                        }
-                    break;
-                case 4:
-                    if (device5 == null) break;
-                    s_ = await device5.GetServicesAsync();
-                    for (int i = 0; i < s_.Count; i++)
-                        switch (i)
-                        {
-                            case 0:
-                                d5s1.Add(s_[i]);
-                                IReadOnlyList<ICharacteristic> c1 = await s_[i].GetCharacteristicsAsync();
-                                foreach (var c_ in c1) { d5c1.Add(c_); }
-                                break;
-                            case 1:
-                                d5s2.Add(s_[i]);
-                                IReadOnlyList<ICharacteristic> c2 = await s_[i].GetCharacteristicsAsync();
-                                foreach (var c_ in c2) { d5c2.Add(c_); }
-                                break;
-                            default:
-                                break;
-                        }
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -613,8 +533,6 @@ namespace BLE_Universal
         // BUTTON: Write Command to BLE Device to trigger MCU collection of accel. data
         async void OnStartClicked(object sender, EventArgs args)
         {
-            // START = DateTime.Now; // Setup Start DateTime for X-Axis of LiveChart
-
             // Write Epoch time in exactly 8 bytes of space, with 0x1D command on the head
             // example: { 0x1D, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x5E, 0x5D, 0x5C }
             // epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
@@ -645,8 +563,8 @@ namespace BLE_Universal
             string str1 = device1?.Name;
             string str2 = device2?.Name;
             string str3 = device3?.Name;
-            string str4 = device4?.Name;
-            string str5 = device5?.Name;
+            // string str4 = device4?.Name;
+            // string str5 = device5?.Name;
 
             if (validOptions.Count == 0)
             {
@@ -678,18 +596,6 @@ namespace BLE_Universal
                 int error = await d3c2[0].WriteAsync(epoch_array);
                 Task.Delay(1500).Wait();
                 error = await d3c2[0].WriteAsync(new byte[] { 0x0C });
-            }
-            else if (action==str4)
-            {
-                int error = await d4c2[0].WriteAsync(epoch_array);
-                Task.Delay(1500).Wait();
-                error = await d4c2[0].WriteAsync(new byte[] { 0x0C });
-            }
-            else if (action==str5)
-            {
-                int error = await d5c2[0].WriteAsync(epoch_array);
-                Task.Delay(1500).Wait();
-                error = await d5c2[0].WriteAsync(new byte[] { 0x0C });
             }
 
             else if (action=="RESUME")
@@ -755,8 +661,6 @@ namespace BLE_Universal
                 if (device1!=null) await ProcessDeviceData(device1, d1c2, d1_temp1, d1_temp2, d1_temp3);
                 if (device2!=null) await ProcessDeviceData(device2, d2c2, d2_temp1, d2_temp2, d2_temp3);
                 if (device3!=null) await ProcessDeviceData(device3, d3c2, d3_temp1, d3_temp2, d3_temp3);
-                if (device4!=null) await ProcessDeviceData(device4, d4c2, d4_temp1, d4_temp2, d4_temp3);
-                if (device5!=null) await ProcessDeviceData(device5, d5c2, d5_temp1, d5_temp2, d5_temp3);
             }
             catch (Exception)
             {
@@ -805,6 +709,8 @@ namespace BLE_Universal
             string temp1_string = Math.Round(value1, 1).ToString() + "°";
             string temp2_string = Math.Round(value2, 1).ToString() + "°";
 
+            var TimeDiff = (DateTime.Now - START).TotalSeconds;
+
             if (bytes.Item1.Length==6)
             {
                 string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
@@ -817,7 +723,7 @@ namespace BLE_Universal
                 }
 
                 // TEMPORARY
-                _tags1["Waist"].Add(new ObservablePoint { X = DateTime.Now.Second, Y = value3 });
+                _tags1["Waist"].Add(new ObservablePoint { X = TimeDiff, Y = value3 });
             }
 
             if (!(temp1.ElementAt(0)==temp1_string))
@@ -834,11 +740,11 @@ namespace BLE_Universal
             // Add to LiveCharts data for device1
             if (device == device1)
             {
-                _tags1["Forearm"].Add(new ObservablePoint { X = DateTime.Now.Second, Y = value1 });
-                _tags1["Underarm"].Add(new ObservablePoint { X = DateTime.Now.Second, Y = value2 });
+                _tags1["Forearm"].Add(new ObservablePoint { X = TimeDiff, Y = value1 });
+                _tags1["Underarm"].Add(new ObservablePoint { X = TimeDiff, Y = value2 });
             }
             
-            Task.Delay(1000).Wait();
+            Task.Delay(1200).Wait();
         }
 
 
@@ -869,22 +775,6 @@ namespace BLE_Universal
                 device3 = null;
                 d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
             }
-            else if (device == device4)
-            {
-                cancelsource4.Cancel();
-                Fiber4.TextColor = Color.FromHex("#707070");
-                Shirt4.Source = new FileImageSource { File = "Man30.png" };
-                device4 = null;
-                d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
-            }
-            else if (device == device5)
-            {
-                cancelsource5.Cancel();
-                Fiber5.TextColor = Color.FromHex("#707070");
-                Shirt5.Source = new FileImageSource { File = "Man30.png" };
-                device5 = null;
-                d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
-            }
         }
 
 
@@ -896,14 +786,10 @@ namespace BLE_Universal
             string str1 = device1?.Name;
             string str2 = device2?.Name;
             string str3 = device3?.Name;
-            string str4 = device4?.Name;
-            string str5 = device5?.Name;
 
             if (str1 != null) validOptions.Add(str1);
             if (str2 != null) validOptions.Add(str2);
             if (str3 != null) validOptions.Add(str3);
-            if (str4 != null) validOptions.Add(str4);
-            if (str5 != null) validOptions.Add(str5);
 
             if (validOptions.Count == 0)
             {
@@ -931,17 +817,8 @@ namespace BLE_Universal
                 if (device3 == null) await DisplayAlert("Error!", "No device connected.", "OK");
                 else await d3c2[0].WriteAsync(new byte[] { 0xCE });
             }
-            else if (action == str4)
-            {
-                if (device4 == null) await DisplayAlert("Error!", "No device connected.", "OK");
-                else await d4c2[0].WriteAsync(new byte[] { 0xCE });
-            }
-            else if (action == str5)
-            {
-                if (device5 == null) await DisplayAlert("Error!", "No device connected.", "OK");
-                else await d5c2[0].WriteAsync(new byte[] { 0xCE });
-            }
-            else return; 
+            else
+                return; 
         }
 
 
@@ -979,17 +856,16 @@ namespace BLE_Universal
                 return S[sign] * fraction * (float)Math.Pow(2, Convert.ToInt32(exp, 2) - 15); // 15 is half-precision bias
             }
 
-            // This line is unreachable, but C# requires a return statement in all code paths
-            return 0.0f;
+            return 0.0f;  // This line is unreachable, but C# requires a return statement in all code paths
         }
 
     }
 
     
-    internal class CartesianChart<T1, T2> : View
-    {
-        public ObservableCollection<ISeries> Series { get; set; }
-        public Axis[] XAxes { get; set; }
-        public Axis[] YAxes { get; set; }
-    }
+    // internal class CartesianChart<T1, T2> : View
+    // {
+    //     public ObservableCollection<ISeries> Series { get; set; }
+    //     public Axis[] XAxes { get; set; }
+    //     public Axis[] YAxes { get; set; }
+    // }
 }
