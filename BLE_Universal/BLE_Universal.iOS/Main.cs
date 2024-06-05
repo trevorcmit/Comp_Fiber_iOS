@@ -14,6 +14,8 @@ namespace BLE_Universal.iOS
         {
             // if you want to use a different Application Delegate class from "AppDelegate" you can specify it here.
             UIApplication.Main(args, null, typeof(AppDelegate));
+            // set orientation to landscape
+            UIDevice.CurrentDevice.SetValueForKey(new NSNumber((int)UIInterfaceOrientation.LandscapeLeft), new NSString("orientation"));
         }
 
     }

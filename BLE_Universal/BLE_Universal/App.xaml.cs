@@ -13,6 +13,10 @@ namespace BLE_Universal
 
             // Switched to Nagivation Page setup for UWP Compatibility
             MainPage = new NavigationPage (new MainPage());
+
+            // Set orientation to landscape
+            // MainPage = new MainPage();
+            // MainPage.SetValue(NavigationPage.HasNavigationBarProperty, false);           
         }
 
         protected override void OnStart()

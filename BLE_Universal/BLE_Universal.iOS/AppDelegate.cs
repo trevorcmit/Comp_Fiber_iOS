@@ -22,6 +22,9 @@ namespace BLE_Universal.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
+            // set orientation to landscape
+            UIDevice.CurrentDevice.SetValueForKey(new NSNumber((int)UIInterfaceOrientation.LandscapeLeft), new NSString("orientation"));
+
             return base.FinishedLaunching(app, options);
         }
 

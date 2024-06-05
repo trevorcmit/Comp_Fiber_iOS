@@ -18,6 +18,9 @@ namespace BLE_Universal.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
             GetBLEPermission();
+
+            // Set orientation to landscape
+            // RequestedOrientation = ScreenOrientation.Landscape;
         }
 
         private async void GetBLEPermission()

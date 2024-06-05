@@ -27,7 +27,7 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignProvision>Automatic</CodesignProvision>
+    <CodesignProvision>iOS Team Store Provisioning Profile: com.computingfiber.BLEUniversal</CodesignProvision>
     <CodesignKey>Apple Distribution: Trevor Carter (46APV3ZYP2)</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
@@ -55,7 +55,7 @@
     <!-- <CodesignEntitlements>Entitlements.plist</CodesignEntitlements> -->
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
-    <CodesignProvision>computingfiber</CodesignProvision>
+    <CodesignProvision>Automatic</CodesignProvision>
     <ExternalConsole>false</ExternalConsole>
     <Commandlineparameters></Commandlineparameters>
     <RunWithWarnings>true</RunWithWarnings>
