@@ -3,57 +3,282 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="BLE_Universal.MainPage"
-    NavigationPage.HasNavigationBar="False"   
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.XamarinForms"
-    mc:Ignorable="d" 
+    NavigationPage.HasNavigationBar="False"    
 >
     <ContentPage.Content>
-        <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <StackLayout Orientation="Vertical">  <!-- Overarching StackLayout -->
 
-            <Grid BackgroundColor="#FFFFFF" RowSpacing="15" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Grid BackgroundColor="#FFFFFF" RowSpacing="15">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.16*"/>
-                    <ColumnDefinition Width="0.84*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.1*"/>
-                    <RowDefinition Height="0.3*"/>
-                    <RowDefinition Height="0.3*"/>
-                    <RowDefinition Height="0.3*"/>
+                    <RowDefinition Height="0.06*" />  <!-- Row 0 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 1 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 2 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 3 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 4 -->
+                    <RowDefinition Height="0.16*" />  <!-- Row 5 -->
+                    <RowDefinition Height="0.14*" />  <!-- Row 6 -->
                 </Grid.RowDefinitions>
 
-                <Label
-                    Grid.Row="0" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center"
-                    x:Name="ConnectedName" TextColor="#000000" FontSize="24" FontAttributes="Bold"
-                />
-                <lvc:CartesianChart x:Name="LiveAccelPlot" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" />
-
-                <!-- - - - BUTTONS ON THE LEFT - - - -->
-                <Grid Grid.Row="0" Grid.Column="0" RowSpan="4">
+                <!-- Fiber 1 -->
+                <Grid Grid.Row="1" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.05*"/>
-                        <RowDefinition Height="0.25*"/> <!-- Row 1 -->
-                        <RowDefinition Height="0.15*"/>
-                        <RowDefinition Height="0.25*"/> <!-- Row 3 -->
-                        <RowDefinition Height="0.15*"/>
-                        <RowDefinition Height="0.15*"/>
+                        <RowDefinition Height="0.2*" />
+                        <RowDefinition Height="0.8*" />
                     </Grid.RowDefinitions>
 
-                    <BoxView Grid.Row="1" Grid.RowSpan="2" CornerRadius="15" x:Name="ConnectColor" />
-                    <BoxView Grid.Row="3" Grid.RowSpan="2" CornerRadius="15" x:Name="StartColor" />
+                    <Image x:Name="Shirt1" Grid.Row="1" Grid.Column="0" />
+                    <Label x:Name="Fiber1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
 
-                    <Label x:Name="ConnectButtonText" FontAttributes="Bold" FontSize="18" TextColor="#000000" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <Label x:Name="StartButtonText"   FontAttributes="Bold" FontSize="18" TextColor="#000000" Grid.Row="4" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <!-- <Label x:Name="Time1" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
 
-                    <Label x:Name="DateTimeText" FontAttributes="Bold" FontSize="15" Grid.Row="5" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <ListView x:Name="Temp1_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Forearm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp1_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Underarm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp1_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Waist" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
 
-                    <!-- <Image Grid.Row="1" VerticalOptions="Start" HorizontalOptions="Center" Source="connect4.jpg" />
-                    <Image Grid.Row="3" VerticalOptions="Start" HorizontalOptions="Center" Source="start.png" /> -->
-                    
-                    <Button Grid.Row="1" Grid.RowSpan="2" Background="Transparent" Clicked="ConnectDevice" />
-                    <Button Grid.Row="3" Grid.RowSpan="2" Background="Transparent" Clicked="OnStartClicked" />
+                    <Button x:Name="Button1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                </Grid>
+
+
+                <!-- Fiber 2 -->
+                <Grid Grid.Row="2" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*" />
+                        <RowDefinition Height="0.8*" />
+                    </Grid.RowDefinitions>
+
+                    <Image x:Name="Shirt2" Grid.Row="1" Grid.Column="0" />
+                    <Label x:Name="Fiber2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+
+                    <!-- <Label x:Name="Time2" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+
+                    <ListView x:Name="Temp2_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Forearm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp2_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Underarm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp2_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Waist" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+
+                    <Button x:Name="Button2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                </Grid>
+
+
+                <!-- Fiber 3 -->
+                <Grid Grid.Row="3" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*" />
+                        <RowDefinition Height="0.8*" />
+                    </Grid.RowDefinitions>
+
+                    <Image x:Name="Shirt3" Grid.Row="1" Grid.Column="0" />
+                    <Label x:Name="Fiber3" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+
+                    <!-- <Label x:Name="Time3" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+
+                    <ListView x:Name="Temp3_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Forearm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp3_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Underarm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp3_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Waist" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+
+                    <Button x:Name="Button3" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                </Grid>
+
+
+                <!-- Fiber 4 -->
+                <Grid Grid.Row="4" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*" />
+                        <RowDefinition Height="0.8*" />
+                    </Grid.RowDefinitions>
+
+                    <Image x:Name="Shirt4" Grid.Row="1" Grid.Column="0" />
+                    <Label x:Name="Fiber4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+
+                    <!-- <Label x:Name="Time4" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+
+                    <ListView x:Name="Temp4_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Forearm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp4_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Underarm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp4_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Waist" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+
+                    <Button x:Name="Button4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                </Grid>
+
+
+                <!-- Fiber 5 -->
+                <Grid Grid.Row="5" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.2*" />
+                        <RowDefinition Height="0.8*" />
+                    </Grid.RowDefinitions>
+
+                    <Image x:Name="Shirt5" Grid.Row="1" Grid.Column="0" />
+                    <Label x:Name="Fiber5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" TextColor="#000000" FontSize="20" FontAttributes="Bold" />
+
+                    <!-- <Label x:Name="Time5" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" TextColor="#000000" FontSize="10" HorizontalOptions="End"/> -->
+
+                    <ListView x:Name="Temp5_1" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Forearm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp5_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Underarm" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="Temp5_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
+                        <ListView.Header>
+                            <Label Text="Waist" FontSize="16" HorizontalOptions="Center" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
+                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                        </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
+                    </ListView>
+
+                    <Button x:Name="Button5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Clicked="ConnectDevice"/>
+                </Grid>
+
+
+                <Grid Grid.Row="6" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.40*"/>
+                        <ColumnDefinition Width="0.20*"/>
+                        <ColumnDefinition Width="0.40*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.7*"/>
+                        <RowDefinition Height="0.3*"/>
+                    </Grid.RowDefinitions>
+
+                    <BoxView Grid.Row="0" Grid.Column="0" CornerRadius="25" Grid.RowSpan="2" x:Name="StartColor" />
+                    <BoxView Grid.Row="0" Grid.Column="2" CornerRadius="25" Grid.RowSpan="2" Color="#AFAFAF" />
+
+                    <Label Text="Start" Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
+                    <Label Text="Erase" Grid.Row="1" Grid.Column="2" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
+
+                    <Image x:Name="startimage" Grid.Row="0" Grid.Column="0" />
+                    <Image x:Name="eraseimage" Grid.Row="0" Grid.Column="2" />
+
+                    <Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Clicked="OnStartClicked" />
+                    <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Clicked="OnChipErase"  />
                 </Grid>
 
             </Grid>
