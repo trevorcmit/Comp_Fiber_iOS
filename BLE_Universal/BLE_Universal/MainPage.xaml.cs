@@ -40,33 +40,33 @@ namespace BLE_Universal
 
         public Dictionary<string, string> BLE_MAP = new Dictionary<string, string>
         {
-            {"IFM_FIBER_51", "1A. Subject 1 Shirt 1"},
-            {"IFM_FIBER_52", "1B. Subject 2 Shirt 2"},
-            {"IFM_FIBER_57", "1B. Subject 16 Shirt 3"},
+            //{"IFM_FIBER_51", "1A. Subject 1 Shirt 1"},
+            //{"IFM_FIBER_52", "1B. Subject 2 Shirt 2"},
+            //{"IFM_FIBER_57", "1B. Subject 16 Shirt 3"},
 
-            {"IFM_FIBER_54", "2B. Subject 5 Shirt 5"},
-            {"IFM_FIBER_55", "1A. Subject 7 Shirt 6"},
-            {"IFM_FIBER_61", "2B. Subject 6 Shirt 7"},
+            //{"IFM_FIBER_54", "2B. Subject 5 Shirt 5"},
+            //{"IFM_FIBER_55", "1A. Subject 7 Shirt 6"},
+            //{"IFM_FIBER_61", "2B. Subject 6 Shirt 7"},
 
-            {"IFM_FIBER_56", "1B. Subject 22 Shirt 8"},
-            {"IFM_FIBER_71", "2A. Subject 24 Shirt 9"},
-            {"IFM_FIBER_67", "1B. Subject 10 Shirt 10"},
+            //{"IFM_FIBER_56", "1B. Subject 22 Shirt 8"},
+            //{"IFM_FIBER_71", "2A. Subject 24 Shirt 9"},
+            //{"IFM_FIBER_67", "1B. Subject 10 Shirt 10"},
 
-            {"IFM_FIBER_76", "1A. Subject 19 Shirt 13"},
-            {"IFM_FIBER_63", "2B. Subject 14 Shirt 14"},
-            {"IFM_FIBER_64", "1A. Subject 15 Shirt 15"},
+            //{"IFM_FIBER_76", "1A. Subject 19 Shirt 13"},
+            //{"IFM_FIBER_63", "2B. Subject 14 Shirt 14"},
+            //{"IFM_FIBER_64", "1A. Subject 15 Shirt 15"},
 
-            {"IFM_FIBER_72", "2A. Subject 17 Shirt 17"},
-            {"IFM_FIBER_99", "2B. Subject 18 Shirt 18"},
-            {"IFM_FIBER_98", "2B. Subject 25 Shirt 19"},
+            //{"IFM_FIBER_72", "2A. Subject 17 Shirt 17"},
+            //{"IFM_FIBER_99", "2B. Subject 18 Shirt 18"},
+            //{"IFM_FIBER_98", "2B. Subject 25 Shirt 19"},
 
-            {"IFM_FIBER_75",  "1A. Subject 20 Shirt 20"},
-            {"IFM_FIBER_102", "1B. Subject 21 Shirt 21"},
-            {"IFM_FIBER_103", "2A. Subject 11 Shirt 22"},
+            //{"IFM_FIBER_75",  "1A. Subject 20 Shirt 20"},
+            //{"IFM_FIBER_102", "1B. Subject 21 Shirt 21"},
+            //{"IFM_FIBER_103", "2A. Subject 11 Shirt 22"},
 
-            {"IFM_FIBER_104", "2A. Subject 23 Shirt 23"},
+            //{"IFM_FIBER_104", "2A. Subject 23 Shirt 23"},
 
-            {"IFM_FIBER_53", "2A. Subject 4 Shirt 4"},
+            //{"IFM_FIBER_53", "2A. Subject 4 Shirt 4"},
         };
         
         //***********************************************************************************************************
@@ -132,11 +132,16 @@ namespace BLE_Universal
             {
                 startimage.Source = new FileImageSource { File = "start.png" };
                 eraseimage.Source = new FileImageSource { File = "erase.png" };
-                Shirt1.Source = new FileImageSource { File = "Man30.png" };
-                Shirt2.Source = new FileImageSource { File = "Man30.png" };
-                Shirt3.Source = new FileImageSource { File = "Man30.png" };
-                Shirt4.Source = new FileImageSource { File = "Man30.png" };
-                Shirt5.Source = new FileImageSource { File = "Man30.png" };
+                // Shirt1.Source = new FileImageSource { File = "Man30.png" };
+                // Shirt2.Source = new FileImageSource { File = "Man30.png" };
+                // Shirt3.Source = new FileImageSource { File = "Man30.png" };
+                // Shirt4.Source = new FileImageSource { File = "Man30.png" };
+                // Shirt5.Source = new FileImageSource { File = "Man30.png" };
+                Shirt1.Source = new FileImageSource { File = "bloodbag.jpg" };
+                Shirt2.Source = new FileImageSource { File = "bloodbag.jpg" };
+                Shirt3.Source = new FileImageSource { File = "bloodbag.jpg" };
+                Shirt4.Source = new FileImageSource { File = "bloodbag.jpg" };
+                Shirt5.Source = new FileImageSource { File = "bloodbag.jpg" };
                 Fiber1.Text = "Not Connected"; Fiber1.TextColor = Color.FromHex("#000000");
                 Fiber2.Text = "Not Connected"; Fiber2.TextColor = Color.FromHex("#000000");
                 Fiber3.Text = "Not Connected"; Fiber3.TextColor = Color.FromHex("#000000");
@@ -299,7 +304,7 @@ namespace BLE_Universal
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber1.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber1.TextColor = Color.FromHex("#004A10");
-                    Shirt1.Source = new FileImageSource { File = "Green30.jpeg" };
+                    Shirt1.Source = new FileImageSource { File = "greenbag.png" };
                     cancelsource1 = new CancellationTokenSource(); canceltoken1 = cancelsource1.Token;
                     ServicesAndCharacteristics(0);
                 }
@@ -319,7 +324,7 @@ namespace BLE_Universal
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber2.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber2.TextColor = Color.FromHex("#004A10");
-                    Shirt2.Source = new FileImageSource { File = "Green30.jpeg" };
+                    Shirt2.Source = new FileImageSource { File = "greenbag.png" };
                     cancelsource2 = new CancellationTokenSource(); canceltoken2 = cancelsource2.Token;
                     ServicesAndCharacteristics(1);
                 }
@@ -339,7 +344,7 @@ namespace BLE_Universal
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber3.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber3.TextColor = Color.FromHex("#004A10");
-                    Shirt3.Source = new FileImageSource { File = "Green30.jpeg" };
+                    Shirt3.Source = new FileImageSource { File = "greenbag.png" };
                     cancelsource3 = new CancellationTokenSource(); canceltoken3 = cancelsource3.Token;
                     ServicesAndCharacteristics(2);
 
@@ -360,7 +365,7 @@ namespace BLE_Universal
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber4.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber4.TextColor = Color.FromHex("#004A10");
-                    Shirt4.Source = new FileImageSource { File = "Green30.jpeg" };
+                    Shirt4.Source = new FileImageSource { File = "greenbag.png" };
                     cancelsource4 = new CancellationTokenSource(); canceltoken4 = cancelsource4.Token;
                     ServicesAndCharacteristics(3);
                 }
@@ -380,7 +385,7 @@ namespace BLE_Universal
                     await adapter.ConnectToDeviceAsync(d);
                     Fiber5.Text = BLE_MAP.ContainsKey(d.Name) ? BLE_MAP[d.Name] : d.Name;
                     Fiber5.TextColor = Color.FromHex("#004A10");
-                    Shirt5.Source = new FileImageSource { File = "Green30.jpeg" };
+                    Shirt5.Source = new FileImageSource { File = "greenbag.png" };
                     cancelsource5 = new CancellationTokenSource(); canceltoken5 = cancelsource5.Token;
                     ServicesAndCharacteristics(4);
                 }
@@ -515,30 +520,6 @@ namespace BLE_Universal
         // BUTTON: Write Command to BLE Device to trigger MCU collection of accel. data
         async void OnStartClicked(object sender, EventArgs args)
         {
-            // START = DateTime.Now; // Setup Start DateTime for X-Axis of LiveChart
-
-            // Write Epoch time in exactly 8 bytes of space, with 0x1D command on the head
-            // example: { 0x1D, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x5E, 0x5D, 0x5C }
-            // epoch_time = (UInt64)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            // byte[] epoch_bytes = BitConverter.GetBytes(epoch_time);
-
-            byte[] epoch_array = new byte[ 9 ];
-
-            // epoch_bytes.CopyTo(epoch_array, 1);
-            // do it by month, day, hour, minute, second, with leftover 0 bytes
-            // epoch_array[1] = (byte)DateTime.Now.Month;
-            // epoch_array[2] = (byte)DateTime.Now.Day;
-            // epoch_array[3] = (byte)DateTime.Now.Hour;
-            // epoch_array[4] = (byte)DateTime.Now.Minute;
-            // epoch_array[5] = (byte)DateTime.Now.Second;
-
-            epoch_array[0] = 0x1D;   // Command
-            epoch_array[1] = 0x12;   // Test bytes currently
-            epoch_array[2] = 0x34;
-            epoch_array[3] = 0x56;
-            epoch_array[4] = 0x78;
-            epoch_array[5] = 0x9A;
-
             List<string> validOptions = new List<string>
             {
                 "RESUME"
@@ -601,12 +582,8 @@ namespace BLE_Universal
                 }
             }
 
-            // else if (action=="START ALL")
-            // {
-                // TO DO FOR 2.3!!
-            // }
-
-            else return;
+            else
+                return;
 
             Task.Delay(600).Wait();
             if (!IS_COLLECTION_RUNNING)
@@ -684,7 +661,7 @@ namespace BLE_Universal
             if (device==null)         return;  // Check that device exists
             if (connection.Count < 3) return;  // Check that index 2 exists
 
-            (byte[], int) bytes;
+            (byte[],int) bytes;
             try
             {
                 bytes = await connection[2]?.ReadAsync();
@@ -701,23 +678,14 @@ namespace BLE_Universal
 
             string t1 = CombineBytesToBinaryString( bytes.Item1[0], bytes.Item1[1] );
             string t2 = CombineBytesToBinaryString( bytes.Item1[2], bytes.Item1[3] );
-            string temp1_string = Math.Round( ParseFloat16(t1), 1).ToString() + "°";
-            //string temp2_string = Math.Round( ParseFloat16(t2), 1).ToString() + "°";
-            string temp3_string = Math.Round(ParseFloat16(t2), 1).ToString() + "°";
-
-            //if (bytes.Item1.Length==6)
-            //{
             string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
-            //string temp3_string = Math.Round( ParseFloat16(t3), 1).ToString() + "°";
-            string temp2_string = Math.Round(ParseFloat16(t3), 1).ToString() + "°";
+            // string temp1_string = Math.Round(ParseFloat16(t1), 1).ToString() + "°";
+            // string temp2_string = Math.Round(ParseFloat16(t2), 1).ToString() + "°";
+            // string temp3_string = Math.Round(ParseFloat16(t3), 1).ToString() + "°";
 
-
-            if (!(temp3.ElementAt(0)==temp3_string))
-                {
-                    temp3.RemoveAt(0);
-                    temp3.Add(temp3_string);
-                }
-            //}
+            string temp1_string = Convert.ToInt32(t1, 2).ToString();
+            string temp2_string = Convert.ToInt32(t2, 2).ToString();
+            string temp3_string = Convert.ToInt32(t3, 2).ToString();
 
             if (!(temp1.ElementAt(0)==temp1_string))
             {
@@ -728,6 +696,11 @@ namespace BLE_Universal
             {
                 temp2.RemoveAt(0);
                 temp2.Add(temp2_string);
+            }
+            if (!(temp3.ElementAt(0)==temp3_string))
+            {
+                temp3.RemoveAt(0);
+                temp3.Add(temp3_string);
             }
 
             Task.Delay(1000).Wait();
@@ -741,7 +714,7 @@ namespace BLE_Universal
             {
                 cancelsource1.Cancel();
                 Fiber1.TextColor = Color.FromHex("#707070");
-                Shirt1.Source = new FileImageSource { File = "Man30.png" };
+                Shirt1.Source = new FileImageSource { File = "bloodbag.jpg" };
                 device1 = null;
                 d1s1.Clear(); d1s2.Clear(); d1c1.Clear(); d1c2.Clear();
             }
@@ -749,7 +722,7 @@ namespace BLE_Universal
             {
                 cancelsource2.Cancel();
                 Fiber2.TextColor = Color.FromHex("#707070");
-                Shirt2.Source = new FileImageSource { File = "Man30.png" };
+                Shirt2.Source = new FileImageSource { File = "bloodbag.jpg" };
                 device2 = null;
                 d2s1.Clear(); d2s2.Clear(); d2c1.Clear(); d2c2.Clear();
             }
@@ -757,7 +730,7 @@ namespace BLE_Universal
             {
                 cancelsource3.Cancel();
                 Fiber3.TextColor = Color.FromHex("#707070");
-                Shirt3.Source = new FileImageSource { File = "Man30.png" };
+                Shirt3.Source = new FileImageSource { File = "bloodbag.jpg" };
                 device3 = null;
                 d3s1.Clear(); d3s2.Clear(); d3c1.Clear(); d3c2.Clear();
             }
@@ -765,7 +738,7 @@ namespace BLE_Universal
             {
                 cancelsource4.Cancel();
                 Fiber4.TextColor = Color.FromHex("#707070");
-                Shirt4.Source = new FileImageSource { File = "Man30.png" };
+                Shirt4.Source = new FileImageSource { File = "bloodbag.jpg" };
                 device4 = null;
                 d4s1.Clear(); d4s2.Clear(); d4c1.Clear(); d4c2.Clear();
             }
@@ -773,7 +746,7 @@ namespace BLE_Universal
             {
                 cancelsource5.Cancel();
                 Fiber5.TextColor = Color.FromHex("#707070");
-                Shirt5.Source = new FileImageSource { File = "Man30.png" };
+                Shirt5.Source = new FileImageSource { File = "bloodbag.jpg" };
                 device5 = null;
                 d5s1.Clear(); d5s2.Clear(); d5c1.Clear(); d5c2.Clear();
             }

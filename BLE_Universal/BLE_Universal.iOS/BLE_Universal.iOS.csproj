@@ -27,7 +27,7 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignProvision>iOS Team Store Provisioning Profile: com.computingfiber.BLEUniversal</CodesignProvision>
+    <CodesignProvision>Automatic</CodesignProvision>
     <CodesignKey>Apple Distribution: Trevor Carter (46APV3ZYP2)</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
@@ -67,10 +67,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>Apple Development: Trevor Carter (UF74G5R7FG)</CodesignKey>
+    <CodesignKey>Apple Distribution: Trevor Carter (46APV3ZYP2)</CodesignKey>
     <!-- <CodesignEntitlements>Entitlements.plist</CodesignEntitlements> -->
     <MtouchLink>SdkOnly</MtouchLink>
-    <CodesignProvision>Trevor IFM</CodesignProvision>
+    <CodesignProvision></CodesignProvision>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchDebug>true</MtouchDebug>
   </PropertyGroup>
@@ -168,5 +168,7 @@
     <BundleResource Include="Resources\Blue.jpg" />
     <BundleResource Include="Resources\start.png" />
     <BundleResource Include="Resources\erase.png" />
+    <BundleResource Include="Resources\bloodbag.jpg" />
+    <BundleResource Include="Resources\greenbag.png" />
   </ItemGroup>
 </Project>
