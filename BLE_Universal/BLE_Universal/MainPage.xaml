@@ -19,7 +19,7 @@
                     <RowDefinition Height="0.16*" />  <!-- Row 3 -->
                     <RowDefinition Height="0.16*" />  <!-- Row 4 -->
                     <RowDefinition Height="0.16*" />  <!-- Row 5 -->
-                    <RowDefinition Height="0.14*" />  <!-- Row 6 -->
+                    <RowDefinition Height="0.13*" />  <!-- Row 6 -->
                 </Grid.RowDefinitions>
 
                 <!-- Fiber 1 -->
@@ -44,7 +44,7 @@
                             <Label Text="Below 1°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp1_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
@@ -53,7 +53,7 @@
                             <Label Text="In Range" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp1_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
@@ -62,7 +62,7 @@
                             <Label Text="Above 10°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
@@ -91,7 +91,7 @@
                             <Label Text="Below 1°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp2_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
@@ -99,7 +99,7 @@
                             <Label Text="In Range" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp2_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
@@ -107,7 +107,7 @@
                             <Label Text="Above 10°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
@@ -136,7 +136,7 @@
                             <Label Text="Below 1°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp3_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
@@ -144,7 +144,7 @@
                             <Label Text="In Range" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp3_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
@@ -152,7 +152,7 @@
                             <Label Text="Above 10°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
@@ -181,7 +181,7 @@
                             <Label Text="Below 1°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp4_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
@@ -189,7 +189,7 @@
                             <Label Text="In Range" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp4_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
@@ -197,7 +197,7 @@
                             <Label Text="Above 10°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
@@ -226,7 +226,7 @@
                             <Label Text="Below 1°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp5_2" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="2" VerticalOptions="Center">
@@ -234,7 +234,7 @@
                             <Label Text="In Range" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
                     <ListView x:Name="Temp5_3" CachingStrategy="RecycleElement" Grid.Row="1" Grid.Column="3" VerticalOptions="Center">
@@ -242,7 +242,7 @@
                             <Label Text="Above 10°C" FontSize="16" HorizontalOptions="Center" />
                         </ListView.Header>
                         <ListView.ItemTemplate><DataTemplate><ViewCell><StackLayout>
-                            <Label Text="{Binding .}" FontSize="32" FontAttributes="Bold" />
+                            <Label Text="{Binding .}" FontSize="30" FontAttributes="Bold" />
                         </StackLayout></ViewCell></DataTemplate></ListView.ItemTemplate>
                     </ListView>
 
@@ -261,17 +261,30 @@
                         <RowDefinition Height="0.3*"/>
                     </Grid.RowDefinitions>
 
+                    <BoxView Grid.ColumnSpan="3"
+                        Grid.Row="0" Grid.Column="0" CornerRadius="25" Grid.RowSpan="2" x:Name="StartColor" />
+
+                    <Label Text="Start" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="Center"
+                        VerticalOptions="Center" FontAttributes="Bold" FontSize="35"/>
+
+                    <Image x:Name="startimage" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                        VerticalOptions="Center" HorizontalOptions="Center"/>
+                    
+                    <Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" Clicked="OnStartClicked" />
+
+                    <!--
                     <BoxView Grid.Row="0" Grid.Column="0" CornerRadius="25" Grid.RowSpan="2" x:Name="StartColor" />
                     <BoxView Grid.Row="0" Grid.Column="2" CornerRadius="25" Grid.RowSpan="2" Color="#AFAFAF" />
 
                     <Label Text="Start" Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
-                    <Label Text="Erase" Grid.Row="1" Grid.Column="2" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
+                    <Label Text="Reset Counter" Grid.Row="1" Grid.Column="2" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18"/>
 
                     <Image x:Name="startimage" Grid.Row="0" Grid.Column="0" />
                     <Image x:Name="eraseimage" Grid.Row="0" Grid.Column="2" />
 
                     <Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Clicked="OnStartClicked" />
                     <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Clicked="OnChipErase"  />
+                    -->
                 </Grid>
 
             </Grid>

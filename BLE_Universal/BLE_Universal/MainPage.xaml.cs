@@ -12,11 +12,6 @@ using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 using Xamarin.Essentials;
-// using LiveChartsCore;
-// using LiveChartsCore.Defaults;
-// using LiveChartsCore.SkiaSharpView;
-// using LiveChartsCore.SkiaSharpView.Painting;
-// using SkiaSharp;
 
 
 namespace BLE_Universal
@@ -35,6 +30,10 @@ namespace BLE_Universal
         Popup popup;
         int SELECTED;
         public Dictionary<char, float> S = new Dictionary<char, float>() { { '0', 1.0f }, { '1', -1.0f } };
+        public int RESET_COUNTER1 = 0;
+        public int RESET_COUNTER2 = 0;
+        public int RESET_COUNTER3 = 0;
+        public int MIN1=0, MIN2=0, MIN3=0;
 
         bool IS_COLLECTION_RUNNING;
 
@@ -131,7 +130,7 @@ namespace BLE_Universal
             Device.BeginInvokeOnMainThread(() =>
             {
                 startimage.Source = new FileImageSource { File = "start.png" };
-                eraseimage.Source = new FileImageSource { File = "erase.png" };
+                // eraseimage.Source = new FileImageSource { File = "resetbutton.png" };
                 // Shirt1.Source = new FileImageSource { File = "Man30.png" };
                 // Shirt2.Source = new FileImageSource { File = "Man30.png" };
                 // Shirt3.Source = new FileImageSource { File = "Man30.png" };
@@ -673,19 +672,39 @@ namespace BLE_Universal
             }
 
             // Exit if bytes or bytes.Item1 is null or insufficiently initialized
-            if (bytes.Item1 == null || bytes.Item1.Length < 4)
+            if (bytes.Item1==null || bytes.Item1.Length < 4)
                 return;
 
             string t1 = CombineBytesToBinaryString( bytes.Item1[0], bytes.Item1[1] );
             string t2 = CombineBytesToBinaryString( bytes.Item1[2], bytes.Item1[3] );
             string t3 = CombineBytesToBinaryString( bytes.Item1[4], bytes.Item1[5] );
+
+            MIN1 = Convert.ToInt32(t1, 2) - RESET_COUNTER1;
+            MIN2 = Convert.ToInt32(t2, 2) - RESET_COUNTER2;
+            MIN3 = Convert.ToInt32(t3, 2) - RESET_COUNTER3;
+
+            int totalMinutes1 = MIN1;
+            int hours1 = totalMinutes1 / 60;
+            int minutes1 = totalMinutes1 % 60;
+            string temp1_string = $"{hours1}:{minutes1:D2}";
+
+            int totalMinutes2 = MIN2;
+            int hours2 = totalMinutes2 / 60;
+            int minutes2 = totalMinutes2 % 60;
+            string temp2_string = $"{hours2}:{minutes2:D2}";
+
+            int totalMinutes3 = MIN3;
+            int hours3 = totalMinutes3 / 60;
+            int minutes3 = totalMinutes3 % 60;
+            string temp3_string = $"{hours3}:{minutes3:D2}";
+        
+            // string temp1_string = Convert.ToInt32(t1, 2).ToString();
+            // string temp2_string = Convert.ToInt32(t2, 2).ToString();
+            // string temp3_string = Convert.ToInt32(t3, 2).ToString();
+
             // string temp1_string = Math.Round(ParseFloat16(t1), 1).ToString() + "°";
             // string temp2_string = Math.Round(ParseFloat16(t2), 1).ToString() + "°";
             // string temp3_string = Math.Round(ParseFloat16(t3), 1).ToString() + "°";
-
-            string temp1_string = Convert.ToInt32(t1, 2).ToString();
-            string temp2_string = Convert.ToInt32(t2, 2).ToString();
-            string temp3_string = Convert.ToInt32(t3, 2).ToString();
 
             if (!(temp1.ElementAt(0)==temp1_string))
             {
@@ -755,68 +774,73 @@ namespace BLE_Universal
 
         // BUTTON: Perform Chip Erase (0xCE) with device selector.
         async void OnChipErase(object sender, EventArgs args)
-        {            
-            List<string> validOptions = new List<string>();
+        {
+            RESET_COUNTER1 = MIN1;
+            RESET_COUNTER2 = MIN2;
+            RESET_COUNTER3 = MIN3;
 
-            string str1 = device1?.Name;
-            string str2 = device2?.Name;
-            string str3 = device3?.Name;
-            string str4 = device4?.Name;
-            string str5 = device5?.Name;
+            
+            // List<string> validOptions = new List<string>();
 
-            if (str1 != null) validOptions.Add(str1);
-            if (str2 != null) validOptions.Add(str2);
-            if (str3 != null) validOptions.Add(str3);
-            if (str4 != null) validOptions.Add(str4);
-            if (str5 != null) validOptions.Add(str5);
+            // string str1 = device1?.Name;
+            // string str2 = device2?.Name;
+            // string str3 = device3?.Name;
+            // string str4 = device4?.Name;
+            // string str5 = device5?.Name;
 
-            if (validOptions.Count == 0)
-            {
-                await DisplayAlert("Error!", "No devices connected.", "OK");
-                return;
-            }
+            // if (str1 != null) validOptions.Add(str1);
+            // if (str2 != null) validOptions.Add(str2);
+            // if (str3 != null) validOptions.Add(str3);
+            // if (str4 != null) validOptions.Add(str4);
+            // if (str5 != null) validOptions.Add(str5);
 
-            string action = await DisplayActionSheet(
-                "Select a device to chip erase", "Cancel", null,
-                validOptions.ToArray()
-            );
+            // if (validOptions.Count == 0)
+            // {
+            //     await DisplayAlert("Error!", "No devices connected.", "OK");
+            //     return;
+            // }
 
-            if (action == str1)
-            {
-                if (device1 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d1c2[0].WriteAsync(new byte[] { 0xCE });
-            }
-            else if (action == str2)
-            {
-                if (device2 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d2c2[0].WriteAsync(new byte[] { 0xCE });
-            }
-            else if (action == str3)
-            {
-                if (device3 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d3c2[0].WriteAsync(new byte[] { 0xCE });
-            }
-            else if (action == str4)
-            {
-                if (device4 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d4c2[0].WriteAsync(new byte[] { 0xCE });
-            }
-            else if (action == str5)
-            {
-                if (device5 == null)
-                    await DisplayAlert("Error!", "No device connected.", "OK");
-                else
-                    await d5c2[0].WriteAsync(new byte[] { 0xCE });
-            }
-            else return; 
+            // string action = await DisplayActionSheet(
+            //     "Select a device to chip erase", "Cancel", null,
+            //     validOptions.ToArray()
+            // );
+
+            // if (action == str1)
+            // {
+            //     if (device1 == null)
+            //         await DisplayAlert("Error!", "No device connected.", "OK");
+            //     else
+            //         await d1c2[0].WriteAsync(new byte[] { 0xCE });
+            // }
+            // else if (action == str2)
+            // {
+            //     if (device2 == null)
+            //         await DisplayAlert("Error!", "No device connected.", "OK");
+            //     else
+            //         await d2c2[0].WriteAsync(new byte[] { 0xCE });
+            // }
+            // else if (action == str3)
+            // {
+            //     if (device3 == null)
+            //         await DisplayAlert("Error!", "No device connected.", "OK");
+            //     else
+            //         await d3c2[0].WriteAsync(new byte[] { 0xCE });
+            // }
+            // else if (action == str4)
+            // {
+            //     if (device4 == null)
+            //         await DisplayAlert("Error!", "No device connected.", "OK");
+            //     else
+            //         await d4c2[0].WriteAsync(new byte[] { 0xCE });
+            // }
+            // else if (action == str5)
+            // {
+            //     if (device5 == null)
+            //         await DisplayAlert("Error!", "No device connected.", "OK");
+            //     else
+            //         await d5c2[0].WriteAsync(new byte[] { 0xCE });
+            // }
+            // else return; 
         }
 
 

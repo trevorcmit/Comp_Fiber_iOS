@@ -170,5 +170,6 @@
     <BundleResource Include="Resources\erase.png" />
     <BundleResource Include="Resources\bloodbag.jpg" />
     <BundleResource Include="Resources\greenbag.png" />
+    <BundleResource Include="Resources\resetbutton.png" />
   </ItemGroup>
 </Project>
